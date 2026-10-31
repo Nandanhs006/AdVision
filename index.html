@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advision — Smart Visual Advertising</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-container">
+    <!-- Navigation / Header -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">✦</span>
+        <span class="logo-text">Advision</span>
+      </div>
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="#preview">Ad Preview</a>
+        <a href="#contact" class="nav-cta">Get Started</a>
+      </nav>
+    </header>
+
+    <!-- Hero / Ad Section -->
+    <main>
+      <section class="hero-section">
+        <div class="ad-badge">Special Announcement</div>
+        <h1 class="hero-title">Transform Your Vision Into High-Converting Ads</h1>
+        <p class="hero-subtitle">
+          Advision empowers creators and brands to launch visually stunning, high-impact campaigns in seconds.
+        </p>
+
+        <!-- Static Ad Card / Display Banner -->
+        <div id="preview" class="ad-card-wrapper">
+          <div class="ad-card">
+            <div class="ad-card-image">
+              <div class="ad-tag">Sponsored</div>
+              <div class="ad-visual">
+                <div class="glow-orb"></div>
+                <div class="product-badge">NEW ARRIVAL</div>
+                <h2>Next-Gen Wireless Pro</h2>
+                <p>Immersive spatial audio meets all-day comfort.</p>
+              </div>
+            </div>
+            <div class="ad-card-content">
+              <div class="price-row">
+                <span class="discount-pill">Limited 30% OFF</span>
+                <span class="price-current">$199</span>
+                <span class="price-original">$285</span>
+              </div>
+              <p class="ad-description">
+                Engineered with precision acoustic drivers and active noise cancellation.
+              </p>
+              <button id="ctaBtn" class="cta-button" type="button">
+                Claim Offer Now &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Key Highlights -->
+      <section id="features" class="features-section">
+        <div class="feature-item">
+          <span class="feature-icon">⚡</span>
+          <h3>Instant Creation</h3>
+          <p>Generate and preview targeted display ads with real-time styling.</p>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🎯</span>
+          <h3>Optimized CTR</h3>
+          <p>Crafted with proven conversion design principles that drive engagement.</p>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">📱</span>
+          <h3>Fully Responsive</h3>
+          <p>Pixel-perfect display across mobile, tablet, and desktop viewports.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2026 Advision. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Interactive feedback modal/toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    🎉 Offer claimed! Redirecting to checkout...
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
