@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark Charcoal Theme (Default) */
+  --adv-sidebar: #151515;
+  --adv-main: #1a1a19;
+  --adv-surface: #222221;
+  --adv-surface-hover: #2c2c2a;
+  --adv-border: #444444;
+  --adv-text: #f0efec;
+  --adv-secondary: #c3c2b8;
+  --adv-accent: #6366f1;
+  --adv-accent-hover: #4f46e5;
+  --adv-success: #4aa130;
+  --adv-success-bg: #162611;
+  --adv-warning: #d19633;
+  --adv-warning-bg: #2e1b04;
+  --adv-danger: #e0675f;
+  --adv-danger-bg: #301513;
+}
+
+.light {
+  /* Warm neutral light theme */
+  --adv-sidebar: #eae8e1;
+  --adv-main: #f5f4ef;
+  --adv-surface: #ffffff;
+  --adv-surface-hover: #ebe9e3;
+  --adv-border: #d3d1c7;
+  --adv-text: #1a1a19;
+  --adv-secondary: #57564f;
+  --adv-accent: #4f46e5;
+  --adv-accent-hover: #4338ca;
+  --adv-success: #2e7d1b;
+  --adv-success-bg: #eaf6e6;
+  --adv-warning: #b47818;
+  --adv-warning-bg: #fdf3e2;
+  --adv-danger: #c5423a;
+  --adv-danger-bg: #fae8e7;
+}
+
+body {
+  background-color: var(--adv-main);
+  color: var(--adv-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", "Noto Sans Telugu", "Noto Sans Kannada", sans-serif;
+  min-height: 100vh;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--adv-sidebar);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--adv-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--adv-secondary);
+}

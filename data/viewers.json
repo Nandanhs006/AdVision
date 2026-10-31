@@ -1,0 +1,72 @@
+[
+  {
+    "id": "viewer-tokyo",
+    "name": "Kenji Sato",
+    "city": "Tokyo",
+    "country": "Japan",
+    "language": "ja",
+    "ageBand": "25-34",
+    "favorites": ["Haruki Murakami", "Blue Bottle Coffee", "Sony Audio", "Uniqlo", "Studio Ghibli"],
+    "adPreference": "normal"
+  },
+  {
+    "id": "viewer-vizag",
+    "name": "Praveen Kumar",
+    "city": "Visakhapatnam",
+    "country": "India",
+    "language": "te",
+    "ageBand": "25-34",
+    "favorites": ["SS Rajamouli", "Filter Coffee", "Royal Enfield", "Telugu Cinema", "Chai Point"],
+    "adPreference": "normal"
+  },
+  {
+    "id": "viewer-sf",
+    "name": "Maya Lin",
+    "city": "San Francisco",
+    "country": "United States",
+    "language": "en",
+    "ageBand": "30-39",
+    "favorites": ["Patagonia", "Aeropress", "Science Fiction", "Specialty Coffee", "Podcast Audio"],
+    "adPreference": "normal"
+  },
+  {
+    "id": "viewer-blr",
+    "name": "Ananya Rao",
+    "city": "Bengaluru",
+    "country": "India",
+    "language": "kn",
+    "ageBand": "20-29",
+    "favorites": ["Third Wave Coffee", "Indie Rock", "Kannada Literature", "Tech Podcasts", "Urban Backpacks"],
+    "adPreference": "normal"
+  },
+  {
+    "id": "viewer-paris",
+    "name": "Camille Dupont",
+    "city": "Paris",
+    "country": "France",
+    "language": "fr",
+    "ageBand": "28-36",
+    "favorites": ["French Cinema", "Artisanal Boulangerie", "Minimalist Fashion", "Espresso", "Vinyl Records"],
+    "adPreference": "normal"
+  },
+  {
+    "id": "viewer-kids",
+    "name": "Leo & Mia (Kids Profile)",
+    "city": "Seattle",
+    "country": "United States",
+    "language": "en",
+    "ageBand": "6-11",
+    "favorites": ["Animation", "Dinosaurs", "LEGO", "Picture Books"],
+    "adPreference": "kids"
+  },
+  {
+    "id": "viewer-adfree",
+    "name": "Marcus Vance (Premium Tier)",
+    "city": "London",
+    "country": "United Kingdom",
+    "language": "en",
+    "ageBand": "35-49",
+    "favorites": ["Documentaries", "Jazz", "Architecture"],
+    "adPreference": "adfree"
+  }
+]

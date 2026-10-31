@@ -1,0 +1,111 @@
+[
+  {
+    "id": "proj-tokyo-nightfall",
+    "name": "Tokyo Nightfall - Alleyway Scene",
+    "filmTitle": "The Neon Crossing (Ep 3)",
+    "videoUrl": "/media/demo-scene.mp4",
+    "durationSec": 15,
+    "status": "live",
+    "zones": [
+      {
+        "id": "zone-rooftop-billboard",
+        "label": "Rooftop LED Billboard",
+        "quad": [
+          { "x": 0.22, "y": 0.18 },
+          { "x": 0.48, "y": 0.19 },
+          { "x": 0.47, "y": 0.44 },
+          { "x": 0.23, "y": 0.42 }
+        ],
+        "startSec": 0.5,
+        "endSec": 14.5,
+        "frameShare": 0.06
+      },
+      {
+        "id": "zone-storefront-sign",
+        "label": "Corner Store Signboard",
+        "quad": [
+          { "x": 0.65, "y": 0.35 },
+          { "x": 0.88, "y": 0.36 },
+          { "x": 0.86, "y": 0.62 },
+          { "x": 0.64, "y": 0.59 }
+        ],
+        "startSec": 2.0,
+        "endSec": 12.0,
+        "frameShare": 0.05
+      }
+    ],
+    "rules": {
+      "allowedCategories": [],
+      "blockedCategories": ["spirits"],
+      "prominenceCap": 0.25,
+      "requireApproval": false,
+      "sceneMood": ["rainy", "introspective", "urban night", "neon lights", "cyberpunk"]
+    },
+    "createdAt": "2026-10-25T10:00:00Z",
+    "updatedAt": "2026-10-31T08:00:00Z"
+  },
+  {
+    "id": "proj-coastal-cafe",
+    "name": "Bay Area Sunrise Walk",
+    "filmTitle": "Pacific Waves (Short)",
+    "videoUrl": "/media/demo-scene.mp4",
+    "durationSec": 12,
+    "status": "review",
+    "zones": [
+      {
+        "id": "zone-kiosk-poster",
+        "label": "Transit Kiosk Poster",
+        "quad": [
+          { "x": 0.15, "y": 0.25 },
+          { "x": 0.35, "y": 0.24 },
+          { "x": 0.36, "y": 0.68 },
+          { "x": 0.16, "y": 0.67 }
+        ],
+        "startSec": 1.0,
+        "endSec": 10.0,
+        "frameShare": 0.08
+      }
+    ],
+    "rules": {
+      "allowedCategories": ["coffee", "books", "fashion", "tea"],
+      "blockedCategories": ["spirits"],
+      "prominenceCap": 0.3,
+      "requireApproval": true,
+      "sceneMood": ["sunlit", "morning", "serene", "nature", "warm"]
+    },
+    "createdAt": "2026-10-26T14:30:00Z",
+    "updatedAt": "2026-10-30T16:45:00Z"
+  },
+  {
+    "id": "proj-milan-galleria",
+    "name": "Galleria Architecture",
+    "filmTitle": "Symphony in Stone",
+    "videoUrl": "/media/demo-scene.mp4",
+    "durationSec": 20,
+    "status": "draft",
+    "zones": [
+      {
+        "id": "zone-archway-banner",
+        "label": "Archway Display",
+        "quad": [
+          { "x": 0.35, "y": 0.15 },
+          { "x": 0.65, "y": 0.15 },
+          { "x": 0.63, "y": 0.45 },
+          { "x": 0.37, "y": 0.45 }
+        ],
+        "startSec": 0.0,
+        "endSec": 18.0,
+        "frameShare": 0.09
+      }
+    ],
+    "rules": {
+      "allowedCategories": ["fashion", "audio", "travel"],
+      "blockedCategories": [],
+      "prominenceCap": 0.35,
+      "requireApproval": false,
+      "sceneMood": ["classical", "architectural", "luxurious", "historic"]
+    },
+    "createdAt": "2026-10-28T09:15:00Z",
+    "updatedAt": "2026-10-29T11:20:00Z"
+  }
+]

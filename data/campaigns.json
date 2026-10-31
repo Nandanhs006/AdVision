@@ -1,0 +1,262 @@
+[
+  {
+    "id": "camp-kissa-coffee",
+    "brandName": "Kissa Craft Roasters",
+    "category": "coffee",
+    "qlooEntityId": "urn:entity:brand:kissa_coffee",
+    "tags": ["coffee", "specialty coffee", "cold brew", "cafe culture", "artisanal"],
+    "countries": ["Japan", "United States", "France"],
+    "languages": ["en", "ja", "fr"],
+    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "headline": {
+      "en": "Cold brew, slow-dripped in Shibuya",
+      "ja": "渋谷仕立ての水出し水滴珈琲",
+      "fr": "Infusion à froid artisanale de Shibuya",
+      "te": "టోక్యో కోల్డ్ బ్రూ కాఫీ",
+      "kn": "ಟೋಕಿಯೋ ಕೋಲ್ಡ್ ಬ್ರೂ ಕಾಫಿ"
+    },
+    "cta": {
+      "en": "Find a Pour",
+      "ja": "取扱店を探す",
+      "fr": "Découvrir",
+      "te": "రుచి చూడండి",
+      "kn": "ರುಚಿ ನೋಡಿ"
+    },
+    "palette": { "bg": "#121b18", "fg": "#f4efe6", "accent": "#4aa130" },
+    "publicService": false
+  },
+  {
+    "id": "camp-malabar-chai",
+    "brandName": "Malabar Hill Spiced Tea",
+    "category": "tea",
+    "qlooEntityId": "urn:entity:brand:malabar_tea",
+    "tags": ["tea", "chai", "filter coffee", "spices", "beverages"],
+    "countries": ["India", "United States", "United Kingdom"],
+    "languages": ["en", "te", "kn"],
+    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "headline": {
+      "en": "Diwali harvest spiced cardamom brew",
+      "te": "దీపావళి స్పెషల్ ఫిల్టర్ కాఫీ & చాయ్",
+      "kn": "ದೀಪಾವಳಿ ಸ್ಪೆಷಲ್ ಪರಿಮಳಯುಕ್ತ ಚಹಾ",
+      "ja": "カルダモン薫る祝祭のスパイスチャイ",
+      "fr": "Thé épicé de fête à la cardamome"
+    },
+    "cta": {
+      "en": "Sip the Blend",
+      "te": "ఇప్పుడే ఆర్డర్ చేయండి",
+      "kn": "ಈಗಲೇ ಆರ್ಡರ್ ಮಾಡಿ",
+      "ja": "ブレンドを試す",
+      "fr": "Déguster"
+    },
+    "palette": { "bg": "#23180d", "fg": "#fdf8ee", "accent": "#d19633" },
+    "publicService": false
+  },
+  {
+    "id": "camp-lumina-audio",
+    "brandName": "Lumina Spatial Sound",
+    "category": "audio",
+    "qlooEntityId": "urn:entity:brand:lumina_audio",
+    "tags": ["audio", "headphones", "indie music", "podcasts", "electronics"],
+    "countries": ["Japan", "United States", "France", "United Kingdom", "India"],
+    "languages": ["en", "ja", "fr", "te", "kn"],
+    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "headline": {
+      "en": "Immersive sound, tuned for acoustic realism",
+      "ja": "音の粒子まで描く、純粋空間音響",
+      "fr": "Son immersif spatial haute fidélité",
+      "te": "అద్భుతమైన ధ్వని నాణ్యతతో హెడ్‌ఫోన్స్",
+      "kn": "ಅಪ್ರತಿಮ ಧ್ವನಿ ಅನುಭವದ ಸ್ಪೇಷಲ್ ಹೆಡ್‌ಫೋನ್"
+    },
+    "cta": {
+      "en": "Hear the Depth",
+      "ja": "視聴体験する",
+      "fr": "Écouter la démo",
+      "te": "వివరాలు చూడండి",
+      "kn": "ಅನುಭವಿಸಿ ನೋಡಿ"
+    },
+    "palette": { "bg": "#14172b", "fg": "#edf2ff", "accent": "#6366f1" },
+    "publicService": false
+  },
+  {
+    "id": "camp-atlantis-books",
+    "brandName": "Folio & Horizon Press",
+    "category": "books",
+    "qlooEntityId": "urn:entity:brand:folio_press",
+    "tags": ["books", "literature", "science fiction", "indie bookstore", "design"],
+    "countries": ["United States", "Japan", "France", "United Kingdom", "India"],
+    "languages": ["en", "ja", "fr", "kn"],
+    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "headline": {
+      "en": "Speculative visions in letterpress print",
+      "ja": "活版印刷で紡ぐ、新たな思索の地平",
+      "fr": "Récits d'anticipation reliés à la main",
+      "kn": "ಸಾಹಿತ್ಯ ಮತ್ತು ಕಲ್ಪನಾ ಲೋಕದ ಅಪೂರ್ವ ಕೃತಿಗಳು",
+      "te": "సరికొత్త సాహిత్య ముద్రణలు"
+    },
+    "cta": {
+      "en": "Browse Catalog",
+      "ja": "書目録を見る",
+      "fr": "Feuilleter",
+      "kn": "ಪುಸ್ತಕ ನೋಡಿ",
+      "te": "చదవండి"
+    },
+    "palette": { "bg": "#1a1622", "fg": "#f5f0fa", "accent": "#a855f7" },
+    "publicService": false
+  },
+  {
+    "id": "camp-solstice-apparel",
+    "brandName": "Atelier Solstice",
+    "category": "fashion",
+    "qlooEntityId": "urn:entity:brand:solstice_atelier",
+    "tags": ["fashion", "minimalist", "sustainable apparel", "design", "outerwear"],
+    "countries": ["France", "Japan", "United States", "United Kingdom"],
+    "languages": ["en", "fr", "ja"],
+    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "headline": {
+      "en": "Zero-waste merino weave for all weather",
+      "fr": "Laine mérinos éco-responsable pour chaque saison",
+      "ja": "循環型メリノウールが織りなす日常服",
+      "te": "పర్యావరణ హితమైన డిజైనర్ దుస్తులు",
+      "kn": "ಪರಿಸರಸ್ನೇಹಿ ಶೈಲಿಯ ಹೊಸ ಉಡುಪುಗಳು"
+    },
+    "cta": {
+      "en": "Explore Collection",
+      "fr": "Voir la collection",
+      "ja": "コレクションへ",
+      "te": "సేకరణను చూడండి",
+      "kn": "ವಿವರ ನೋಡಿ"
+    },
+    "palette": { "bg": "#1d1a18", "fg": "#fbf8f5", "accent": "#e07a5f" },
+    "publicService": false
+  },
+  {
+    "id": "camp-nordic-voyage",
+    "brandName": "Fjordline Expedition Rail",
+    "category": "travel",
+    "qlooEntityId": "urn:entity:brand:fjordline_rail",
+    "tags": ["travel", "train journeys", "nature", "scandinavia", "mountains"],
+    "countries": ["United States", "France", "Japan", "United Kingdom"],
+    "languages": ["en", "fr", "ja"],
+    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "headline": {
+      "en": "Glacier routes under the aurora canopy",
+      "fr": "Traversée des fjords sous les aurores boréales",
+      "ja": "極光を望む、北欧氷河鉄道の旅",
+      "te": "మంచు పర్వతాల గుండా అద్భుత ప్రయాణం",
+      "kn": "ಹಿಮಪರ್ವತಗಳ ನಡುವೆ ರೈಲು ಸಾಹಸಯಾತ್ರೆ"
+    },
+    "cta": {
+      "en": "View Routes",
+      "fr": "Planifier",
+      "ja": "旅程を見る",
+      "te": "ప్రయాణ వివరాలు",
+      "kn": "ಮಾರ್ಗ ತಿಳಿಯಿರಿ"
+    },
+    "palette": { "bg": "#101924", "fg": "#edf6fa", "accent": "#38bdf8" },
+    "publicService": false
+  },
+  {
+    "id": "camp-islay-whisky",
+    "brandName": "Cask & Peat Distillers",
+    "category": "spirits",
+    "qlooEntityId": "urn:entity:brand:cask_peat_spirits",
+    "tags": ["spirits", "whisky", "cocktails", "nightlife", "craft spirits"],
+    "countries": ["United Kingdom", "United States", "France", "Japan"],
+    "languages": ["en", "ja", "fr"],
+    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "headline": {
+      "en": "Single malt aged in coastal oak barrels",
+      "ja": "海風香るオーク樽仕込みシングルモルト",
+      "fr": "Single malt vieilli en fût de chêne côtier",
+      "te": "ప్రీమియం స్పిరిట్స్ సేకరణ",
+      "kn": "ಪ್ರೀಮಿಯಂ ಸಿಂಗಲ್ ಮಾಲ್ಟ್ ಆನಂದ"
+    },
+    "cta": {
+      "en": "Discover 16-Year",
+      "ja": "16年物を知る",
+      "fr": "Découvrir le 16 ans",
+      "te": "మరింత సమాచారం",
+      "kn": "ಹೆಚ್ಚು ತಿಳಿಯಿರಿ"
+    },
+    "palette": { "bg": "#23110e", "fg": "#faeae6", "accent": "#e0675f" },
+    "publicService": false
+  },
+  {
+    "id": "camp-vintage-archive",
+    "brandName": "RetroChronicle Watches",
+    "category": "fashion",
+    "qlooEntityId": "urn:entity:brand:retro_watches",
+    "tags": ["fashion", "watches", "vintage", "design", "accessories"],
+    "countries": ["Japan", "France", "United States"],
+    "languages": ["en", "ja", "fr"],
+    "flight": { "start": "2023-01-01", "end": "2024-01-01" },
+    "headline": {
+      "en": "Mechanical chronographs from 1974",
+      "ja": "1974年の鼓動を宿す機械式時計",
+      "fr": "Chronographes mécaniques d'époque 1974",
+      "te": "వింటేజ్ వాచీలు",
+      "kn": "ವಿಂಟೇಜ್ ವಾಚ್‌ಗಳು"
+    },
+    "cta": {
+      "en": "Archived",
+      "ja": "アーカイブ",
+      "fr": "Archivé",
+      "te": "పూర్తయింది",
+      "kn": "ಆರ್ಕೈವ್"
+    },
+    "palette": { "bg": "#1c1c1c", "fg": "#e5e5e5", "accent": "#a3a3a3" },
+    "publicService": false
+  },
+  {
+    "id": "psa-civic-library",
+    "brandName": "Public Library Network",
+    "category": "public_service",
+    "qlooEntityId": "urn:entity:brand:public_library_network",
+    "tags": ["books", "community", "education", "public service", "reading"],
+    "countries": ["United States", "Japan", "India", "France", "United Kingdom"],
+    "languages": ["en", "ja", "te", "kn", "fr"],
+    "flight": { "start": "2025-01-01", "end": "2028-12-31" },
+    "headline": {
+      "en": "Free books, audio, and community spaces for all",
+      "ja": "だれでも、いつでも。あなたの街の公立図書館へ",
+      "te": "మీ సమీప పబ్లిక్ లైబ్రరీని సందర్శించండి",
+      "kn": "ನಿಮ್ಮ ಹತ್ತಿರದ ಗ್ರಂಥಾಲಯಕ್ಕೆ ಭೇಟಿ ನೀಡಿ",
+      "fr": "Livres gratuits et savoirs partagés dans votre médiathèque"
+    },
+    "cta": {
+      "en": "Get a Free Card",
+      "ja": "利用カードを作る",
+      "te": "కార్డు పొందండి",
+      "kn": "ಉಚಿತ ಕಾರ್ಡ್ ಪಡೆಯಿರಿ",
+      "fr": "S'inscrire gratuitement"
+    },
+    "palette": { "bg": "#0f1c24", "fg": "#e6f4fa", "accent": "#2dd4bf" },
+    "publicService": true
+  },
+  {
+    "id": "psa-road-safety",
+    "brandName": "Vision Zero Road Safety",
+    "category": "public_service",
+    "qlooEntityId": "urn:entity:brand:vision_zero_safety",
+    "tags": ["safety", "public service", "transport", "community"],
+    "countries": ["United States", "Japan", "India", "France", "United Kingdom"],
+    "languages": ["en", "ja", "te", "kn", "fr"],
+    "flight": { "start": "2025-01-01", "end": "2028-12-31" },
+    "headline": {
+      "en": "Eyes on the crosswalk. Every second counts.",
+      "ja": "横断歩道は歩行者優先。みんなの命を守る運転を。",
+      "te": "పాదచారులకు ప్రాధాన్యత ఇవ్వండి. సురక్షిత ప్రయాణం.",
+      "kn": "ರಸ್ತೆ ದಾಟುವವರಿಗೆ ಗೌರವ ನೀಡಿ. ಜಾಗರೂಕರಾಗಿ ಚಾಲನೆ ಮಾಡಿ.",
+      "fr": "Priorité aux passages piétons. Sécurité pour tous."
+    },
+    "cta": {
+      "en": "Drive Safe",
+      "ja": "安全運転を推進",
+      "te": "సురక్షితంగా డ్రైవ్ చేయండి",
+      "kn": "ಸುರಕ್ಷಿತವಾಗಿ ಚಲಿಸಿ",
+      "fr": "Conduire prudemment"
+    },
+    "palette": { "bg": "#1f1515", "fg": "#faeeee", "accent": "#f43f5e" },
+    "publicService": true
+  }
+]
