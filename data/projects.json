@@ -1,111 +1,124 @@
 [
   {
     "id": "proj-tokyo-nightfall",
-    "name": "Tokyo Expressway Overpass (Night Cut)",
-    "filmTitle": "The Neon Crossing (Ep 3)",
-    "videoUrl": "/media/cinematic-film.mp4",
+    "name": "Tokyo Shibuya Scramble (Crossing Cut)",
+    "filmTitle": "Shibuya Nights: Neon Crossing",
+    "videoUrl": "/media/shibuya-crossing.mp4",
     "durationSec": 20,
     "status": "live",
     "zones": [
       {
-        "id": "zone-expressway-billboard",
-        "label": "Highway LED Super-Billboard",
+        "id": "zone-qfront-billboard",
+        "label": "QFRONT Digital LED Super-Screen",
         "quad": [
-          { "x": 0.12, "y": 0.115 },
-          { "x": 0.428, "y": 0.138 },
-          { "x": 0.432, "y": 0.518 },
-          { "x": 0.124, "y": 0.495 }
+          { "x": 0.211, "y": 0.162 },
+          { "x": 0.348, "y": 0.188 },
+          { "x": 0.348, "y": 0.315 },
+          { "x": 0.211, "y": 0.308 }
         ],
         "startSec": 0.2,
         "endSec": 19.5,
-        "frameShare": 0.118
+        "frameShare": 0.125
       },
       {
-        "id": "zone-rooftop-billboard",
-        "label": "Downtown Alleyway Display",
+        "id": "zone-magnet-display",
+        "label": "Magnet 109 Facade Screen",
         "quad": [
-          { "x": 0.22, "y": 0.18 },
-          { "x": 0.48, "y": 0.19 },
-          { "x": 0.47, "y": 0.44 },
-          { "x": 0.23, "y": 0.42 }
+          { "x": 0.765, "y": 0.222 },
+          { "x": 0.863, "y": 0.222 },
+          { "x": 0.863, "y": 0.324 },
+          { "x": 0.765, "y": 0.324 }
         ],
         "startSec": 0.5,
-        "endSec": 15.0,
-        "frameShare": 0.065
+        "endSec": 19.0,
+        "frameShare": 0.085
       }
     ],
     "rules": {
       "allowedCategories": [],
       "blockedCategories": ["spirits"],
-      "prominenceCap": 0.25,
+      "prominenceCap": 0.30,
       "requireApproval": false,
-      "sceneMood": ["rainy", "introspective", "urban night", "expressway", "neon"]
+      "sceneMood": ["shibuya", "tokyo", "urban night", "scramble", "neon", "high-visibility"]
     },
     "createdAt": "2026-10-25T10:00:00Z",
-    "updatedAt": "2026-11-01T17:35:00Z"
+    "updatedAt": "2026-11-01T21:30:00Z"
   },
   {
     "id": "proj-coastal-cafe",
-    "name": "Bay Area Sunrise Walk",
-    "filmTitle": "Pacific Waves (Short)",
-    "videoUrl": "/media/cinematic-film.mp4",
-    "durationSec": 20,
-    "status": "review",
+    "name": "Chicago Skyline Expressway (Transit Cut)",
+    "filmTitle": "Metropolis: The Loop Approach",
+    "videoUrl": "/media/chicago-expressway.mp4",
+    "durationSec": 12,
+    "status": "live",
     "zones": [
       {
-        "id": "zone-kiosk-poster",
-        "label": "Transit Kiosk Poster",
+        "id": "zone-chicago-gantry-billboard",
+        "label": "Expressway Roadside Super-Billboard",
         "quad": [
-          { "x": 0.15, "y": 0.25 },
-          { "x": 0.35, "y": 0.24 },
-          { "x": 0.36, "y": 0.68 },
-          { "x": 0.16, "y": 0.67 }
+          { "x": 0.254, "y": 0.345 },
+          { "x": 0.297, "y": 0.346 },
+          { "x": 0.297, "y": 0.376 },
+          { "x": 0.254, "y": 0.375 }
         ],
-        "startSec": 1.0,
-        "endSec": 18.0,
-        "frameShare": 0.08
+        "startSec": 0.2,
+        "endSec": 11.8,
+        "frameShare": 0.055
       }
     ],
     "rules": {
-      "allowedCategories": ["coffee", "books", "fashion", "tea"],
+      "allowedCategories": ["coffee", "books", "fashion", "tea", "audio", "travel"],
       "blockedCategories": ["spirits"],
-      "prominenceCap": 0.3,
-      "requireApproval": true,
-      "sceneMood": ["sunlit", "morning", "serene", "nature", "warm"]
+      "prominenceCap": 0.25,
+      "requireApproval": false,
+      "sceneMood": ["expressway", "transit", "skyline", "midwestern", "urban day"]
     },
     "createdAt": "2026-10-26T14:30:00Z",
-    "updatedAt": "2026-11-01T17:35:00Z"
+    "updatedAt": "2026-11-01T21:30:00Z"
   },
   {
     "id": "proj-milan-galleria",
-    "name": "Galleria Architecture",
-    "filmTitle": "Symphony in Stone",
-    "videoUrl": "/media/cinematic-film.mp4",
-    "durationSec": 20,
-    "status": "draft",
+    "name": "Munich Promenade (Neuhauser Walk)",
+    "filmTitle": "European Stroll: Neuhauser Arcade",
+    "videoUrl": "/media/munich-promenade.mp4",
+    "durationSec": 15,
+    "status": "live",
     "zones": [
       {
-        "id": "zone-archway-banner",
-        "label": "Archway Display",
+        "id": "zone-promenade-window",
+        "label": "Arcade Storefront Showcase",
         "quad": [
-          { "x": 0.35, "y": 0.15 },
-          { "x": 0.65, "y": 0.15 },
-          { "x": 0.63, "y": 0.45 },
-          { "x": 0.37, "y": 0.45 }
+          { "x": 0.495, "y": 0.020 },
+          { "x": 0.583, "y": 0.020 },
+          { "x": 0.583, "y": 0.518 },
+          { "x": 0.495, "y": 0.518 }
         ],
-        "startSec": 0.0,
-        "endSec": 18.0,
-        "frameShare": 0.09
+        "startSec": 0.2,
+        "endSec": 14.8,
+        "frameShare": 0.082
+      },
+      {
+        "id": "zone-promenade-fascia",
+        "label": "Pedestrian Boulevard Fascia Sign",
+        "quad": [
+          { "x": 0.085, "y": 0.015 },
+          { "x": 0.395, "y": 0.015 },
+          { "x": 0.395, "y": 0.165 },
+          { "x": 0.085, "y": 0.165 }
+        ],
+        "startSec": 0.2,
+        "endSec": 14.8,
+        "frameShare": 0.062
       }
     ],
     "rules": {
-      "allowedCategories": ["fashion", "audio", "travel"],
+      "allowedCategories": ["fashion", "audio", "travel", "coffee", "books"],
       "blockedCategories": [],
       "prominenceCap": 0.35,
       "requireApproval": false,
-      "sceneMood": ["classical", "architectural", "luxurious", "historic"]
+      "sceneMood": ["continental", "pedestrian", "lifestyle", "shopping", "promenade"]
     },
     "createdAt": "2026-10-28T09:15:00Z",
-    "updatedAt": "2026-11-01T17:35:00Z"
+    "updatedAt": "2026-11-01T21:30:00Z"
   }
 ]
