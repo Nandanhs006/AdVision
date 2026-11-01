@@ -118,7 +118,9 @@ export function CompositedPlayer({
     }
   };
 
-  const matrix3d = getQuadMatrix3d(zone.quad, containerSize.w, containerSize.h);
+  const posterW = 380;
+  const posterH = 260;
+  const matrix3d = getQuadMatrix3d(zone.quad, containerSize.w, containerSize.h, posterW, posterH);
 
   return (
     <div className="flex flex-col space-y-4">
@@ -194,15 +196,15 @@ export function CompositedPlayer({
         {/* Composited Billboard Zone Overlay */}
         {isZoneActive && (
           <div
-            className="absolute pointer-events-none transition-all duration-300 z-20 shadow-2xl rounded-sm overflow-hidden"
+            className="absolute top-0 left-0 pointer-events-none transition-all duration-300 z-20 shadow-2xl rounded-sm overflow-hidden"
             style={{
-              left: `${zone.quad[0].x * 100}%`,
-              top: `${zone.quad[0].y * 100}%`,
-              width: `${(zone.quad[1].x - zone.quad[0].x) * 100}%`,
-              height: `${(zone.quad[2].y - zone.quad[0].y) * 100}%`,
+              width: `${posterW}px`,
+              height: `${posterH}px`,
+              transformOrigin: "0 0",
+              transform: matrix3d,
               boxShadow: decision?.winningCampaign?.palette?.accent
-                ? `0 0 25px ${decision.winningCampaign.palette.accent}66`
-                : "0 0 20px rgba(99, 102, 241, 0.4)",
+                ? `0 0 35px ${decision.winningCampaign.palette.accent}99`
+                : "0 0 25px rgba(99, 102, 241, 0.6)",
               border: `2px solid ${decision?.winningCampaign?.palette?.accent || "#6366f1"}`,
             }}
           >
@@ -211,12 +213,13 @@ export function CompositedPlayer({
               language={viewer.language}
               isNeutral={decision?.winner === "neutral"}
               isPending={decision?.status === "pending"}
-              width={360}
-              height={260}
+              width={posterW}
+              height={posterH}
             />
 
-            {/* Glowing neon scanline effect */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent pointer-events-none animate-pulse" />
+            {/* Specular floodlight glare & scanline illumination */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/15 via-transparent to-black/30 pointer-events-none" />
           </div>
         )}
 

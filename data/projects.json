@@ -1,15 +1,28 @@
 [
   {
     "id": "proj-tokyo-nightfall",
-    "name": "Tokyo Nightfall - Alleyway Scene",
+    "name": "Tokyo Expressway Overpass (Night Cut)",
     "filmTitle": "The Neon Crossing (Ep 3)",
-    "videoUrl": "/media/demo-scene.mp4",
-    "durationSec": 15,
+    "videoUrl": "/media/cinematic-film.mp4",
+    "durationSec": 20,
     "status": "live",
     "zones": [
       {
+        "id": "zone-expressway-billboard",
+        "label": "Highway LED Super-Billboard",
+        "quad": [
+          { "x": 0.12, "y": 0.115 },
+          { "x": 0.428, "y": 0.138 },
+          { "x": 0.432, "y": 0.518 },
+          { "x": 0.124, "y": 0.495 }
+        ],
+        "startSec": 0.2,
+        "endSec": 19.5,
+        "frameShare": 0.118
+      },
+      {
         "id": "zone-rooftop-billboard",
-        "label": "Rooftop LED Billboard",
+        "label": "Downtown Alleyway Display",
         "quad": [
           { "x": 0.22, "y": 0.18 },
           { "x": 0.48, "y": 0.19 },
@@ -17,21 +30,8 @@
           { "x": 0.23, "y": 0.42 }
         ],
         "startSec": 0.5,
-        "endSec": 14.5,
-        "frameShare": 0.06
-      },
-      {
-        "id": "zone-storefront-sign",
-        "label": "Corner Store Signboard",
-        "quad": [
-          { "x": 0.65, "y": 0.35 },
-          { "x": 0.88, "y": 0.36 },
-          { "x": 0.86, "y": 0.62 },
-          { "x": 0.64, "y": 0.59 }
-        ],
-        "startSec": 2.0,
-        "endSec": 12.0,
-        "frameShare": 0.05
+        "endSec": 15.0,
+        "frameShare": 0.065
       }
     ],
     "rules": {
@@ -39,17 +39,17 @@
       "blockedCategories": ["spirits"],
       "prominenceCap": 0.25,
       "requireApproval": false,
-      "sceneMood": ["rainy", "introspective", "urban night", "neon lights", "cyberpunk"]
+      "sceneMood": ["rainy", "introspective", "urban night", "expressway", "neon"]
     },
     "createdAt": "2026-10-25T10:00:00Z",
-    "updatedAt": "2026-10-31T08:00:00Z"
+    "updatedAt": "2026-11-01T17:35:00Z"
   },
   {
     "id": "proj-coastal-cafe",
     "name": "Bay Area Sunrise Walk",
     "filmTitle": "Pacific Waves (Short)",
-    "videoUrl": "/media/demo-scene.mp4",
-    "durationSec": 12,
+    "videoUrl": "/media/cinematic-film.mp4",
+    "durationSec": 20,
     "status": "review",
     "zones": [
       {
@@ -62,7 +62,7 @@
           { "x": 0.16, "y": 0.67 }
         ],
         "startSec": 1.0,
-        "endSec": 10.0,
+        "endSec": 18.0,
         "frameShare": 0.08
       }
     ],
@@ -74,13 +74,13 @@
       "sceneMood": ["sunlit", "morning", "serene", "nature", "warm"]
     },
     "createdAt": "2026-10-26T14:30:00Z",
-    "updatedAt": "2026-10-30T16:45:00Z"
+    "updatedAt": "2026-11-01T17:35:00Z"
   },
   {
     "id": "proj-milan-galleria",
     "name": "Galleria Architecture",
     "filmTitle": "Symphony in Stone",
-    "videoUrl": "/media/demo-scene.mp4",
+    "videoUrl": "/media/cinematic-film.mp4",
     "durationSec": 20,
     "status": "draft",
     "zones": [
@@ -106,6 +106,6 @@
       "sceneMood": ["classical", "architectural", "luxurious", "historic"]
     },
     "createdAt": "2026-10-28T09:15:00Z",
-    "updatedAt": "2026-10-29T11:20:00Z"
+    "updatedAt": "2026-11-01T17:35:00Z"
   }
 ]
