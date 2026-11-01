@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getQlooClient } from "@/lib/qloo/client";
 import { runDecisionPipeline } from "@/lib/decide";
+import { buildTasteProfile } from "@/lib/ads/taste-profile";
+import { mapTasteToStyle } from "@/lib/ads/taste-to-style";
 import campaignsJson from "@/data/campaigns.json";
 import viewersJson from "@/data/viewers.json";
 import projectsJson from "@/data/projects.json";
@@ -57,6 +59,41 @@ const MCP_TOOLS = [
         prominenceCap: { type: "number", default: 0.35 },
       },
       required: ["viewerId"],
+    },
+  },
+  {
+    name: "ads_taste_profile",
+    description: "Build a Qloo taste profile for a cohort of viewers based on cultural anchors and geography (read-only)",
+    inputSchema: {
+      type: "object",
+      properties: {
+        city: { type: "string", description: "Target city (e.g. Tokyo, New York)" },
+        country: { type: "string", description: "Target country" },
+        language: { type: "string", description: "Target language (e.g. ja, en, te, kn, fr)" },
+        ageBand: { type: "string", description: "Age band (e.g. 21-30, 25-34)" },
+        anchors: { type: "array", items: { type: "string" }, description: "3 to 5 cultural anchors (artists, films, places)" },
+        goal: { type: "string", enum: ["awareness", "traffic", "sales"], default: "awareness" },
+      },
+      required: ["city", "country", "anchors"],
+    },
+  },
+  {
+    name: "ads_generate_variants",
+    description: "Generate Qloo-informed ad style variants (palette, layout, motif, typeStyle) and tone reasons for a brand brief and cohort (read-only)",
+    inputSchema: {
+      type: "object",
+      properties: {
+        brandName: { type: "string", description: "Brand name" },
+        product: { type: "string", description: "Product name" },
+        category: { type: "string", description: "Product category" },
+        goal: { type: "string", enum: ["awareness", "traffic", "sales"], default: "awareness" },
+        city: { type: "string", description: "Target city" },
+        country: { type: "string", description: "Target country" },
+        language: { type: "string", description: "Target language" },
+        ageBand: { type: "string", description: "Age range" },
+        anchors: { type: "array", items: { type: "string" }, description: "3 to 5 taste anchors" },
+      },
+      required: ["brandName", "product", "category", "city", "country", "anchors"],
     },
   },
 ];
@@ -147,6 +184,44 @@ export async function POST(req: NextRequest) {
           jsonrpc: "2.0",
           id,
           result: { content: [{ type: "text", text: JSON.stringify(decision) }] },
+        });
+      }
+
+      if (toolName === "ads_taste_profile") {
+        const cohort = {
+          city: String(args.city || "Tokyo"),
+          country: String(args.country || "Japan"),
+          language: String(args.language || "ja"),
+          ageBand: String(args.ageBand || "25-34"),
+          anchors: Array.isArray(args.anchors) ? args.anchors : ["Ryuichi Sakamoto", "Haruki Murakami", "Daikanyama T-Site"],
+          goal: (args.goal === "sales" || args.goal === "traffic" ? args.goal : "awareness") as "awareness" | "traffic" | "sales",
+        };
+        const profile = await buildTasteProfile(cohort, { client: qloo });
+        return NextResponse.json({
+          jsonrpc: "2.0",
+          id,
+          result: { content: [{ type: "text", text: JSON.stringify(profile) }] },
+        });
+      }
+
+      if (toolName === "ads_generate_variants") {
+        const cohort = {
+          city: String(args.city || "Tokyo"),
+          country: String(args.country || "Japan"),
+          language: String(args.language || "ja"),
+          ageBand: String(args.ageBand || "25-34"),
+          anchors: Array.isArray(args.anchors) ? args.anchors : ["Ryuichi Sakamoto", "Haruki Murakami", "Daikanyama T-Site"],
+          goal: (args.goal === "sales" || args.goal === "traffic" ? args.goal : "awareness") as "awareness" | "traffic" | "sales",
+        };
+        const profile = await buildTasteProfile(cohort, {
+          client: qloo,
+          keywords: [String(args.category || ""), String(args.product || "")],
+        });
+        const styles = mapTasteToStyle(profile, `cohort-${cohort.city.toLowerCase()}`);
+        return NextResponse.json({
+          jsonrpc: "2.0",
+          id,
+          result: { content: [{ type: "text", text: JSON.stringify({ tasteProfile: profile, variants: styles }) }] },
         });
       }
 
