@@ -114,7 +114,7 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
   const insightsRes = await qlooClient.brandInsights({
     entityIds: resolvedEntityIds,
     tagIds: resolvedTagIds,
-    locationQuery: viewer.city,
+    locationQuery: viewer.country || viewer.city,
     take: 50,
   });
 

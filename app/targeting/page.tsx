@@ -141,7 +141,7 @@ export default function TargetingPage() {
           >
             {viewers.map((v) => (
               <option key={v.id} value={v.id}>
-                {v.name} ({v.city}, {v.country})
+                {v.name} ({v.country})
               </option>
             ))}
           </select>

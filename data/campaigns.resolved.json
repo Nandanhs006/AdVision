@@ -1,5 +1,160 @@
 [
   {
+    "id": "camp-repbull-energy",
+    "brandName": "RepBull Energy",
+    "category": "beverage",
+    "qlooEntityId": "urn:entity:brand:repbull_energy",
+    "tags": [
+      "energy drink",
+      "extreme sports",
+      "formula 1",
+      "action",
+      "stamina",
+      "racing"
+    ],
+    "countries": [
+      "United States",
+      "Japan",
+      "India",
+      "United Kingdom",
+      "France"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "te",
+      "kn",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
+    "headline": {
+      "en": "Gives You Wings. Limitless Energy.",
+      "ja": "翼をさずける、限界なき覚醒エナジー",
+      "te": "అపరిమిత శక్తి, దూసుకుపోయే ఉత్సాహం",
+      "kn": "ಅಪರಿಮಿತ ಶಕ್ತಿ, ಮುನ್ನುಗ್ಗುವ ಉತ್ಸಾಹ",
+      "fr": "Donne des ailes. Énergie pure."
+    },
+    "cta": {
+      "en": "Fuel Up",
+      "ja": "チャージする",
+      "te": "శక్తిని పొందండి",
+      "kn": "ಶಕ್ತಿ ಪಡೆಯಿರಿ",
+      "fr": "Faire le plein"
+    },
+    "palette": {
+      "bg": "#001a30",
+      "fg": "#ffffff",
+      "accent": "#db0a40"
+    },
+    "publicService": false
+  },
+  {
+    "id": "camp-sony-alpha",
+    "brandName": "Sony Alpha Optics",
+    "category": "electronics",
+    "qlooEntityId": "urn:entity:brand:sony_alpha",
+    "tags": [
+      "camera",
+      "photography",
+      "mirrorless",
+      "optics",
+      "cinematography",
+      "full-frame"
+    ],
+    "countries": [
+      "Japan",
+      "United States",
+      "India",
+      "France",
+      "United Kingdom"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "te",
+      "kn",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
+    "headline": {
+      "en": "Capture the Unseen. Pure Full-Frame Precision.",
+      "ja": "一瞬を永遠に。最先端αフルサイズ超解像",
+      "te": "అద్భుతమైన ఫుల్‌ఫ్రేమ్ కెమెరా స్పష్టత",
+      "kn": "ಅತ್ಯದ್ಭುತ ಫುಲ್‌ಫ್ರೇಮ್ ಕ್ಯಾಮೆರಾ ನಿಖರತೆ",
+      "fr": "Capturez l'invisible. Plein format Alpha."
+    },
+    "cta": {
+      "en": "Explore Alpha",
+      "ja": "詳細を見る",
+      "te": "వివరాలు చూడండి",
+      "kn": "ವಿವರ ನೋಡಿ",
+      "fr": "Découvrir Alpha"
+    },
+    "palette": {
+      "bg": "#0c0c0e",
+      "fg": "#f8f8f8",
+      "accent": "#ff6600"
+    },
+    "publicService": false
+  },
+  {
+    "id": "camp-mrf-tyres",
+    "brandName": "MRF ZLX Tyres",
+    "category": "automotive",
+    "qlooEntityId": "urn:entity:brand:mrf_tyres",
+    "tags": [
+      "automotive",
+      "tyres",
+      "racing",
+      "highways",
+      "cricket",
+      "performance"
+    ],
+    "countries": [
+      "India",
+      "United States",
+      "United Kingdom",
+      "Japan"
+    ],
+    "languages": [
+      "en",
+      "te",
+      "kn",
+      "ja",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
+    "headline": {
+      "en": "Pace, Grip & Endless Highways.",
+      "te": "అసాధారణ పట్టు, అసమానమైన ప్రయాణ వేగం.",
+      "kn": "ಅತ್ಯುತ್ತಮ ರಸ್ತೆ ಹಿಡಿತ, ರಾಜಮಾರ್ಗದ ಸವಾರಿ.",
+      "ja": "極限のグリップ力、遥かなる走破性。",
+      "fr": "Adhérence ultime pour longues routes."
+    },
+    "cta": {
+      "en": "Find Dealer",
+      "te": "డీలర్‌ను కనుగొనండి",
+      "kn": "ಡೀಲರ್ ಅನ್ನು ಹುಡುಕಿ",
+      "ja": "取扱店を探す",
+      "fr": "Trouver un centre"
+    },
+    "palette": {
+      "bg": "#150406",
+      "fg": "#ffffff",
+      "accent": "#d3112a"
+    },
+    "publicService": false
+  },
+  {
     "id": "camp-kissa-coffee",
     "brandName": "Kissa Craft Roasters",
     "category": "coffee",
@@ -475,7 +630,7 @@
     "cta": {
       "en": "Drive Safe",
       "ja": "安全運転を推進",
-      "te": "సురక్షితంగా డ్రైవ్ చేయండి",
+      "te": "సురక్షితంగా డ್ರైవ్ చేయండి",
       "kn": "ಸುರಕ್ಷಿತವಾಗಿ ಚಲಿಸಿ",
       "fr": "Conduire prudemment"
     },

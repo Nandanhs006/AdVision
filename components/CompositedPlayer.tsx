@@ -143,7 +143,7 @@ export function CompositedPlayer({
                       : "bg-adv-sidebar border-adv-border text-adv-secondary hover:text-adv-text"
                   }`}
                 >
-                  {v.name} ({v.city})
+                  {v.name} ({v.country})
                 </button>
               );
             })}

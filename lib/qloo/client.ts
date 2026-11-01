@@ -564,16 +564,44 @@ export class QlooClient {
   private getSearchFixture(query: string, types?: string[], take = 5): QlooSearchResponse {
     const qLower = query.toLowerCase();
     const mockEntities: Record<string, { id: string; name: string; type: string }> = {
+      // US - RepBull / Extreme Sports / Gaming / Racing
+      "repbull": { id: "urn:entity:brand:repbull_energy", name: "RepBull Energy", type: "urn:entity:brand" },
+      "repbull energy": { id: "urn:entity:brand:repbull_energy", name: "RepBull Energy", type: "urn:entity:brand" },
+      "red bull": { id: "urn:entity:brand:repbull_energy", name: "RepBull Energy", type: "urn:entity:brand" },
+      "formula 1": { id: "urn:entity:generic:formula_1", name: "Formula 1", type: "urn:entity:genre" },
+      "extreme sports": { id: "urn:entity:generic:extreme_sports", name: "Extreme Sports", type: "urn:entity:genre" },
+      "gaming": { id: "urn:entity:generic:gaming", name: "Gaming", type: "urn:entity:genre" },
+      "skateboarding": { id: "urn:entity:generic:skateboarding", name: "Skateboarding", type: "urn:entity:genre" },
+      "action cinema": { id: "urn:entity:genre:action_cinema", name: "Action Cinema", type: "urn:entity:genre" },
+
+      // Japan - Sony Alpha Camera / Photography
+      "sony alpha optics": { id: "urn:entity:brand:sony_alpha", name: "Sony Alpha Optics", type: "urn:entity:brand" },
+      "sony alpha": { id: "urn:entity:brand:sony_alpha", name: "Sony Alpha Optics", type: "urn:entity:brand" },
+      "sony camera": { id: "urn:entity:brand:sony_alpha", name: "Sony Alpha Optics", type: "urn:entity:brand" },
+      "mirrorless cameras": { id: "urn:entity:generic:mirrorless_cameras", name: "Mirrorless Cameras", type: "urn:entity:brand" },
+      "tokyo street photography": { id: "urn:entity:tag:street_photography", name: "Tokyo Street Photography", type: "urn:entity:tag" },
+      "cinematography": { id: "urn:entity:tag:cinematography", name: "Cinematography", type: "urn:entity:tag" },
       "haruki murakami": { id: "urn:entity:person:haruki_murakami", name: "Haruki Murakami", type: "urn:entity:person" },
       "blue bottle coffee": { id: "urn:entity:brand:kissa_coffee", name: "Blue Bottle Coffee", type: "urn:entity:brand" },
       "sony audio": { id: "urn:entity:brand:lumina_audio", name: "Sony Audio", type: "urn:entity:brand" },
       "uniqlo": { id: "urn:entity:brand:solstice_atelier", name: "Uniqlo", type: "urn:entity:brand" },
       "studio ghibli": { id: "urn:entity:media:studio_ghibli", name: "Studio Ghibli", type: "urn:entity:media" },
+
+      // India - MRF Tyres / Cricket / Highway Touring
+      "mrf zlx tyres": { id: "urn:entity:brand:mrf_tyres", name: "MRF ZLX Tyres", type: "urn:entity:brand" },
+      "mrf tyres": { id: "urn:entity:brand:mrf_tyres", name: "MRF ZLX Tyres", type: "urn:entity:brand" },
+      "cricket": { id: "urn:entity:sport:cricket", name: "Cricket", type: "urn:entity:genre" },
+      "formula racing": { id: "urn:entity:sport:formula_racing", name: "Formula Racing", type: "urn:entity:genre" },
+      "highway road trips": { id: "urn:entity:tag:road_trips", name: "Highway Road Trips", type: "urn:entity:tag" },
+      "motorcycling": { id: "urn:entity:brand:motorcycling", name: "Motorcycling", type: "urn:entity:brand" },
+      "automotive design": { id: "urn:entity:tag:automotive_design", name: "Automotive Design", type: "urn:entity:tag" },
       "ss rajamouli": { id: "urn:entity:person:ss_rajamouli", name: "S.S. Rajamouli", type: "urn:entity:person" },
       "filter coffee": { id: "urn:entity:brand:malabar_tea", name: "Filter Coffee Traditions", type: "urn:entity:brand" },
       "royal enfield": { id: "urn:entity:brand:royal_enfield", name: "Royal Enfield", type: "urn:entity:brand" },
       "telugu cinema": { id: "urn:entity:genre:telugu_cinema", name: "Telugu Cinema", type: "urn:entity:genre" },
       "chai point": { id: "urn:entity:brand:malabar_tea", name: "Chai Point", type: "urn:entity:brand" },
+
+      // General
       "patagonia": { id: "urn:entity:brand:solstice_atelier", name: "Patagonia", type: "urn:entity:brand" },
       "aeropress": { id: "urn:entity:brand:kissa_coffee", name: "AeroPress Coffee", type: "urn:entity:brand" },
       "science fiction": { id: "urn:entity:genre:sci_fi", name: "Science Fiction", type: "urn:entity:genre" },
@@ -609,11 +637,58 @@ export class QlooClient {
   }): QlooInsightsResponse {
     const loc = (args.locationQuery || "").toLowerCase();
 
-    // Contextual rankings reflecting realistic cultural taste graphs
-    if (loc.includes("tokyo") || loc.includes("japan")) {
+    // 1. United States -> RepBull Energy (0.96)
+    if (loc.includes("united states") || loc.includes("us") || loc.includes("america") || loc.includes("san francisco") || loc.includes("seattle") || loc.includes("new york")) {
       return {
         brands: [
           {
+            id: "urn:entity:brand:repbull_energy",
+            name: "RepBull Energy",
+            affinity: 0.96,
+            category: "beverage",
+            explainability: [
+              { signal: "Formula 1 & extreme sports affinity", contribution: 0.54 },
+              { signal: "Action gaming & high-octane lifestyle index", contribution: 0.42 },
+            ],
+          },
+          {
+            id: "urn:entity:brand:lumina_audio",
+            name: "Lumina Spatial Sound",
+            affinity: 0.88,
+            category: "audio",
+            explainability: [{ signal: "Podcasts & sound realism correlation", contribution: 0.45 }],
+          },
+          {
+            id: "urn:entity:brand:folio_press",
+            name: "Folio & Horizon Press",
+            affinity: 0.82,
+            category: "books",
+            explainability: [{ signal: "Speculative fiction reader index", contribution: 0.40 }],
+          },
+          {
+            id: "urn:entity:brand:solstice_atelier",
+            name: "Atelier Solstice",
+            affinity: 0.78,
+            category: "fashion",
+            explainability: [{ signal: "Outdoor performance apparel", contribution: 0.40 }],
+          },
+          {
+            id: "urn:entity:brand:kissa_coffee",
+            name: "Kissa Craft Roasters",
+            affinity: 0.75,
+            category: "coffee",
+            explainability: [{ signal: "Specialty cold brew affinity", contribution: 0.38 }],
+          },
+        ],
+        source: "fixture",
+      };
+    }
+
+    // 2. Japan -> Sony Alpha Optics (0.96) or Kissa Coffee for Murakami profile
+    if (loc.includes("japan") || loc.includes("tokyo")) {
+      const isMurakami = args.entityIds?.some((e) => e.includes("murakami"));
+      const topBrand = isMurakami
+        ? {
             id: "urn:entity:brand:kissa_coffee",
             name: "Kissa Craft Roasters",
             affinity: 0.94,
@@ -622,25 +697,58 @@ export class QlooClient {
               { signal: "Shibuya specialty coffee affinity", contribution: 0.52 },
               { signal: "Haruki Murakami café culture correlation", contribution: 0.42 },
             ],
-          },
+          }
+        : {
+            id: "urn:entity:brand:sony_alpha",
+            name: "Sony Alpha Optics",
+            affinity: 0.96,
+            category: "electronics",
+            explainability: [
+              { signal: "Full-frame camera & optics enthusiast index", contribution: 0.55 },
+              { signal: "Tokyo street photography correlation", contribution: 0.41 },
+            ],
+          };
+
+      const secondBrand = isMurakami
+        ? {
+            id: "urn:entity:brand:sony_alpha",
+            name: "Sony Alpha Optics",
+            affinity: 0.91,
+            category: "electronics",
+            explainability: [
+              { signal: "Tokyo street photography correlation", contribution: 0.41 },
+            ],
+          }
+        : {
+            id: "urn:entity:brand:kissa_coffee",
+            name: "Kissa Craft Roasters",
+            affinity: 0.89,
+            category: "coffee",
+            explainability: [
+              { signal: "Shibuya specialty coffee culture", contribution: 0.50 },
+            ],
+          };
+
+      return {
+        brands: [
+          topBrand,
+          secondBrand,
           {
             id: "urn:entity:brand:lumina_audio",
             name: "Lumina Spatial Sound",
-            affinity: 0.89,
+            affinity: 0.85,
             category: "audio",
             explainability: [
-              { signal: "Audiophile & Sony headphone overlap", contribution: 0.48 },
-              { signal: "Indie music stream listener index", contribution: 0.41 },
+              { signal: "Audiophile headphone overlap", contribution: 0.44 },
             ],
           },
           {
             id: "urn:entity:brand:folio_press",
             name: "Folio & Horizon Press",
-            affinity: 0.82,
+            affinity: 0.81,
             category: "books",
             explainability: [
-              { signal: "Literary fiction reader index", contribution: 0.55 },
-              { signal: "Print design aesthetic match", contribution: 0.27 },
+              { signal: "Literary fiction reader index", contribution: 0.40 },
             ],
           },
           {
@@ -649,78 +757,53 @@ export class QlooClient {
             affinity: 0.77,
             category: "fashion",
             explainability: [
-              { signal: "Tokyo minimalist wardrobe index", contribution: 0.49 },
+              { signal: "Tokyo minimalist wardrobe index", contribution: 0.40 },
             ],
-          },
-          {
-            id: "urn:entity:brand:cask_peat_spirits",
-            name: "Cask & Peat Distillers",
-            affinity: 0.72,
-            category: "spirits",
-            explainability: [
-              { signal: "Tokyo craft whisky bar patron correlation", contribution: 0.65 },
-            ],
-          },
-          {
-            id: "urn:entity:brand:malabar_tea",
-            name: "Malabar Hill Spiced Tea",
-            affinity: 0.45,
-            category: "tea",
-            explainability: [{ signal: "Exotic botanical tea curiosity", contribution: 0.35 }],
           },
         ],
         source: "fixture",
       };
     }
 
-    if (loc.includes("visakhapatnam") || loc.includes("vizag") || loc.includes("bengaluru") || loc.includes("india")) {
+    // 3. India -> MRF ZLX Tyres (0.95)
+    if (loc.includes("india") || loc.includes("visakhapatnam") || loc.includes("bengaluru") || loc.includes("vizag") || loc.includes("mumbai")) {
       return {
         brands: [
           {
+            id: "urn:entity:brand:mrf_tyres",
+            name: "MRF ZLX Tyres",
+            affinity: 0.95,
+            category: "automotive",
+            explainability: [
+              { signal: "Indian highway endurance & motorsport rally index", contribution: 0.52 },
+              { signal: "Cricket & automotive performance correlation", contribution: 0.43 },
+            ],
+          },
+          {
             id: "urn:entity:brand:malabar_tea",
             name: "Malabar Hill Spiced Tea",
-            affinity: 0.91,
+            affinity: 0.88,
             category: "tea",
             explainability: [
-              { signal: "South Indian filter coffee & tea culture", contribution: 0.58 },
-              { signal: "Festival celebration blend preference", contribution: 0.33 },
+              { signal: "Chai and south Indian filter coffee index", contribution: 0.50 },
             ],
           },
           {
             id: "urn:entity:brand:lumina_audio",
             name: "Lumina Spatial Sound",
-            affinity: 0.84,
+            affinity: 0.78,
             category: "audio",
             explainability: [
-              { signal: "Cinematic film score listener index", contribution: 0.51 },
-              { signal: "Youth tech adopter score", contribution: 0.33 },
+              { signal: "Indian cinema sound design fan index", contribution: 0.42 },
             ],
           },
           {
-            id: "urn:entity:brand:kissa_coffee",
-            name: "Kissa Craft Roasters",
-            affinity: 0.73,
-            category: "coffee",
+            id: "urn:entity:brand:solstice_atelier",
+            name: "Atelier Solstice",
+            affinity: 0.65,
+            category: "fashion",
             explainability: [
-              { signal: "Artisanal coffee roaster adoption", contribution: 0.45 },
-            ],
-          },
-          {
-            id: "urn:entity:brand:folio_press",
-            name: "Folio & Horizon Press",
-            affinity: 0.68,
-            category: "books",
-            explainability: [
-              { signal: "Regional literature and translation reading index", contribution: 0.42 },
-            ],
-          },
-          {
-            id: "urn:entity:brand:cask_peat_spirits",
-            name: "Cask & Peat Distillers",
-            affinity: 0.60,
-            category: "spirits",
-            explainability: [
-              { signal: "Premium nightlife demographic correlation", contribution: 0.44 },
+              { signal: "Contemporary urban wear index", contribution: 0.35 },
             ],
           },
         ],

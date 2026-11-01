@@ -14,13 +14,13 @@ export default function CompareSyncPage() {
   const zone = project.zones[0] as Zone;
   const allViewers = viewersJson as Viewer[];
 
-  // 4 Target Viewers: Tokyo, Visakhapatnam, Kids, Ad-free
-  const viewerTokyo = allViewers.find((v) => v.id === "viewer-tokyo") || allViewers[0];
-  const viewerVizag = allViewers.find((v) => v.id === "viewer-vizag") || allViewers[1];
-  const viewerKids = allViewers.find((v) => v.id === "viewer-kids") || allViewers[5];
-  const viewerAdFree = allViewers.find((v) => v.id === "viewer-adfree") || allViewers[6];
+  // 4 Target Viewers in requested order: US, JAPAN, India, Kids
+  const viewerUS = allViewers.find((v) => v.id === "viewer-us" || (v.country === "United States" && v.adPreference === "normal")) || allViewers[0];
+  const viewerJapan = allViewers.find((v) => v.id === "viewer-japan" || v.country === "Japan") || allViewers[1];
+  const viewerIndia = allViewers.find((v) => v.id === "viewer-india" || v.country === "India") || allViewers[2];
+  const viewerKids = allViewers.find((v) => v.id === "viewer-kids") || allViewers[3];
 
-  const fourViewers = [viewerTokyo, viewerVizag, viewerKids, viewerAdFree];
+  const fourViewers = [viewerUS, viewerJapan, viewerIndia, viewerKids];
 
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const [currentTime, setCurrentTime] = useState<number>(2.0);
@@ -126,7 +126,7 @@ export default function CompareSyncPage() {
                     {v.name}
                   </span>
                   <span className="text-[11px] text-adv-secondary font-mono">
-                    {v.city}, {v.country} ({v.language})
+                    {v.country} ({v.language.toUpperCase()})
                   </span>
                 </div>
 

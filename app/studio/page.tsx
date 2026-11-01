@@ -685,7 +685,7 @@ export default function StudioEditorPage() {
                       {viewer.name}
                     </td>
                     <td className="py-3 px-3 text-adv-secondary font-mono">
-                      {viewer.city}, {viewer.country} ({viewer.language})
+                      {viewer.country} ({viewer.language})
                     </td>
                     <td className="py-3 px-3">
                       {winnerCamp ? (
