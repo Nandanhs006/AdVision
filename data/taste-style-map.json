@@ -1,0 +1,292 @@
+{
+  "rules": [
+    {
+      "id": "rule-ambient",
+      "keywords": ["ambient", "electronic", "sakamoto", "synthesizer", "meditative", "soundtrack"],
+      "palette": { "bg": "#0f172a", "fg": "#f8fafc", "accent": "#38bdf8" },
+      "typeStyle": "geometric-sans",
+      "layout": "minimal-center",
+      "motif": "waves",
+      "tone": ["meditative", "spacious", "subtle"],
+      "energy": 0.25
+    },
+    {
+      "id": "rule-techno",
+      "keywords": ["techno", "industrial", "berlin", "club", "electronic", "modular"],
+      "palette": { "bg": "#09090b", "fg": "#fafafa", "accent": "#22c55e" },
+      "typeStyle": "condensed-bold",
+      "layout": "bold-type",
+      "motif": "grid",
+      "tone": ["hypnotic", "relentless", "industrial"],
+      "energy": 0.88
+    },
+    {
+      "id": "rule-hiphop",
+      "keywords": ["hip-hop", "rap", "tyler", "street", "rhythmic", "beat", "gully", "divine"],
+      "palette": { "bg": "#18181b", "fg": "#fafafa", "accent": "#eab308" },
+      "typeStyle": "condensed-bold",
+      "layout": "split-panel",
+      "motif": "grain",
+      "tone": ["bold", "confident", "rhythmic"],
+      "energy": 0.82
+    },
+    {
+      "id": "rule-indie",
+      "keywords": ["indie", "acoustic", "folk", "lo-fi", "vinyl", "nostalgic", "kuhad"],
+      "palette": { "bg": "#292524", "fg": "#f5f5f4", "accent": "#f97316" },
+      "typeStyle": "editorial-serif",
+      "layout": "collage-grid",
+      "motif": "grain",
+      "tone": ["intimate", "authentic", "nostalgic"],
+      "energy": 0.45
+    },
+    {
+      "id": "rule-classical",
+      "keywords": ["classical", "symphonic", "orchestral", "poetic", "acoustic", "rahman"],
+      "palette": { "bg": "#1c1917", "fg": "#fafaf9", "accent": "#ca8a04" },
+      "typeStyle": "editorial-serif",
+      "layout": "minimal-center",
+      "motif": "circles",
+      "tone": ["timeless", "dignified", "poetic"],
+      "energy": 0.35
+    },
+    {
+      "id": "rule-jazz",
+      "keywords": ["jazz", "sax", "improvisation", "night", "bar", "nujabes"],
+      "palette": { "bg": "#171717", "fg": "#f5f5f5", "accent": "#0284c7" },
+      "typeStyle": "editorial-serif",
+      "layout": "split-panel",
+      "motif": "waves",
+      "tone": ["smooth", "improvisational", "late-night"],
+      "energy": 0.5
+    },
+    {
+      "id": "rule-rock",
+      "keywords": ["rock", "guitar", "punk", "distortion", "energy", "amplified"],
+      "palette": { "bg": "#0a0a0a", "fg": "#ffffff", "accent": "#dc2626" },
+      "typeStyle": "condensed-bold",
+      "layout": "bold-type",
+      "motif": "stripes",
+      "tone": ["raw", "energetic", "amplified"],
+      "energy": 0.9
+    },
+    {
+      "id": "rule-cyberpunk",
+      "keywords": ["cyberpunk", "sci-fi", "neon", "futuristic", "blade", "runner", "tokyo"],
+      "palette": { "bg": "#0b0f19", "fg": "#f1f5f9", "accent": "#06b6d4" },
+      "typeStyle": "geometric-sans",
+      "layout": "bold-type",
+      "motif": "grid",
+      "tone": ["futuristic", "high-tech", "electrified"],
+      "energy": 0.85
+    },
+    {
+      "id": "rule-minimalist",
+      "keywords": ["minimalist", "clean", "japan", "scandinavian", "essential", "clarity", "design"],
+      "palette": { "bg": "#18181b", "fg": "#ffffff", "accent": "#a1a1aa" },
+      "typeStyle": "geometric-sans",
+      "layout": "minimal-center",
+      "motif": "circles",
+      "tone": ["clean", "essential", "clarity"],
+      "energy": 0.3
+    },
+    {
+      "id": "rule-cozy",
+      "keywords": ["cozy", "cafe", "warm", "coffee", "roastery", "autumn", "comfort"],
+      "palette": { "bg": "#27221f", "fg": "#fdfaf6", "accent": "#d97706" },
+      "typeStyle": "rounded",
+      "layout": "collage-grid",
+      "motif": "grain",
+      "tone": ["welcoming", "comforting", "snug"],
+      "energy": 0.38
+    },
+    {
+      "id": "rule-vibrant",
+      "keywords": ["vibrant", "playful", "joy", "color", "pop", "streetwear", "kinetic"],
+      "palette": { "bg": "#1e1b4b", "fg": "#ffffff", "accent": "#ec4899" },
+      "typeStyle": "rounded",
+      "layout": "split-panel",
+      "motif": "circles",
+      "tone": ["playful", "joyful", "kinetic"],
+      "energy": 0.8
+    },
+    {
+      "id": "rule-moody",
+      "keywords": ["moody", "cinematic", "shadow", "film", "murakami", "noir", "atmosphere"],
+      "palette": { "bg": "#121214", "fg": "#e4e4e7", "accent": "#8b5cf6" },
+      "typeStyle": "editorial-serif",
+      "layout": "story-vertical",
+      "motif": "grain",
+      "tone": ["enigmatic", "cinematic", "atmospheric"],
+      "energy": 0.42
+    },
+    {
+      "id": "rule-serene",
+      "keywords": ["serene", "nature", "peace", "cedar", "zen", "shrine", "canopy"],
+      "palette": { "bg": "#0f172a", "fg": "#f8fafc", "accent": "#14b8a6" },
+      "typeStyle": "geometric-sans",
+      "layout": "minimal-center",
+      "motif": "waves",
+      "tone": ["peaceful", "balanced", "refreshing"],
+      "energy": 0.28
+    },
+    {
+      "id": "rule-coffee",
+      "keywords": ["coffee", "roast", "espresso", "brew", "beans", "kissa", "artisanal"],
+      "palette": { "bg": "#1c1512", "fg": "#fbf8f5", "accent": "#c27803" },
+      "typeStyle": "editorial-serif",
+      "layout": "split-panel",
+      "motif": "grain",
+      "tone": ["artisanal", "grounded", "aromatic"],
+      "energy": 0.48
+    },
+    {
+      "id": "rule-tea",
+      "keywords": ["tea", "chai", "botanical", "matcha", "herbal", "malabar", "leaf"],
+      "palette": { "bg": "#141f17", "fg": "#f4f8f4", "accent": "#15803d" },
+      "typeStyle": "editorial-serif",
+      "layout": "minimal-center",
+      "motif": "waves",
+      "tone": ["soothing", "botanical", "rooted"],
+      "energy": 0.32
+    },
+    {
+      "id": "rule-streetfood",
+      "keywords": ["street-food", "food", "spicy", "market", "sizzle", "culinary", "flavor"],
+      "palette": { "bg": "#1f130b", "fg": "#fff7ed", "accent": "#ea580c" },
+      "typeStyle": "condensed-bold",
+      "layout": "bold-type",
+      "motif": "stripes",
+      "tone": ["sizzling", "vibrant", "unfiltered"],
+      "energy": 0.82
+    },
+    {
+      "id": "rule-finedining",
+      "keywords": ["dining", "gastronomy", "gourmet", "restaurant", "chef", "luxury"],
+      "palette": { "bg": "#0f0f10", "fg": "#ffffff", "accent": "#e2b144" },
+      "typeStyle": "editorial-serif",
+      "layout": "minimal-center",
+      "motif": "circles",
+      "tone": ["refined", "meticulous", "elevated"],
+      "energy": 0.4
+    },
+    {
+      "id": "rule-urban",
+      "keywords": ["urban", "city", "skyline", "brooklyn", "architectural", "loft", "subway"],
+      "palette": { "bg": "#111827", "fg": "#f9fafb", "accent": "#3b82f6" },
+      "typeStyle": "geometric-sans",
+      "layout": "bold-type",
+      "motif": "grid",
+      "tone": ["dynamic", "cosmopolitan", "architectural"],
+      "energy": 0.72
+    },
+    {
+      "id": "rule-coastal",
+      "keywords": ["coastal", "beach", "ocean", "surf", "biennale", "kochi", "waterfront"],
+      "palette": { "bg": "#082f49", "fg": "#f0f9ff", "accent": "#0284c7" },
+      "typeStyle": "geometric-sans",
+      "layout": "story-vertical",
+      "motif": "waves",
+      "tone": ["breezy", "sunlit", "expansive"],
+      "energy": 0.52
+    },
+    {
+      "id": "rule-mountain",
+      "keywords": ["mountain", "hiking", "trail", "granite", "peak", "alpine", "altitude"],
+      "palette": { "bg": "#1c1917", "fg": "#f5f5f4", "accent": "#10b981" },
+      "typeStyle": "condensed-bold",
+      "layout": "split-panel",
+      "motif": "stripes",
+      "tone": ["rugged", "elevated", "fresh"],
+      "energy": 0.65
+    },
+    {
+      "id": "rule-streetwear",
+      "keywords": ["streetwear", "sneaker", "drop", "fashion", "apparel", "supreme", "edgy"],
+      "palette": { "bg": "#0a0a0a", "fg": "#ffffff", "accent": "#84cc16" },
+      "typeStyle": "condensed-bold",
+      "layout": "bold-type",
+      "motif": "stripes",
+      "tone": ["edgy", "unapologetic", "drop-ready"],
+      "energy": 0.86
+    },
+    {
+      "id": "rule-vintage",
+      "keywords": ["vintage", "retro", "thrift", "analog", "second-hand", "shimokitazawa"],
+      "palette": { "bg": "#292524", "fg": "#fefce8", "accent": "#b45309" },
+      "typeStyle": "editorial-serif",
+      "layout": "collage-grid",
+      "motif": "grain",
+      "tone": ["timeless", "curated", "analog"],
+      "energy": 0.44
+    },
+    {
+      "id": "rule-luxury",
+      "keywords": ["luxury", "prestige", "exclusive", "couture", "atelier", "solstice", "gold"],
+      "palette": { "bg": "#09090b", "fg": "#fafafa", "accent": "#d4af37" },
+      "typeStyle": "editorial-serif",
+      "layout": "minimal-center",
+      "motif": "circles",
+      "tone": ["exclusive", "prestigious", "understated"],
+      "energy": 0.42
+    },
+    {
+      "id": "rule-adventure",
+      "keywords": ["adventure", "outdoor", "expedition", "extreme", "racing", "speed", "endurance", "mrf"],
+      "palette": { "bg": "#18181b", "fg": "#fafafa", "accent": "#f59e0b" },
+      "typeStyle": "condensed-bold",
+      "layout": "story-vertical",
+      "motif": "stripes",
+      "tone": ["daring", "boundless", "enduring"],
+      "energy": 0.88
+    },
+    {
+      "id": "rule-hiking",
+      "keywords": ["hiking", "wilderness", "forest", "patagonia", "eco", "sustainable"],
+      "palette": { "bg": "#142017", "fg": "#f0fdf4", "accent": "#65a30d" },
+      "typeStyle": "geometric-sans",
+      "layout": "split-panel",
+      "motif": "waves",
+      "tone": ["trail-ready", "exploratory", "natural"],
+      "energy": 0.6
+    },
+    {
+      "id": "rule-skate",
+      "keywords": ["skate", "skateboarding", "asphalt", "kickflip", "bowl", "board"],
+      "palette": { "bg": "#171717", "fg": "#ffffff", "accent": "#f43f5e" },
+      "typeStyle": "condensed-bold",
+      "layout": "bold-type",
+      "motif": "grid",
+      "tone": ["counter-cultural", "kinetic", "raw"],
+      "energy": 0.85
+    },
+    {
+      "id": "rule-pricebadge",
+      "keywords": ["sale", "discount", "price", "value", "deal", "retail", "tyres"],
+      "palette": { "bg": "#030712", "fg": "#ffffff", "accent": "#ef4444" },
+      "typeStyle": "condensed-bold",
+      "layout": "price-badge",
+      "motif": "stripes",
+      "tone": ["direct", "urgent", "value-driven"],
+      "energy": 0.78
+    },
+    {
+      "id": "rule-reading",
+      "keywords": ["book", "reading", "fiction", "novel", "literature", "library", "tsite"],
+      "palette": { "bg": "#1c1917", "fg": "#fdfcfb", "accent": "#6366f1" },
+      "typeStyle": "editorial-serif",
+      "layout": "minimal-center",
+      "motif": "grain",
+      "tone": ["contemplative", "intellectual", "narrative"],
+      "energy": 0.3
+    }
+  ],
+  "default": {
+    "palette": { "bg": "#18181b", "fg": "#fafafa", "accent": "#3b82f6" },
+    "typeStyle": "geometric-sans",
+    "layout": "split-panel",
+    "motif": "grid",
+    "tone": ["balanced", "confident", "modern"],
+    "energy": 0.5
+  }
+}
