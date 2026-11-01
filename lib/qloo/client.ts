@@ -277,36 +277,52 @@ export class QlooClient {
   }
 
   /**
-   * 2. Brand Insights: GET /v2/insights
-   * Retrieves affinity scores for brands based on interest entities, tags, and location
+   * Generic Insights: GET /v2/insights
+   * Retrieves affinity scores for any entity type (artists, movies, places, brands)
    */
-  async brandInsights(args: {
+  async insights(args: {
+    type?: string;
     entityIds?: string[];
     tagIds?: string[];
     locationQuery?: string;
     excludeEntityIds?: string[];
     take?: number;
-  }): Promise<QlooInsightsResponse> {
+  }): Promise<{
+    items: QlooInsightBrandItem[];
+    brands: QlooInsightBrandItem[];
+    source: "qloo" | "fixture";
+  }> {
     const start = performance.now();
-    const take = args.take || 50;
-    const cacheKey = `insights:${args.entityIds?.sort().join(",")}:${args.tagIds?.sort().join(",")}:${args.locationQuery || ""}:${take}`;
-    const cached = this.cache.get<QlooInsightsResponse>(cacheKey);
+    const type = args.type || "brand";
+    const take = args.take || 20;
+    const cacheKey = `insights:${type}:${args.entityIds?.sort().join(",")}:${args.tagIds?.sort().join(",")}:${args.locationQuery || ""}:${take}`;
+    const cached = this.cache.get<{
+      items: QlooInsightBrandItem[];
+      brands: QlooInsightBrandItem[];
+      source: "qloo" | "fixture";
+    }>(cacheKey);
 
     if (cached) {
-      this.recordTrace("/v2/insights", { ...args, take }, 200, performance.now() - start, true);
+      this.recordTrace("/v2/insights", { ...args, type, take }, 200, performance.now() - start, true);
       return cached;
     }
 
     if (this.mode === "fixture") {
-      const fixtureRes = this.getInsightsFixture(args);
-      this.cache.set(cacheKey, fixtureRes);
-      this.recordTrace("/v2/insights", { ...args, take }, 200, performance.now() - start, false);
-      return fixtureRes;
+      const fixtureRes = this.getInsightsFixture({ ...args, type });
+      const res = {
+        items: fixtureRes.brands,
+        brands: fixtureRes.brands,
+        source: fixtureRes.source as "qloo" | "fixture",
+      };
+      this.cache.set(cacheKey, res);
+      this.recordTrace("/v2/insights", { ...args, type, take }, 200, performance.now() - start, false);
+      return res;
     }
 
     try {
+      const filterType = type.startsWith("urn:entity:") ? type : `urn:entity:${type}`;
       const params = new URLSearchParams({
-        "filter.type": "urn:entity:brand",
+        "filter.type": filterType,
         "feature.explainability": "true",
         take: String(take),
       });
@@ -334,22 +350,25 @@ export class QlooClient {
 
       const ms = performance.now() - start;
       if (!res.ok) {
-        this.recordTrace("/v2/insights", { ...args, take }, res.status, ms, false);
-        return this.getInsightsFixture(args);
+        this.recordTrace("/v2/insights", { ...args, type, take }, res.status, ms, false);
+        const fixtureRes = this.getInsightsFixture({ ...args, type });
+        return { items: fixtureRes.brands, brands: fixtureRes.brands, source: "fixture" };
       }
 
       const json = await res.json();
-      const rawBrands = Array.isArray(json)
+      const rawItems = Array.isArray(json)
         ? json
         : Array.isArray(json.brands)
         ? json.brands
+        : Array.isArray(json.items)
+        ? json.items
         : Array.isArray(json.results)
         ? json.results
         : Array.isArray(json.data)
         ? json.data
         : [];
 
-      const brands = rawBrands.map((b: Record<string, unknown>) => {
+      const parsedItems = rawItems.map((b: Record<string, unknown>) => {
         const queryObj = (b.query || {}) as Record<string, unknown>;
         const affinityVal =
           typeof queryObj.affinity === "number"
@@ -360,7 +379,6 @@ export class QlooClient {
             ? b.score
             : 0.5;
 
-        // Parse explainability contributions
         const explainArray = Array.isArray(b.explainability)
           ? b.explainability.map((ex: Record<string, unknown>) => ({
               signal: String(ex.signal || ex.name || "Taste Match"),
@@ -369,27 +387,44 @@ export class QlooClient {
           : undefined;
 
         return {
-          id: String(b.id || b.urn || "urn:entity:brand:unknown"),
-          name: String(b.name || b.title || "Brand"),
+          id: String(b.id || b.urn || `urn:entity:${type}:unknown`),
+          name: String(b.name || b.title || "Entity"),
           affinity: Math.max(0, Math.min(1, affinityVal)),
           explainability: explainArray,
           category: b.category ? String(b.category) : undefined,
         };
       });
 
-      const parsed = QlooInsightsResponseSchema.parse({
-        brands,
-        source: "qloo",
-      });
+      const result = {
+        items: parsedItems,
+        brands: parsedItems,
+        source: "qloo" as const,
+      };
 
-      this.cache.set(cacheKey, parsed);
-      this.recordTrace("/v2/insights", { ...args, take }, 200, ms, false);
-      return parsed;
+      this.cache.set(cacheKey, result);
+      this.recordTrace("/v2/insights", { ...args, type, take }, 200, ms, false);
+      return result;
     } catch {
       const ms = performance.now() - start;
-      this.recordTrace("/v2/insights", { ...args, take }, 500, ms, false);
-      return this.getInsightsFixture(args);
+      this.recordTrace("/v2/insights", { ...args, type, take }, 500, ms, false);
+      const fixtureRes = this.getInsightsFixture({ ...args, type });
+      return { items: fixtureRes.brands, brands: fixtureRes.brands, source: "fixture" };
     }
+  }
+
+  /**
+   * 2. Brand Insights: GET /v2/insights
+   * Retrieves affinity scores for brands based on interest entities, tags, and location
+   */
+  async brandInsights(args: {
+    entityIds?: string[];
+    tagIds?: string[];
+    locationQuery?: string;
+    excludeEntityIds?: string[];
+    take?: number;
+  }): Promise<QlooInsightsResponse> {
+    const res = await this.insights({ ...args, type: "brand" });
+    return { brands: res.brands, source: res.source };
   }
 
   /**
@@ -631,12 +666,110 @@ export class QlooClient {
   }
 
   private getInsightsFixture(args: {
+    type?: string;
     entityIds?: string[];
     tagIds?: string[];
     locationQuery?: string;
   }): QlooInsightsResponse {
     const loc = (args.locationQuery || "").toLowerCase();
+    const type = (args.type || "").toLowerCase();
 
+    // Entity Type: Artist
+    if (type.includes("artist") || type.includes("music")) {
+      if (loc.includes("japan") || loc.includes("tokyo")) {
+        return {
+          brands: [
+            { id: "urn:entity:artist:ryuichi_sakamoto", name: "Ryuichi Sakamoto", affinity: 0.95, category: "music", explainability: [{ signal: "Ambient electronic & neo-classical scoring", contribution: 0.55 }] },
+            { id: "urn:entity:artist:cornelius", name: "Cornelius", affinity: 0.89, category: "music", explainability: [{ signal: "Shibuya-kei audio-visual design", contribution: 0.46 }] },
+            { id: "urn:entity:artist:midori_takada", name: "Midori Takada", affinity: 0.85, category: "music", explainability: [{ signal: "Japanese environmental percussion", contribution: 0.42 }] },
+            { id: "urn:entity:artist:nujabes", name: "Nujabes", affinity: 0.83, category: "music", explainability: [{ signal: "Tokyo lo-fi jazz-hop", contribution: 0.39 }] },
+          ],
+          source: "fixture",
+        };
+      }
+      if (loc.includes("india") || loc.includes("visakhapatnam") || loc.includes("mumbai") || loc.includes("bengaluru")) {
+        return {
+          brands: [
+            { id: "urn:entity:artist:ar_rahman", name: "A.R. Rahman", affinity: 0.96, category: "music", explainability: [{ signal: "Symphonic soundtrack innovation", contribution: 0.56 }] },
+            { id: "urn:entity:artist:divine", name: "Divine", affinity: 0.89, category: "music", explainability: [{ signal: "Gully street rap culture", contribution: 0.47 }] },
+            { id: "urn:entity:artist:prateek_kuhad", name: "Prateek Kuhad", affinity: 0.86, category: "music", explainability: [{ signal: "Acoustic indie folk songwriting", contribution: 0.41 }] },
+          ],
+          source: "fixture",
+        };
+      }
+      return {
+        brands: [
+          { id: "urn:entity:artist:tyler_the_creator", name: "Tyler, The Creator", affinity: 0.95, category: "music", explainability: [{ signal: "Alternative hip-hop & pastel streetwear", contribution: 0.52 }] },
+          { id: "urn:entity:artist:steve_lacy", name: "Steve Lacy", affinity: 0.89, category: "music", explainability: [{ signal: "DIY neo-soul guitar grooves", contribution: 0.45 }] },
+          { id: "urn:entity:artist:lcd_soundsystem", name: "LCD Soundsystem", affinity: 0.85, category: "music", explainability: [{ signal: "Brooklyn dance-punk & modular synth", contribution: 0.40 }] },
+        ],
+        source: "fixture",
+      };
+    }
+
+    // Entity Type: Movie / Film / TV
+    if (type.includes("movie") || type.includes("film") || type.includes("tv")) {
+      if (loc.includes("japan") || loc.includes("tokyo")) {
+        return {
+          brands: [
+            { id: "urn:entity:movie:drive_my_car", name: "Drive My Car", affinity: 0.94, category: "film", explainability: [{ signal: "Haruki Murakami literary adaptation", contribution: 0.56 }] },
+            { id: "urn:entity:movie:lost_in_translation", name: "Lost In Translation", affinity: 0.90, category: "film", explainability: [{ signal: "Tokyo neon atmosphere & quiet drama", contribution: 0.47 }] },
+            { id: "urn:entity:movie:perfect_days", name: "Perfect Days", affinity: 0.88, category: "film", explainability: [{ signal: "Tokyo minimalist aesthetic & cassette culture", contribution: 0.44 }] },
+          ],
+          source: "fixture",
+        };
+      }
+      if (loc.includes("india") || loc.includes("visakhapatnam") || loc.includes("mumbai") || loc.includes("bengaluru")) {
+        return {
+          brands: [
+            { id: "urn:entity:movie:rrr", name: "RRR", affinity: 0.96, category: "film", explainability: [{ signal: "Heroic folklore spectacle & momentum", contribution: 0.57 }] },
+            { id: "urn:entity:movie:gully_boy", name: "Gully Boy", affinity: 0.90, category: "film", explainability: [{ signal: "Street authenticity & youth aspiration", contribution: 0.46 }] },
+          ],
+          source: "fixture",
+        };
+      }
+      return {
+        brands: [
+          { id: "urn:entity:movie:eeao", name: "Everything Everywhere All At Once", affinity: 0.95, category: "film", explainability: [{ signal: "A24 maximalist cinematic storytelling", contribution: 0.54 }] },
+          { id: "urn:entity:movie:past_lives", name: "Past Lives", affinity: 0.91, category: "film", explainability: [{ signal: "Contemporary urban yearning & romance", contribution: 0.48 }] },
+          { id: "urn:entity:movie:severance", name: "Severance", affinity: 0.87, category: "tv", explainability: [{ signal: "Minimalist corporate dystopia", contribution: 0.42 }] },
+        ],
+        source: "fixture",
+      };
+    }
+
+    // Entity Type: Place / Destination
+    if (type.includes("place") || type.includes("travel")) {
+      if (loc.includes("japan") || loc.includes("tokyo")) {
+        return {
+          brands: [
+            { id: "urn:entity:place:daikanyama_tsite", name: "Daikanyama T-Site", affinity: 0.95, category: "place", explainability: [{ signal: "Architectural book palace & artisan cafe", contribution: 0.55 }] },
+            { id: "urn:entity:place:shimokitazawa", name: "Shimokitazawa Vinyl Alley", affinity: 0.91, category: "place", explainability: [{ signal: "Indie record shops & vintage apparel", contribution: 0.48 }] },
+            { id: "urn:entity:place:meiji_forest", name: "Meiji Shrine Canopy", affinity: 0.87, category: "place", explainability: [{ signal: "Mindful cedar sanctuary", contribution: 0.42 }] },
+          ],
+          source: "fixture",
+        };
+      }
+      if (loc.includes("india") || loc.includes("visakhapatnam") || loc.includes("mumbai") || loc.includes("bengaluru")) {
+        return {
+          brands: [
+            { id: "urn:entity:place:fort_kochi", name: "Fort Kochi Biennale", affinity: 0.93, category: "place", explainability: [{ signal: "Historic coastal spice warehouse arts", contribution: 0.52 }] },
+            { id: "urn:entity:place:hauz_khas", name: "Hauz Khas Village", affinity: 0.89, category: "place", explainability: [{ signal: "Heritage ruins & indie design studios", contribution: 0.46 }] },
+          ],
+          source: "fixture",
+        };
+      }
+      return {
+        brands: [
+          { id: "urn:entity:place:dumbo_brooklyn", name: "Dumbo Brooklyn Waterfront", affinity: 0.94, category: "place", explainability: [{ signal: "Cobblestone industrial loft aesthetic", contribution: 0.51 }] },
+          { id: "urn:entity:place:high_line", name: "High Line Chelsea", affinity: 0.90, category: "place", explainability: [{ signal: "Elevated urban park & public sculpture", contribution: 0.46 }] },
+          { id: "urn:entity:place:soho_design", name: "SoHo Design District", affinity: 0.87, category: "place", explainability: [{ signal: "Cast iron facades & artisan retail", contribution: 0.42 }] },
+        ],
+        source: "fixture",
+      };
+    }
+
+    // Default: Brand Insights
     // 1. United States -> RepBull Energy (0.96)
     if (loc.includes("united states") || loc.includes("us") || loc.includes("america") || loc.includes("san francisco") || loc.includes("seattle") || loc.includes("new york")) {
       return {
