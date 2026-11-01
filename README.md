@@ -73,7 +73,7 @@ flowchart TD
 1. **`/` Projects:** High-level metric overview (active films, marked surfaces, global markets, pending approvals) and production projects catalog.
 2. **`/studio` Studio Editor:** Video preview with draggable 4-corner zone handles, trim and mark zone tools, timeline scrubber with zone blocks, editorial rules panel, and live "Who sees what" multi-viewer matrix.
 3. **`/targeting` Qloo Targeting:** Detailed taste-graph inspector showing ranked brands with affinity progress bars, status pills, raw Qloo API trace logs, and 3-step explanation strip.
-4. **`/watch/[id]` Cinema Player:** Interactive video player featuring live persona switching (Tokyo, Vizag, SF, BLR, Paris, Kids, Ad-free), perspective-warped in-scene billboards, pause-to-shop card, and "Why this ad?" drawer.
+4. **`/watch/[id]` Cinema Player:** Interactive video player featuring live persona switching (Tokyo, Vizag, SF, BLR, Paris, Kids, Ad-free), perspective-warped in-scene billboards, scannable QR code pause-to-shop card (click or scan to open checkout in a new window), and "Why this ad?" drawer.
 5. **`/compare` 4-Way Persona Sync:** Side-by-side synchronized viewports demonstrating the core promise: *one scene, four viewers, one story*.
 6. **`/campaigns` Brand Studio:** Campaign builder with instant Qloo entity resolution and live localized canvas poster preview across Japanese, Telugu, Kannada, French, and English.
 7. **`/analytics` Campaign Analytics:** Event telemetry tracking impressions, pause-to-shop inspections, and sponsor click-through rates.

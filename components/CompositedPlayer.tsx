@@ -5,7 +5,8 @@ import { Zone, Viewer, Decision } from "@/lib/schema";
 import { getQuadMatrix3d } from "@/lib/homography";
 import { AdPoster } from "./AdPoster";
 import { ProceduralScene } from "./ProceduralScene";
-import { Play, Pause, RotateCcw, Sparkles, ExternalLink, ShieldCheck, X } from "lucide-react";
+import { QRCodeSVG } from "./QRCodeSVG";
+import { Play, Pause, RotateCcw, Sparkles, ExternalLink, ShieldCheck, X, QrCode } from "lucide-react";
 
 interface CompositedPlayerProps {
   videoUrl?: string;
@@ -89,9 +90,16 @@ export function CompositedPlayer({
     }
   };
 
-  const handleShopClick = async () => {
+  const handleShopClick = async (customUrl?: string) => {
     setClickCount((c) => c + 1);
     if (decision?.winningCampaign) {
+      const targetUrl =
+        customUrl ||
+        `/campaigns?brand=${encodeURIComponent(decision.winningCampaign.brandName)}&viewer=${viewer.id}`;
+
+      // Open in new window immediately
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+
       try {
         await fetch("/api/events", {
           method: "POST",
@@ -219,8 +227,8 @@ export function CompositedPlayer({
 
         {/* Pause-To-Shop Card Overlay */}
         {shopCardVisible && decision?.winningCampaign && (
-          <div className="absolute bottom-16 left-6 right-6 md:left-8 md:w-96 bg-adv-sidebar/95 backdrop-blur-xl border border-adv-border p-4 rounded-xl shadow-2xl z-30 animate-in fade-in slide-in-from-bottom-4">
-            <div className="flex items-start justify-between">
+          <div className="absolute bottom-16 left-4 right-4 md:left-8 md:w-[420px] bg-adv-sidebar/95 backdrop-blur-xl border border-adv-border p-4 rounded-2xl shadow-2xl z-30 animate-in fade-in slide-in-from-bottom-4">
+            <div className="flex items-start justify-between pb-2 border-b border-adv-border/60 mb-3">
               <div>
                 <span className="text-[10px] uppercase font-mono tracking-wider px-2 py-0.5 rounded bg-adv-accent/20 text-adv-accent font-semibold border border-adv-accent/30">
                   Featured In-Scene Sponsor
@@ -231,32 +239,63 @@ export function CompositedPlayer({
               </div>
               <button
                 onClick={() => setShopCardVisible(false)}
-                className="text-adv-secondary hover:text-white"
+                className="text-adv-secondary hover:text-white p-1 rounded-lg hover:bg-adv-surfaceHover transition-colors"
+                title="Close"
               >
                 <X size={16} />
               </button>
             </div>
-            <p className="text-xs text-adv-secondary mt-1.5">
-              {decision.winningCampaign.headline[viewer.language] ||
-                decision.winningCampaign.headline.en}
-            </p>
-            <div className="mt-3 flex items-center gap-2">
+
+            <div className="flex items-center gap-4">
+              {/* Scannable & Clickable QR Code */}
               <button
-                onClick={handleShopClick}
-                className="flex-1 py-2 px-3 rounded-lg text-xs font-bold text-white bg-adv-accent hover:bg-adv-accentHover transition-colors flex items-center justify-center gap-1.5 shadow-md"
+                type="button"
+                onClick={() => handleShopClick()}
+                className="group relative flex-shrink-0 p-2 bg-white rounded-xl shadow-md border border-white/20 hover:scale-105 transition-transform cursor-pointer"
+                title="Scan with phone or click to open in new window"
               >
-                <span>
-                  {decision.winningCampaign.cta[viewer.language] ||
-                    decision.winningCampaign.cta.en ||
-                    "Shop Product"}
-                </span>
-                <ExternalLink size={13} />
+                <QRCodeSVG
+                  value={`https://advision.app/shop/${decision.winningCampaign.id}?viewer=${viewer.id}&city=${viewer.city}`}
+                  size={76}
+                  fgColor="#0a0a0a"
+                  bgColor="#ffffff"
+                />
+                <div className="absolute inset-0 bg-adv-accent/20 rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  <ExternalLink size={16} className="text-white drop-shadow" />
+                </div>
               </button>
-              {clickCount > 0 && (
-                <span className="text-[11px] text-adv-success font-semibold px-2 py-1 rounded bg-adv-successBg">
-                  ✓ Click logged ({clickCount})
-                </span>
-              )}
+
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-adv-secondary leading-snug line-clamp-2">
+                  {decision.winningCampaign.headline[viewer.language] ||
+                    decision.winningCampaign.headline.en}
+                </p>
+
+                <div className="flex items-center gap-1.5 text-[10px] font-mono text-adv-accent mt-1.5">
+                  <QrCode size={12} />
+                  <span>Scan or click QR to open</span>
+                </div>
+
+                <div className="mt-3 flex items-center gap-2">
+                  <button
+                    onClick={() => handleShopClick()}
+                    className="flex-1 py-2 px-3 rounded-xl text-xs font-bold text-white bg-adv-accent hover:bg-adv-accentHover transition-colors flex items-center justify-center gap-1.5 shadow-md"
+                  >
+                    <span>
+                      {decision.winningCampaign.cta[viewer.language] ||
+                        decision.winningCampaign.cta.en ||
+                        "Shop Product"}
+                    </span>
+                    <ExternalLink size={12} />
+                  </button>
+
+                  {clickCount > 0 && (
+                    <span className="text-[10px] text-adv-success font-semibold px-2 py-1 rounded-lg bg-adv-successBg whitespace-nowrap">
+                      ✓ Opened ({clickCount})
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         )}
