@@ -1,0 +1,119 @@
+{
+  "templates": {
+    "en": {
+      "awareness": {
+        "headline": "Crafted For Every Defining Moment",
+        "body": "Experience unmatched quality engineered to elevate your daily routine with effortless precision.",
+        "cta": "Explore More",
+        "caption": "Discover purposeful craftsmanship designed to inspire your everyday. #DesignCraft #ModernLiving #AdvisionStudio #TasteGraph",
+        "altText": "Commercial visual featuring bold geometric typography and brand palette"
+      },
+      "traffic": {
+        "headline": "Step Into Pure Innovation Today",
+        "body": "Explore our curated collection crafted for modern living and creative expression.",
+        "cta": "Visit Collection",
+        "caption": "Your next favorite creative discovery is waiting. Explore the full story today. #NextGen #CreativeLiving #CuratedTaste #Advision",
+        "altText": "Clean promotional graphic highlighting curated collection and link"
+      },
+      "sales": {
+        "headline": "Engineered Performance For The Ambitious",
+        "body": "Premium durability meets thoughtful design. Upgrade your standard without compromise.",
+        "cta": "Shop Now",
+        "caption": "Built to endure, designed to stand out. Discover what sets us apart. #CraftedQuality #PerformanceDesign #ShopNow #Advision",
+        "altText": "High-contrast promotional poster with call to action button"
+      }
+    },
+    "ja": {
+      "awareness": {
+        "headline": "日常を静かに彩る、極上の美意識",
+        "body": "細部まで妥協のない日本のクラフトマンシップが、心地よい時間をお届けします。",
+        "cta": "詳細を見る",
+        "caption": "日常に調和する洗練された美しさを。あなたのスタイルに寄り添う新しい体験をお届けします。 #洗練の美 #日常のこだわり #ライフスタイル #アドビジョン",
+        "altText": "洗練されたミニマルなデザインの広告ポスター"
+      },
+      "traffic": {
+        "headline": "新しい感性と出会う特別な瞬間",
+        "body": "東京のクリエイティビティにインスパイアされた、今注目のコレクションをご案内。",
+        "cta": "今すぐチェック",
+        "caption": "日常を豊かにするデザインと感性を。最新コレクションを今すぐご覧ください。 #感性デザイン #東京スタイル #クリエイティブ #Advision",
+        "altText": "最新コレクションを紹介するプロモーション画像"
+      },
+      "sales": {
+        "headline": "妥協なき品質と、美しい機能美",
+        "body": "長く愛用できる信頼のクオリティ。あなたの毎日に本物の価値を届けます。",
+        "cta": "ご購入はこちら",
+        "caption": "本質を追求するすべての人へ。職人の想いが宿る上質なアイテムをぜひ。 #本物の価値 #上質な暮らし #限定コレクション #Advision",
+        "altText": "商品の品質をアピールするプレミアムポスター"
+      }
+    },
+    "te": {
+      "awareness": {
+        "headline": "మీ జీవితాన్ని మార్చే సరికొత్త అనుభూతి",
+        "body": "అద్భుతమైన పనితీరు మరియు నమ్మకమైన నాణ్యతతో మీ ప్రతి ప్రయాణం ఒక జ్ఞాపకం.",
+        "cta": "మరింత తెలుసుకోండి",
+        "caption": "మీ అభిరుచికి తగిన ఆధునిక నాణ్యత మరియు డిజైన్. ఇప్పుడే చూడండి. #తెలుగు #నాణ్యత #అడ్విజన్ #నూతనఅనుభవం",
+        "altText": "ఆధునిక తెలుగు ప్రకటన పోస్టర్"
+      },
+      "traffic": {
+        "headline": "కొత్త శైలిని ఇప్పుడే ప్రారంభించండి",
+        "body": "శ్రేష్టమైన రూపకల్పన మరియు అగ్రశ్రేణి సాంకేతికతతో మీకు ప్రత్యేక గుర్తింపు.",
+        "cta": "సందర్శించండి",
+        "caption": "మీ జీవితానికి సరికొత్త రూపు ఇవ్వండి. మా కలెక్షన్ చూడండి. #నూతనశైలి #తెలుగుడిజైన్ #అడ్విజన్ #ట్రెండ్స్",
+        "altText": "ప్రత్యేక సేకరణ చూపే ప్రకటన"
+      },
+      "sales": {
+        "headline": "నమ్మకమైన పటిష్టత, రాజీలేని నాణ్యత",
+        "body": "ప్రతి రోడ్డుపై పూర్తి భరోసా. అత్యుత్తమ పనితీరుతో ముందంజ వేయండి.",
+        "cta": "ఇప్పుడే కొనండి",
+        "caption": "దీర్ఘకాలిక మన్నిక మరియు భరోసా. ఈరోజే ఆర్డర్ చేసుకోండి. #భరోసా #శ్రేష్టత #అడ్విజన్ #కొనుగోలు",
+        "altText": "పటిష్టమైన పనితీరును సూచించే ప్రకటన"
+      }
+    },
+    "kn": {
+      "awareness": {
+        "headline": "ನಿಮ್ಮ ದಿನಚರಿಯನ್ನು ಬೆಳಗಿಸುವ ಅದ್ಭುತ ಅನುಭವ",
+        "body": "ಉತ್ತಮ ಗುಣಮಟ್ಟ ಮತ್ತು ಸಾಟಿಯಿಲ್ಲದ ವಿನ್ಯಾಸದೊಂದಿಗೆ ನಿಮ್ಮ ಜೀವನಕ್ಕೆ ಹೊಸ ಚೈತನ್ಯ ನೀಡಿ.",
+        "cta": "ಹೆಚ್ಚು ತಿಳಿಯಿರಿ",
+        "caption": "ಉತ್ತಮ ಶೈಲಿ ಮತ್ತು ವಿಶ್ವಾಸಾರ್ಹತೆಯ ಹೊಸ ಸಂಯೋಜನೆ. #ಕನ್ನಡ #ಗುಣಮಟ್ಟ #ಅಡ್ವಿಷನ್ #ಹೊಸಶೈಲಿ",
+        "altText": "ಆಕರ್ಷಕ ಕನ್ನಡ ಜಾಹೀರಾತು ಪೋಸ್ಟರ್"
+      },
+      "traffic": {
+        "headline": "ಹೊಸ ಆವಿಷ್ಕಾರವನ್ನು ಇಂದೇ ಅನ್ವೇಷಿಸಿ",
+        "body": "ಆಧುನಿಕ ಬದುಕಿಗೆ ಹೇಳಿಮಾಡಿಸಿದ ವಿಶೇಷ ಕಲೆಕ್ಷನ್ ನಿಮ್ಮದಾಗಿಸಿಕೊಳ್ಳಿ.",
+        "cta": "ವೀಕ್ಷಿಸಿ",
+        "caption": "ನಿಮ್ಮ ಅಭಿರುಚಿಗೆ ತಕ್ಕಂತೆ ರೂಪಿಸಿದ ಹೊಸ ಸರಣಿಯನ್ನು ವೀಕ್ಷಿಸಿ. #ಆಧುನಿಕಬದುಕು #ಅನ್ವೇಷಣೆ #ಕನ್ನಡ #Advision",
+        "altText": "ವಿಶೇಷ ವಿನ್ಯಾಸದ ಜಾಹೀರಾತು ಚಿತ್ರ"
+      },
+      "sales": {
+        "headline": "ಬಲವಾದ ಗುಣಮಟ್ಟ, ವಿಶ್ವಾಸಾರ್ಹ ಕಾರ್ಯಕ್ಷಮತೆ",
+        "body": "ಪ್ರತಿ ಕ್ಷಣದಲ್ಲೂ ಅಚಲ ವಿಶ್ವಾಸ. ನಿಮ್ಮ ನಿರೀಕ್ಷೆಗೆ ಮೀರಿದ ಉತ್ಕೃಷ್ಟತೆ.",
+        "cta": "ಈಗಲೇ ಖರೀದಿಸಿ",
+        "caption": "ನಂಬಿಕಸ್ಥ ಗುಣಮಟ್ಟ ಮತ್ತು ದೀರ್ಘಕಾಲದ ಬಾಳಿಕೆ. ಇಂದೇ ಭೇಟಿ ನೀಡಿ. #ವಿಶ್ವಾಸಾರ್ಹ #ಖರೀದಿ #ಅಡ್ವಿಷನ್ #ಉತ್ಕೃಷ್ಟತೆ",
+        "altText": "ಉತ್ಕೃಷ್ಟ ಗುಣಮಟ್ಟದ ಮಾರಾಟ ಜಾಹೀರಾತು"
+      }
+    },
+    "fr": {
+      "awareness": {
+        "headline": "L'élégance pure pour chaque instant",
+        "body": "Une conception méticuleuse pensée pour sublimer votre quotidien avec grâce et précision.",
+        "cta": "En Savoir Plus",
+        "caption": "Quand l'artisanat rencontre l'exigence contemporaine. Découvrez notre vision créative. #DesignFrançais #ÉléganceModerne #AdvisionStudio #ArtDeVivre",
+        "altText": "Affiche publicitaire minimaliste et élégante avec typographie soignée"
+      },
+      "traffic": {
+        "headline": "Explorez Une Nouvelle Dimension Créative",
+        "body": "Laissez-vous inspirer par notre collection exclusive conçue pour les esprits audacieux.",
+        "cta": "Découvrir",
+        "caption": "Votre prochaine inspiration créative vous attend. Explorez la collection dès aujourd'hui. #NouvelleCollection #StyleContemporain #Advision #Créativité",
+        "altText": "Visuel de promotion mettant en valeur une esthétique contemporaine"
+      },
+      "sales": {
+        "headline": "Performance Absolue et Design Remarquable",
+        "body": "L'alliance parfaite entre matériaux nobles et ingénierie de précision pour durer.",
+        "cta": "Acheter",
+        "caption": "L'excellence sans compromis. Adoptez un standard supérieur dès maintenant. #HautePrécision #QualitéDurable #Boutique #Advision",
+        "altText": "Affiche commerciale premium avec bouton d'appel à l'action"
+      }
+    }
+  }
+}
