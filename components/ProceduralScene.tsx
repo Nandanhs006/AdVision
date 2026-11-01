@@ -16,6 +16,29 @@ interface ProceduralSceneProps {
   isZoneActive?: boolean;
 }
 
+const BRAND_IMAGE_PATHS: Record<string, string> = {
+  repbull: "/brands/repbull.jpg",
+  sony: "/brands/sony.png",
+  mrf: "/brands/mrf.png",
+  coffee: "/brands/coffee.png",
+};
+
+const proceduralImageCache = new Map<string, HTMLImageElement>();
+
+function getProceduralBrandImage(key: string): HTMLImageElement | null {
+  if (typeof window === "undefined") return null;
+  const path = BRAND_IMAGE_PATHS[key];
+  if (!path) return null;
+
+  let img = proceduralImageCache.get(path);
+  if (!img) {
+    img = new Image();
+    img.src = path;
+    proceduralImageCache.set(path, img);
+  }
+  return img;
+}
+
 export function ProceduralScene({
   currentTime,
   duration = 15,
@@ -118,52 +141,68 @@ export function ProceduralScene({
         ctx.fillStyle = glow;
         ctx.fillRect(bx - 40, by - 40, bw + 80, bh + 80);
 
-        // Poster Background Gradient
-        const posterBg = ctx.createLinearGradient(bx, by, bx + bw, by + bh);
-        posterBg.addColorStop(0, palette.bg);
-        posterBg.addColorStop(1, "#080808");
-        ctx.fillStyle = posterBg;
-        ctx.fillRect(bx, by, bw, bh);
-
-        // Neon border frame
-        ctx.strokeStyle = palette.accent;
-        ctx.lineWidth = 3;
-        ctx.strokeRect(bx, by, bw, bh);
-
-        // Brand-specific graphic accents on the billboard
+        // Check for authentic reference image
         const bId = campaign.id.toLowerCase();
-        if (bId.includes("repbull")) {
-          // Golden sun disc & racing silver wedge
-          ctx.fillStyle = "rgba(255, 204, 0, 0.4)";
-          ctx.beginPath();
-          ctx.arc(bx + bw * 0.82, by + bh * 0.45, bh * 0.35, 0, Math.PI * 2);
-          ctx.fill();
+        const bName = campaign.brandName.toLowerCase();
+        let bKey = "";
+        if (bId.includes("repbull") || bName.includes("repbull") || bName.includes("red bull")) bKey = "repbull";
+        else if (bId.includes("sony") || bName.includes("sony")) bKey = "sony";
+        else if (bId.includes("mrf") || bName.includes("mrf")) bKey = "mrf";
+        else if (bId.includes("kissa") || bName.includes("coffee") || bName.includes("nescafe")) bKey = "coffee";
 
-          ctx.fillStyle = "#ffd600";
-          ctx.font = "italic 900 12px sans-serif";
-          ctx.textAlign = "left";
-          ctx.fillText("⚡ GIVES YOU WINGS", bx + 16, by + bh - 50);
-        } else if (bId.includes("sony")) {
-          // Camera aperture glowing ring & Sony α mark
-          ctx.strokeStyle = "#ff6600";
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(bx + bw * 0.82, by + bh * 0.45, bh * 0.28, 0, Math.PI * 2);
-          ctx.stroke();
+        const refImg = bKey ? getProceduralBrandImage(bKey) : null;
+        if (refImg && refImg.complete && refImg.naturalWidth > 0) {
+          ctx.drawImage(refImg, bx, by, bw, bh);
+          ctx.strokeStyle = palette.accent;
+          ctx.lineWidth = 2.5;
+          ctx.strokeRect(bx, by, bw, bh);
+        } else {
+          // Poster Background Gradient Fallback
+          const posterBg = ctx.createLinearGradient(bx, by, bx + bw, by + bh);
+          posterBg.addColorStop(0, palette.bg);
+          posterBg.addColorStop(1, "#080808");
+          ctx.fillStyle = posterBg;
+          ctx.fillRect(bx, by, bw, bh);
 
-          ctx.fillStyle = "#ff6600";
-          ctx.font = "italic 900 24px Georgia, serif";
-          ctx.textAlign = "center";
-          ctx.fillText("α", bx + bw * 0.82, by + bh * 0.45 + 8);
-        } else if (bId.includes("mrf")) {
-          // Racing tyre tread lines & motorsport badge
-          ctx.strokeStyle = "#d3112a";
+          // Neon border frame
+          ctx.strokeStyle = palette.accent;
           ctx.lineWidth = 3;
-          for (let i = 0; i < 4; i++) {
+          ctx.strokeRect(bx, by, bw, bh);
+
+          // Brand-specific graphic accents on the billboard
+          if (bKey === "repbull") {
+            // Golden sun disc & racing silver wedge
+            ctx.fillStyle = "rgba(255, 204, 0, 0.4)";
             ctx.beginPath();
-            ctx.moveTo(bx + bw * 0.72 + i * 8, by + 12);
-            ctx.lineTo(bx + bw * 0.82 + i * 8, by + bh * 0.7);
+            ctx.arc(bx + bw * 0.82, by + bh * 0.45, bh * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = "#ffd600";
+            ctx.font = "italic 900 12px sans-serif";
+            ctx.textAlign = "left";
+            ctx.fillText("⚡ GIVES YOU WINGS", bx + 16, by + bh - 50);
+          } else if (bKey === "sony") {
+            // Camera aperture glowing ring & Sony α mark
+            ctx.strokeStyle = "#ff6600";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(bx + bw * 0.82, by + bh * 0.45, bh * 0.28, 0, Math.PI * 2);
             ctx.stroke();
+
+            ctx.fillStyle = "#ff6600";
+            ctx.font = "italic 900 24px Georgia, serif";
+            ctx.textAlign = "center";
+            ctx.fillText("α", bx + bw * 0.82, by + bh * 0.45 + 8);
+          } else if (bKey === "mrf") {
+            // Racing tyre tread lines & motorsport badge
+            ctx.strokeStyle = "#d3112a";
+            ctx.lineWidth = 3;
+            for (let i = 0; i < 4; i++) {
+              ctx.beginPath();
+              ctx.moveTo(bx + bw * 0.72 + i * 8, by + 12);
+              ctx.lineTo(bx + bw * 0.82 + i * 8, by + bh * 0.7);
+              ctx.stroke();
+            }
           }
         }
 

@@ -1,4 +1,6 @@
-import { createCanvas, Canvas, SKRSContext2D } from "@napi-rs/canvas";
+import { createCanvas, Canvas, SKRSContext2D, Image } from "@napi-rs/canvas";
+import fs from "fs";
+import path from "path";
 import { StyleSpec, AdCopy, AdAspect } from "../schema";
 
 export interface RenderDimensions {
@@ -44,6 +46,39 @@ function getFontFamily(typeStyle: string): string {
     default:
       return "'Helvetica Neue', 'Arial', 'Noto Sans', sans-serif";
   }
+}
+
+const brandImageMemCache = new Map<string, Image>();
+
+function getBrandImage(brandName: string): Image | null {
+  const bn = brandName.toLowerCase();
+  let relPath = "";
+  if (bn.includes("repbull") || bn.includes("red bull")) {
+    relPath = "public/brands/repbull.jpg";
+  } else if (bn.includes("sony")) {
+    relPath = "public/brands/sony.png";
+  } else if (bn.includes("mrf")) {
+    relPath = "public/brands/mrf.png";
+  } else if (bn.includes("coffee") || bn.includes("kissa") || bn.includes("nescafe")) {
+    relPath = "public/brands/coffee.png";
+  }
+
+  if (!relPath) return null;
+  const cached = brandImageMemCache.get(relPath);
+  if (cached) return cached;
+
+  try {
+    const fullPath = path.resolve(process.cwd(), relPath);
+    if (fs.existsSync(fullPath)) {
+      const img = new Image();
+      img.src = fs.readFileSync(fullPath);
+      brandImageMemCache.set(relPath, img);
+      return img;
+    }
+  } catch {
+    return null;
+  }
+  return null;
 }
 
 export interface TextFitResult {
@@ -280,14 +315,25 @@ export function renderCreativeToCanvas(params: {
   ctx.fillStyle = palette.bg;
   ctx.fillRect(0, 0, dim.width, dim.height);
 
+  const heroBrandImg = getBrandImage(brandName);
+
   // 2. Layout Archetype Specific Base Background Structure
   if (layout === "split-panel") {
     // 50/50 vertical or horizontal split
     const splitY = dim.height * 0.48;
-    ctx.fillStyle = palette.accent;
-    ctx.globalAlpha = 0.14;
-    ctx.fillRect(0, 0, dim.width, splitY);
-    ctx.globalAlpha = 1.0;
+    if (heroBrandImg) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, 0, dim.width, splitY);
+      ctx.clip();
+      ctx.drawImage(heroBrandImg, 0, 0, dim.width, splitY);
+      ctx.restore();
+    } else {
+      ctx.fillStyle = palette.accent;
+      ctx.globalAlpha = 0.14;
+      ctx.fillRect(0, 0, dim.width, splitY);
+      ctx.globalAlpha = 1.0;
+    }
 
     ctx.strokeStyle = palette.accent;
     ctx.lineWidth = 3;
@@ -297,12 +343,26 @@ export function renderCreativeToCanvas(params: {
     ctx.stroke();
   } else if (layout === "bold-type") {
     // High-impact accent band
+    if (heroBrandImg) {
+      ctx.save();
+      ctx.globalAlpha = 0.25;
+      ctx.drawImage(heroBrandImg, 0, 0, dim.width, dim.height);
+      ctx.restore();
+    }
     ctx.fillStyle = palette.accent;
     ctx.globalAlpha = 0.12;
     ctx.fillRect(0, dim.height * 0.15, dim.width, dim.height * 0.5);
     ctx.globalAlpha = 1.0;
   } else if (layout === "collage-grid") {
     // Modular quadrants
+    if (heroBrandImg) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(60, 60, dim.width * 0.5 - 60, dim.height * 0.55 - 60);
+      ctx.clip();
+      ctx.drawImage(heroBrandImg, 60, 60, dim.width * 0.5 - 60, dim.height * 0.55 - 60);
+      ctx.restore();
+    }
     ctx.strokeStyle = palette.accent;
     ctx.globalAlpha = 0.15;
     ctx.lineWidth = 2;
@@ -314,6 +374,12 @@ export function renderCreativeToCanvas(params: {
     ctx.lineTo(dim.width - 60, dim.height * 0.55);
     ctx.stroke();
     ctx.globalAlpha = 1.0;
+  } else if (heroBrandImg) {
+    // Elegant background motif glow
+    ctx.save();
+    ctx.globalAlpha = 0.18;
+    ctx.drawImage(heroBrandImg, dim.width * 0.5, dim.height * 0.05, dim.width * 0.45, dim.height * 0.35);
+    ctx.restore();
   }
 
   // 3. Draw Brand Motifs & Accents

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Campaign } from "@/lib/schema";
 
 interface AdPosterProps {
@@ -13,6 +13,30 @@ interface AdPosterProps {
   className?: string;
 }
 
+const BRAND_IMAGE_PATHS: Record<string, string> = {
+  repbull: "/brands/repbull.jpg",
+  sony: "/brands/sony.png",
+  mrf: "/brands/mrf.png",
+  coffee: "/brands/coffee.png",
+};
+
+const clientImageCache = new Map<string, HTMLImageElement>();
+
+function getClientBrandImage(key: string, onLoaded: () => void): HTMLImageElement | null {
+  if (typeof window === "undefined") return null;
+  const path = BRAND_IMAGE_PATHS[key];
+  if (!path) return null;
+
+  let img = clientImageCache.get(path);
+  if (!img) {
+    img = new Image();
+    img.src = path;
+    img.onload = () => onLoaded();
+    clientImageCache.set(path, img);
+  }
+  return img;
+}
+
 export function AdPoster({
   campaign,
   language = "en",
@@ -23,6 +47,7 @@ export function AdPoster({
   className = "",
 }: AdPosterProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [, setLoadTick] = useState(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -75,13 +100,35 @@ export function AdPoster({
     const textHeadline = campaign.headline[langKey] || Object.values(campaign.headline)[0] || campaign.brandName;
     const textCta = campaign.cta[langKey] || Object.values(campaign.cta)[0] || "Shop Now";
 
+    let brandKey = "";
     if (brandId.includes("repbull") || brandName.includes("repbull") || brandName.includes("red bull")) {
-      renderRepBullEnergy(ctx, w, h, textHeadline, textCta, langKey);
+      brandKey = "repbull";
     } else if (brandId.includes("sony") || brandName.includes("sony")) {
-      renderSonyAlpha(ctx, w, h, textHeadline, textCta, langKey);
+      brandKey = "sony";
     } else if (brandId.includes("mrf") || brandName.includes("mrf")) {
+      brandKey = "mrf";
+    } else if (brandId.includes("kissa") || brandName.includes("kissa") || brandName.includes("coffee") || brandName.includes("nescafe")) {
+      brandKey = "coffee";
+    }
+
+    // If authentic reference image is available and loaded, draw it directly
+    if (brandKey) {
+      const refImg = getClientBrandImage(brandKey, () => setLoadTick((t) => t + 1));
+      if (refImg && refImg.complete && refImg.naturalWidth > 0) {
+        ctx.drawImage(refImg, 0, 0, w, h);
+        renderBillboardDOOHOverlay(ctx, w, h);
+        ctx.restore();
+        return;
+      }
+    }
+
+    if (brandKey === "repbull") {
+      renderRepBullEnergy(ctx, w, h, textHeadline, textCta, langKey);
+    } else if (brandKey === "sony") {
+      renderSonyAlpha(ctx, w, h, textHeadline, textCta, langKey);
+    } else if (brandKey === "mrf") {
       renderMRFTyres(ctx, w, h, textHeadline, textCta, langKey);
-    } else if (brandId.includes("kissa") || brandName.includes("kissa")) {
+    } else if (brandKey === "coffee") {
       renderKissaCoffee(ctx, w, h, textHeadline, textCta);
     } else if (brandId.includes("lumina") || brandName.includes("lumina")) {
       renderLuminaAudio(ctx, w, h, textHeadline, textCta);
