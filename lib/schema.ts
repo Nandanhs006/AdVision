@@ -254,8 +254,8 @@ export const AdCreativeSchema = z.object({
   style: StyleSpecSchema,
   copy: AdCopySchema,
   imageUrl: z.string(),
-  trace: z.array(QlooTraceEntrySchema).default([]),
-  styleReasons: z.array(z.string()).default([]),
+  trace: z.array(QlooTraceEntrySchema).optional().default([]),
+  styleReasons: z.array(z.string()).optional().default([]),
   status: AdCreativeStatusSchema.default("draft"),
   createdAt: z.string(),
 });
