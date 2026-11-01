@@ -63,6 +63,9 @@ export const CampaignSchema = z.object({
   cta: z.record(z.string()),
   palette: PaletteSchema,
   publicService: z.boolean().default(false),
+  // Part 2 additions
+  adCreativeIds: z.array(z.string()).optional(),
+  createdInAdStudio: z.boolean().optional(),
 });
 export type Campaign = z.infer<typeof CampaignSchema>;
 
@@ -132,3 +135,164 @@ export const EventLogSchema = z.object({
   timestamp: z.string(),
 });
 export type EventLog = z.infer<typeof EventLogSchema>;
+
+// ==========================================
+// Part 2: Ad Studio Schemas
+// ==========================================
+
+export const CohortSchema = z.object({
+  id: z.string().optional(),
+  city: z.string().min(1),
+  country: z.string().min(1),
+  language: z.string().min(2),
+  ageBand: z.string().min(1),
+  anchors: z.array(z.string()).min(3).max(5), // 3 to 5 free-text favorites
+  goal: z.enum(["awareness", "traffic", "sales"]),
+});
+export type Cohort = z.infer<typeof CohortSchema>;
+
+export const BriefSchema = z.object({
+  brandName: z.string().min(1),
+  product: z.string().min(1),
+  category: z.string().min(1),
+  goal: z.enum(["awareness", "traffic", "sales"]),
+  languages: z.array(z.string()).default(["en"]),
+  paletteOverride: PaletteSchema.optional(),
+  price: z.string().optional(),
+});
+export type Brief = z.infer<typeof BriefSchema>;
+
+export const TasteTagSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  weight: z.number(),
+});
+export type TasteTag = z.infer<typeof TasteTagSchema>;
+
+export const TasteEntitySchema = z.object({
+  type: z.string(),
+  name: z.string(),
+  affinity: z.number(),
+});
+export type TasteEntity = z.infer<typeof TasteEntitySchema>;
+
+export const TasteProfileSchema = z.object({
+  topTags: z.array(TasteTagSchema),
+  topEntities: z.array(TasteEntitySchema),
+  traces: z.array(QlooTraceEntrySchema),
+  source: z.enum(["qloo", "fixture", "fallback"]),
+});
+export type TasteProfile = z.infer<typeof TasteProfileSchema>;
+
+export const TypeStyleSchema = z.enum([
+  "geometric-sans",
+  "editorial-serif",
+  "rounded",
+  "condensed-bold",
+]);
+export type TypeStyle = z.infer<typeof TypeStyleSchema>;
+
+export const LayoutArchetypeSchema = z.enum([
+  "minimal-center",
+  "bold-type",
+  "split-panel",
+  "collage-grid",
+  "story-vertical",
+  "price-badge",
+]);
+export type LayoutArchetype = z.infer<typeof LayoutArchetypeSchema>;
+
+export const MotifSchema = z.enum([
+  "circles",
+  "grain",
+  "stripes",
+  "waves",
+  "grid",
+]);
+export type Motif = z.infer<typeof MotifSchema>;
+
+export const StyleSpecSchema = z.object({
+  palette: PaletteSchema,
+  typeStyle: TypeStyleSchema,
+  layout: LayoutArchetypeSchema,
+  motif: MotifSchema,
+  tone: z.array(z.string()),
+  energy: z.number().min(0).max(1),
+});
+export type StyleSpec = z.infer<typeof StyleSpecSchema>;
+
+export const AdCopySchema = z.object({
+  headline: z.string(), // <= 7 words
+  body: z.string(),     // <= 125 chars
+  cta: z.string(),      // <= 3 words
+  caption: z.string(),  // <= 300 chars, with 3 to 5 hashtags
+  altText: z.string(),
+});
+export type AdCopy = z.infer<typeof AdCopySchema>;
+
+export const AdAspectSchema = z.enum(["1:1", "4:5", "9:16"]);
+export type AdAspect = z.infer<typeof AdAspectSchema>;
+
+export const AdVariantSchema = z.enum(["primary", "contrast", "safe"]);
+export type AdVariant = z.infer<typeof AdVariantSchema>;
+
+export const AdCreativeStatusSchema = z.enum([
+  "draft",
+  "approved",
+  "published",
+  "simulated",
+  "failed",
+]);
+export type AdCreativeStatus = z.infer<typeof AdCreativeStatusSchema>;
+
+export const AdCreativeSchema = z.object({
+  id: z.string(),
+  campaignId: z.string(),
+  cohortId: z.string(),
+  variant: AdVariantSchema,
+  aspect: AdAspectSchema,
+  style: StyleSpecSchema,
+  copy: AdCopySchema,
+  imageUrl: z.string(),
+  trace: z.array(QlooTraceEntrySchema).default([]),
+  styleReasons: z.array(z.string()).default([]),
+  status: AdCreativeStatusSchema.default("draft"),
+  createdAt: z.string(),
+});
+export type AdCreative = z.infer<typeof AdCreativeSchema>;
+
+export const ConnectionSchema = z.object({
+  id: z.string(),
+  provider: z.enum(["instagram", "facebook"]),
+  mode: z.enum(["live", "simulated"]),
+  displayName: z.string(),
+  externalId: z.string(),
+  scopes: z.array(z.string()),
+  tokenEnc: z.string(), // AES-256-GCM encrypted
+  expiresAt: z.string().optional(),
+  createdAt: z.string(),
+});
+export type Connection = z.infer<typeof ConnectionSchema>;
+
+export const PublishJobStatusSchema = z.enum([
+  "queued",
+  "container_created",
+  "published",
+  "simulated",
+  "failed",
+]);
+export type PublishJobStatus = z.infer<typeof PublishJobStatusSchema>;
+
+export const PublishJobSchema = z.object({
+  id: z.string(),
+  creativeId: z.string(),
+  connectionId: z.string(),
+  provider: z.enum(["instagram", "facebook"]),
+  status: PublishJobStatusSchema,
+  externalPostId: z.string().optional(),
+  error: z.string().optional(),
+  simulated: z.boolean(),
+  createdAt: z.string(),
+  completedAt: z.string().optional(),
+});
+export type PublishJob = z.infer<typeof PublishJobSchema>;
