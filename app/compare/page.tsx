@@ -154,25 +154,33 @@ export default function CompareSyncPage() {
                   duration={duration}
                   playing={playing}
                   onTimeUpdate={(t) => setCurrentTime(t)}
+                  campaign={dec?.winningCampaign}
+                  viewerLanguage={v.language}
+                  isNeutral={isNeutral}
+                  isZoneActive={isZoneActive}
                 />
 
                 {/* Composited Billboard Zone */}
                 {isZoneActive && (
                   <div
-                    className="absolute top-0 left-0 pointer-events-none"
+                    className="absolute pointer-events-none transition-all duration-300 z-20 shadow-2xl rounded-sm overflow-hidden"
                     style={{
-                      width: "100px",
-                      height: "100px",
-                      transformOrigin: "0 0",
-                      transform: matrix,
+                      left: `${zone.quad[0].x * 100}%`,
+                      top: `${zone.quad[0].y * 100}%`,
+                      width: `${(zone.quad[1].x - zone.quad[0].x) * 100}%`,
+                      height: `${(zone.quad[2].y - zone.quad[0].y) * 100}%`,
+                      boxShadow: dec?.winningCampaign?.palette?.accent
+                        ? `0 0 20px ${dec.winningCampaign.palette.accent}77`
+                        : "0 0 15px rgba(99, 102, 241, 0.4)",
+                      border: `2px solid ${dec?.winningCampaign?.palette?.accent || "#6366f1"}`,
                     }}
                   >
                     <AdPoster
                       campaign={dec?.winningCampaign}
                       language={v.language}
                       isNeutral={isNeutral}
-                      width={180}
-                      height={130}
+                      width={280}
+                      height={200}
                     />
                   </div>
                 )}

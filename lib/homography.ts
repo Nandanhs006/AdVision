@@ -1,21 +1,31 @@
 import { Point2D } from "./schema";
 
 /**
- * Computes the 3x3 projective transformation matrix H that maps unit square
- * (0,0), (1,0), (1,1), (0,1) to quad points (x0,y0), (x1,y1), (x2,y2), (x3,y3)
- * and formats it as a CSS matrix3d() string.
+ * Computes the 3D projective transformation matrix mapping an element of
+ * dimensions (srcWidth x srcHeight) to normalized quadrilateral coordinates
+ * quad: [TL, TR, BR, BL] scaled by (containerWidth x containerHeight).
+ *
+ * Output format: CSS matrix3d(a1, b1, 0, d1, a2, b2, 0, d2, 0, 0, 1, 0, a4, b4, 0, d4)
  */
-export function getQuadMatrix3d(quad: Point2D[], width = 100, height = 100): string {
-  if (quad.length !== 4) {
+export function getQuadMatrix3d(
+  quad: Point2D[],
+  containerWidth: number,
+  containerHeight: number,
+  srcWidth = 300,
+  srcHeight = 200
+): string {
+  if (quad.length !== 4 || containerWidth <= 0 || containerHeight <= 0) {
     return "matrix3d(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1)";
   }
 
-  // Multiply normalized coordinates by display dimensions
-  const p0 = { x: quad[0].x * width, y: quad[0].y * height };
-  const p1 = { x: quad[1].x * width, y: quad[1].y * height };
-  const p2 = { x: quad[2].x * width, y: quad[2].y * height };
-  const p3 = { x: quad[3].x * width, y: quad[3].y * height };
+  // Destination corner points in container pixel space
+  // p0: Top-Left, p1: Top-Right, p2: Bottom-Right, p3: Bottom-Left
+  const p0 = { x: quad[0].x * containerWidth, y: quad[0].y * containerHeight };
+  const p1 = { x: quad[1].x * containerWidth, y: quad[1].y * containerHeight };
+  const p2 = { x: quad[2].x * containerWidth, y: quad[2].y * containerHeight };
+  const p3 = { x: quad[3].x * containerWidth, y: quad[3].y * containerHeight };
 
+  // Projective transform mapping unit square (0,0)-(1,0)-(1,1)-(0,1) to p0-p1-p2-p3
   const dx1 = p1.x - p2.x;
   const dy1 = p1.y - p2.y;
   const dx2 = p3.x - p2.x;
@@ -26,7 +36,7 @@ export function getQuadMatrix3d(quad: Point2D[], width = 100, height = 100): str
   const det = dx1 * dy2 - dy1 * dx2;
   if (Math.abs(det) < 1e-7) {
     // Affine fallback
-    return `matrix3d(1,0,0,0, 0,1,0,0, 0,0,1,0, ${p0.x},${p0.y},0,1)`;
+    return `matrix3d(1,0,0,0, 0,1,0,0, 0,0,1,0, ${p0.x.toFixed(2)},${p0.y.toFixed(2)},0,1)`;
   }
 
   const g = (sx * dy2 - sy * dx2) / det;
@@ -38,21 +48,22 @@ export function getQuadMatrix3d(quad: Point2D[], width = 100, height = 100): str
   const e = p3.y - p0.y + h * p3.y;
   const f = p0.y;
 
-  // Normalized to unit input [0..1]
-  // In CSS matrix3d(a1, b1, c1, d1, a2, b2, c2, d2, a3, b3, c3, d3, a4, b4, c4, d4) (column-major)
-  const m00 = a / width;
-  const m10 = d / width;
-  const m30 = g / width;
+  // Scale coefficients from unit square [0,1] to element dimensions [srcWidth, srcHeight]
+  const m11 = a / srcWidth;   // scale X
+  const m12 = d / srcWidth;   // skew Y
+  const m14 = g / srcWidth;   // persp X
 
-  const m01 = b / height;
-  const m11 = e / height;
-  const m31 = h / height;
+  const m21 = b / srcHeight;  // skew X
+  const m22 = e / srcHeight;  // scale Y
+  const m24 = h / srcHeight;  // persp Y
 
-  const m03 = c;
-  const m13 = f;
-  const m33 = 1;
+  const m41 = c;              // translate X
+  const m42 = f;              // translate Y
+  const m44 = 1;
 
-  return `matrix3d(${m00.toFixed(6)}, ${m10.toFixed(6)}, 0, ${m30.toFixed(6)}, ${m01.toFixed(6)}, ${m11.toFixed(6)}, 0, ${m31.toFixed(6)}, 0, 0, 1, 0, ${m03.toFixed(2)}, ${m13.toFixed(2)}, 0, ${m33})`;
+  // CSS matrix3d arguments (column-major order):
+  // matrix3d(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44)
+  return `matrix3d(${m11.toFixed(6)}, ${m12.toFixed(6)}, 0, ${m14.toFixed(8)}, ${m21.toFixed(6)}, ${m22.toFixed(6)}, 0, ${m24.toFixed(8)}, 0, 0, 1, 0, ${m41.toFixed(2)}, ${m42.toFixed(2)}, 0, ${m44})`;
 }
 
 /**

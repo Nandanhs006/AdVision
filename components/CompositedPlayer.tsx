@@ -169,6 +169,11 @@ export function CompositedPlayer({
             duration={duration}
             playing={playing}
             onTimeUpdate={handleTimeUpdate}
+            campaign={decision?.winningCampaign}
+            viewerLanguage={viewer.language}
+            isNeutral={decision?.winner === "neutral"}
+            isPending={decision?.status === "pending"}
+            isZoneActive={isZoneActive}
           />
         ) : (
           <video
@@ -189,13 +194,16 @@ export function CompositedPlayer({
         {/* Composited Billboard Zone Overlay */}
         {isZoneActive && (
           <div
-            className="absolute top-0 left-0 pointer-events-none transition-opacity duration-200"
+            className="absolute pointer-events-none transition-all duration-300 z-20 shadow-2xl rounded-sm overflow-hidden"
             style={{
-              width: "100px",
-              height: "100px",
-              transformOrigin: "0 0",
-              transform: matrix3d,
-              opacity: 1,
+              left: `${zone.quad[0].x * 100}%`,
+              top: `${zone.quad[0].y * 100}%`,
+              width: `${(zone.quad[1].x - zone.quad[0].x) * 100}%`,
+              height: `${(zone.quad[2].y - zone.quad[0].y) * 100}%`,
+              boxShadow: decision?.winningCampaign?.palette?.accent
+                ? `0 0 25px ${decision.winningCampaign.palette.accent}66`
+                : "0 0 20px rgba(99, 102, 241, 0.4)",
+              border: `2px solid ${decision?.winningCampaign?.palette?.accent || "#6366f1"}`,
             }}
           >
             <AdPoster
@@ -203,17 +211,26 @@ export function CompositedPlayer({
               language={viewer.language}
               isNeutral={decision?.winner === "neutral"}
               isPending={decision?.status === "pending"}
-              width={240}
-              height={180}
+              width={360}
+              height={260}
             />
+
+            {/* Glowing neon scanline effect */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent pointer-events-none animate-pulse" />
           </div>
         )}
 
         {/* Zone indicator bounding box badge */}
         {isZoneActive && (
-          <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/20 text-[11px] text-white flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-adv-success animate-pulse" />
-            <span>In-Scene: {zone.label}</span>
+          <div className="absolute top-3 left-3 bg-black/85 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20 text-xs text-white flex items-center gap-2 z-30 shadow-lg">
+            <span className="w-2.5 h-2.5 rounded-full bg-adv-success animate-ping" />
+            <span className="font-bold text-adv-text">LIVE REPLACEMENT:</span>
+            <span className="text-adv-accent font-semibold">
+              {decision?.winningCampaign?.brandName || (decision?.winner === "neutral" ? "Neutral Mural" : "Civic PSA")}
+            </span>
+            <span className="text-[10px] text-adv-secondary font-mono">
+              ({viewer.language.toUpperCase()})
+            </span>
           </div>
         )}
 
