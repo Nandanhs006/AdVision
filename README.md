@@ -185,6 +185,103 @@ GET /api/health
 
 ---
 
+## Part 2: Ad Studio (Qloo-Designed Social Ads & Meta Connect)
+
+Advision Part 2 extends the platform into a brand-side **Ad Studio**. A brand enters a product brief and defines a target **cohort** (e.g. *Tokyo Indie Enthusiasts*, *NYC Street Culture*, or *Coastal Arts Community*). Qloo's cultural taste graph analyzes that cohort across artists, films, places, and brands, and Advision deterministically turns the taste profile into **production-grade social ad templates** (palette, typography, layout archetype, motif, and tone) plus localized copy.
+
+The brand previews the creatives inside Instagram feed, Instagram story, and Facebook post mockups, exports multi-aspect PNG posters (1:1, 4:5, 9:16), and publishes them directly or simulates publication through connected social accounts.
+
+```mermaid
+flowchart TD
+    Cohort["Target Cohort\n(City, Country, 3-5 Cultural Anchors)"] --> TastePipeline["Qloo Taste Pipeline\n(lib/ads/taste-profile.ts)"]
+    Brief["Brand Brief\n(Product, Category, Goal, Palette)"] --> Studio["Ad Studio Engine\n(lib/ads/copy.ts & render.ts)"]
+
+    subgraph QlooTasteGraph ["Qloo Cultural Intelligence"]
+        QSearch["qloo.search (Resolve Anchors)"]
+        QTags["qloo.resolveTags (Category & Mood)"]
+        QInsights["qloo.insights (Artists, Movies, Places, Brands)"]
+    end
+
+    TastePipeline --> QSearch
+    TastePipeline --> QTags
+    TastePipeline --> QInsights
+
+    QInsights --> Profile["Taste Profile\n(Top Tags, Top Entities, Affinities)"]
+    Profile --> TasteToStyle["Deterministic Taste-to-Style Map\n(data/taste-style-map.json)"]
+    
+    TasteToStyle --> Tokens["3 Style Variants\n(Primary, Contrast, Safe)"]
+    Tokens --> CopyGen["LLM Copy Generator + Compliance\n(Groq Llama-3.3-70b / Fallback Templates)"]
+    CopyGen --> RenderCanvas["Server Canvas Renderer\n(@napi-rs/canvas)"]
+
+    RenderCanvas --> Aspect1["1:1 Square (1080x1080)"]
+    RenderCanvas --> Aspect2["4:5 Feed (1080x1350)"]
+    RenderCanvas --> Aspect3["9:16 Story (1080x1920)"]
+
+    Aspect1 --> Previews["Platform Previews\n(Instagram Feed, Story, Facebook)"]
+    Aspect2 --> Previews
+    Aspect3 --> Previews
+
+    Previews --> MetaConnect{"Publishing Router\n(Live vs Simulated)"}
+    MetaConnect -->|Live Meta App Role| MetaGraph["Meta Graph API v21.0\n(Page Photo / IG 2-Step Container)"]
+    MetaConnect -->|Demo / Unapproved| Simulated["Simulated Provider\n(Transparent 'Simulated' Badge)"]
+
+    Previews -->|Use as in-scene creative| InScene["Part 1 Cinema Billboard\n(/watch/proj-tokyo-nightfall)"]
+```
+
+### How Qloo Powers the Ad Studio (Calls & Taste Pipeline)
+1. **Anchor Resolution (`/search`):** Parallel resolution of 3 to 5 cultural anchors (e.g. *Haruki Murakami*, *Tyler The Creator*, *Dumbo Brooklyn*) into verified Qloo entity URNs.
+2. **Multi-Domain Cultural Insights (`/v2/insights`):** Queries cultural affinity vectors across at least four distinct entity categories:
+   - `urn:entity:artist` — Musical and performing artists defining cohort sonic taste.
+   - `urn:entity:movie` — Cinematic, film, and television aesthetics.
+   - `urn:entity:place` — Architectural landmarks, third wave cafes, and neighborhood cultural hubs.
+   - `urn:entity:brand` — Existing commercial brands with high cohort affinity.
+3. **Affinity-Weighted Tag Aggregation:** Extracts explainability signals and descriptive tags from top entities, normalizes weights, strips uninformative stop words (*general, item, brand, correlation*), and isolates the **top 8 taste tags**.
+4. **Why the Output Depends on Qloo:** If you change the city from Tokyo to New York, or change the anchors from *Ryuichi Sakamoto* to *Formula 1*, the extracted Qloo tags shift from *ambient, meditative, minimalist* to *high-energy, industrial, street*. These tags trigger different deterministic rules in `data/taste-style-map.json`, resulting in visibly different color palettes, layout archetypes, typography, and motifs.
+
+### Deterministic Taste-to-Style Mapping Table (28 Rules)
+Design tokens are selected deterministically by scoring tag rules against Qloo tag weights (tie-broken stably via cohort ID hashing):
+
+| Domain / Mood | Trigger Keywords | Layout Archetype | Type Style | Palette (bg / fg / accent) | Visual Motif |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Ambient / Minimal** | `ambient`, `sakamoto`, `meditative` | `minimal-center` | `geometric-sans` | `#0f172a` / `#f8fafc` / `#38bdf8` | `waves` |
+| **Cyberpunk / Tech** | `cyberpunk`, `neon`, `futuristic` | `bold-type` | `geometric-sans` | `#0b0f19` / `#f1f5f9` / `#06b6d4` | `grid` |
+| **Hip-Hop / Urban** | `hip-hop`, `tyler`, `rhythmic`, `street` | `split-panel` | `condensed-bold` | `#18181b` / `#fafafa` / `#eab308` | `grain` |
+| **Indie / Folk** | `indie`, `acoustic`, `vinyl`, `kuhad` | `collage-grid` | `editorial-serif` | `#292524` / `#f5f5f4` / `#f97316` | `grain` |
+| **Classical / Symphonic**| `classical`, `symphonic`, `rahman` | `minimal-center` | `editorial-serif` | `#1c1917` / `#fafaf9` / `#ca8a04` | `circles` |
+| **Jazz / Late Night** | `jazz`, `improvisation`, `nujabes` | `split-panel` | `editorial-serif` | `#171717` / `#f5f5f5` / `#0284c7` | `waves` |
+| **Rock / Raw Energy** | `rock`, `guitar`, `punk`, `energy` | `bold-type` | `condensed-bold` | `#0a0a0a` / `#ffffff` / `#dc2626` | `stripes` |
+| **Artisan Coffee** | `coffee`, `roast`, `kissa`, `brew` | `split-panel` | `editorial-serif` | `#1c1512` / `#fbf8f5` / `#c27803` | `grain` |
+| **Botanical Tea** | `tea`, `chai`, `botanical`, `malabar` | `minimal-center` | `editorial-serif` | `#141f17` / `#f4f8f4` / `#15803d` | `waves` |
+| **Street Food / Spice** | `street-food`, `spicy`, `culinary` | `bold-type` | `condensed-bold` | `#1f130b` / `#fff7ed` / `#ea580c` | `stripes` |
+| **Streetwear / Drop** | `streetwear`, `sneaker`, `supreme` | `bold-type` | `condensed-bold` | `#0a0a0a` / `#ffffff` / `#84cc16` | `stripes` |
+| **Adventure / Touring** | `adventure`, `racing`, `speed`, `mrf` | `story-vertical` | `condensed-bold` | `#18181b` / `#fafafa` / `#f59e0b` | `stripes` |
+| **Retail Special Offer** | `sale`, `discount`, `price`, `deal` | `price-badge` | `condensed-bold` | `#030712` / `#ffffff` / `#ef4444` | `stripes` |
+
+### Meta Integration: Endpoints, Flow & Permissions
+Advision integrates with Meta Graph API v21.0 following strict least-privilege principles:
+- **Permissions Requested:**
+  - Facebook: `pages_show_list`, `pages_read_engagement`, `pages_manage_posts`
+  - Instagram: `instagram_basic`, `instagram_content_publish`, `pages_show_list`
+- **Facebook Photo Publish Flow:**
+  `POST https://graph.facebook.com/v21.0/{page-id}/photos` with `url` and `caption`.
+- **Instagram Professional Two-Step Flow:**
+  1. Rate Limit Pre-Check: `GET https://graph.facebook.com/v21.0/{ig-user-id}/content_publishing_limit`
+  2. Media Container Creation: `POST https://graph.facebook.com/v21.0/{ig-user-id}/media` with `image_url` and `caption`.
+  3. Container Status Polling: `GET https://graph.facebook.com/v21.0/{container-id}?fields=status_code`
+  4. Media Publish: `POST https://graph.facebook.com/v21.0/{ig-user-id}/media_publish` with `creation_id`.
+
+### Meta Development Mode Honesty & Simulated Mode
+Under Meta developer policies, unapproved apps in Development Mode can only make live API calls for accounts with an explicit role (Admin/Developer/Tester) inside the Meta App.
+- **Simulated Provider:** For seamless testing, Advision features a built-in `SimulatedProvider` (`META_MODE=simulated`). It accepts identical payloads, validates constraints, returns realistic mock post IDs (`sim_fb_...`, `sim_ig_...`), and attaches a visible `Simulated` badge to all demo outputs. A simulated publish is never presented as live.
+
+### Privacy Stance & Token Security
+- **Cohort-Level Only:** Advision never collects, tracks, or stores individual viewer profiles or private messages.
+- **AES-256-GCM Encryption:** All Meta access tokens are encrypted at rest with AES-256-GCM using `TOKEN_ENCRYPTION_KEY`.
+- **Secrets Stay Server-Side:** Tokens are never logged, never included in client bundles, and redacted from all `/api/connections` responses.
+- **Complete Disconnect:** Clicking "Disconnect" on `/connections` permanently purges the connection record and wipes encrypted tokens from disk and memory.
+
+---
+
 ## Limitations & Roadmap
 
 - **Creatives:** In this release, creatives are rendered as procedural, localized graphic posters on canvas. Photorealistic generative video repainting (diffusion-based in-painting) is planned for future roadmap iterations.

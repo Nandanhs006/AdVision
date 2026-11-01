@@ -14,7 +14,9 @@ export async function GET() {
     ]);
 
     const totalGenerated = creatives.length;
-    const totalApproved = creatives.filter((c) => c.status === "approved").length;
+    const totalApproved = creatives.filter(
+      (c) => c.status === "approved" || c.status === "published" || c.status === "simulated"
+    ).length;
 
     const liveJobs = jobs.filter((j) => !j.simulated && j.status === "published");
     const simulatedJobs = jobs.filter(
@@ -33,7 +35,9 @@ export async function GET() {
         language: co.language.toUpperCase(),
         ageBand: co.ageBand,
         generated: coCreatives.length,
-        approved: coCreatives.filter((c) => c.status === "approved").length,
+        approved: coCreatives.filter(
+          (c) => c.status === "approved" || c.status === "published" || c.status === "simulated"
+        ).length,
         publishedLive: coJobs.filter((j) => !j.simulated && j.status === "published").length,
         publishedSimulated: coJobs.filter((j) => j.simulated || j.status === "simulated").length,
       };

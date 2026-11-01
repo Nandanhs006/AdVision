@@ -38,3 +38,8 @@ next-env.d.ts
 /docdel/
 docdel/
 
+# runtime generated social posters
+/public/rendered-ads/*.png
+!/public/rendered-ads/.gitkeep
+
+
