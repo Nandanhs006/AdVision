@@ -13,6 +13,8 @@ import {
   Sun,
   Moon,
   Info,
+  Palette,
+  Share2,
 } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
@@ -22,6 +24,8 @@ const navItems = [
   { label: "Qloo Targeting", href: "/targeting", icon: Sparkles },
   { label: "Player", href: "/watch/proj-tokyo-nightfall", icon: PlaySquare },
   { label: "4-Way Sync", href: "/compare", icon: Columns3 },
+  { label: "Ad Studio", href: "/ad-studio", icon: Palette },
+  { label: "Social Connect", href: "/connections", icon: Share2 },
   { label: "Brand Studio", href: "/campaigns", icon: Megaphone },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
 ];

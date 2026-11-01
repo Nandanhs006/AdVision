@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Campaign } from "@/lib/schema";
 import { AdPoster } from "@/components/AdPoster";
 import campaignsJson from "@/data/campaigns.json";
@@ -401,6 +402,83 @@ export default function BrandStudioPage() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Catalog of Active Brand Campaigns */}
+      <div className="bg-adv-surface border border-adv-border rounded-2xl p-6 space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-adv-border">
+          <div>
+            <h3 className="font-bold text-base text-adv-text">
+              Active Brand Campaigns Catalog ({campaigns.length})
+            </h3>
+            <p className="text-xs text-adv-secondary">
+              Campaigns eligible for Qloo-driven in-scene billboard placement and Ad Studio export.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {campaigns.map((c) => (
+            <div
+              key={c.id}
+              className="p-4 rounded-xl bg-adv-sidebar border border-adv-border space-y-3 flex flex-col justify-between"
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-3.5 h-3.5 rounded-full border border-white/20 shrink-0"
+                      style={{ backgroundColor: c.palette.accent }}
+                    />
+                    <span className="font-bold text-sm text-adv-text">{c.brandName}</span>
+                  </div>
+                  {c.createdInAdStudio && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-adv-accent/20 text-adv-accent font-semibold border border-adv-accent/30 font-mono">
+                      Created in Ad Studio
+                    </span>
+                  )}
+                </div>
+
+                <div className="text-xs text-adv-secondary line-clamp-2">
+                  &ldquo;{c.headline.en || Object.values(c.headline)[0]}&rdquo;
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-wrap text-[11px] text-adv-secondary font-mono">
+                  <span className="px-1.5 py-0.5 rounded bg-adv-surface border border-adv-border uppercase">
+                    {c.category}
+                  </span>
+                  <span>·</span>
+                  <span>{c.languages.join(", ").toUpperCase()}</span>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-adv-border/60 flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    // Update preview form with this campaign
+                    setBrandName(c.brandName);
+                    setCategory(c.category);
+                    setBg(c.palette.bg);
+                    setFg(c.palette.fg);
+                    setAccent(c.palette.accent);
+                    if (c.headline.en) setHeadlineEn(c.headline.en);
+                  }}
+                  className="text-xs text-adv-secondary hover:text-adv-text underline"
+                >
+                  Load in Editor
+                </button>
+
+                <Link
+                  href="/watch/proj-tokyo-nightfall"
+                  className="px-2.5 py-1.5 rounded-lg bg-adv-surface hover:bg-adv-surfaceHover border border-adv-border text-xs text-adv-accent font-semibold flex items-center gap-1"
+                >
+                  <span>Use as in-scene creative</span>
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

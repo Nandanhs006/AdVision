@@ -2,19 +2,38 @@
 
 import React, { useState, useEffect } from "react";
 import { EventLog } from "@/lib/schema";
-import { BarChart3, Eye, MousePointerClick, PauseCircle, MapPin, Layers } from "lucide-react";
+import {
+  BarChart3,
+  Eye,
+  MousePointerClick,
+  PauseCircle,
+  MapPin,
+  Layers,
+  Palette,
+  Send,
+  CheckCircle2,
+  Users,
+} from "lucide-react";
 
 export default function AnalyticsPage() {
   const [events, setEvents] = useState<EventLog[]>([]);
+  const [adsAnalytics, setAdsAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch("/api/events");
-        if (res.ok) {
-          const data = await res.json();
+        const [evRes, adsRes] = await Promise.all([
+          fetch("/api/events"),
+          fetch("/api/ads/analytics"),
+        ]);
+        if (evRes.ok) {
+          const data = await evRes.json();
           setEvents(data.events || []);
+        }
+        if (adsRes.ok) {
+          const adsData = await adsRes.json();
+          setAdsAnalytics(adsData);
         }
       } catch {
         // ignore
@@ -22,7 +41,7 @@ export default function AnalyticsPage() {
         setLoading(false);
       }
     };
-    fetchEvents();
+    fetchData();
   }, []);
 
   const totalImpressions = events.filter((e) => e.type === "impression").length;
@@ -203,6 +222,134 @@ export default function AnalyticsPage() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Part 2: Ad Studio Social Campaign Metrics */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-adv-border">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-adv-accent/20 text-adv-accent border border-adv-accent/30">
+                Ad Studio
+              </span>
+              <span className="text-xs text-adv-secondary font-mono">Cohort Creative Generation & Social Connect</span>
+            </div>
+            <h2 className="text-xl font-bold text-adv-text tracking-tight mt-1">
+              Social Creative Production & Publishing
+            </h2>
+          </div>
+        </div>
+
+        {/* 4 Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-adv-surface border border-adv-border p-5 rounded-2xl flex items-center justify-between shadow-sm">
+            <div>
+              <span className="text-xs text-adv-secondary font-medium uppercase tracking-wider block">
+                Creatives Generated
+              </span>
+              <span className="text-3xl font-black text-adv-text mt-1 block">
+                {adsAnalytics?.totalGenerated ?? 0}
+              </span>
+              <span className="text-[11px] text-adv-secondary mt-1 block">
+                3x3 aspect ratios rendered
+              </span>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-adv-sidebar flex items-center justify-center border border-adv-border text-adv-accent">
+              <Palette size={22} />
+            </div>
+          </div>
+
+          <div className="bg-adv-surface border border-adv-border p-5 rounded-2xl flex items-center justify-between shadow-sm">
+            <div>
+              <span className="text-xs text-adv-secondary font-medium uppercase tracking-wider block">
+                Approved Creatives
+              </span>
+              <span className="text-3xl font-black text-adv-text mt-1 block">
+                {adsAnalytics?.totalApproved ?? 0}
+              </span>
+              <span className="text-[11px] text-adv-secondary mt-1 block">
+                Validated brand assets
+              </span>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-adv-sidebar flex items-center justify-center border border-adv-border text-adv-success">
+              <CheckCircle2 size={22} />
+            </div>
+          </div>
+
+          <div className="bg-adv-surface border border-adv-border p-5 rounded-2xl flex items-center justify-between shadow-sm">
+            <div>
+              <span className="text-xs text-adv-secondary font-medium uppercase tracking-wider block">
+                Live Published
+              </span>
+              <span className="text-3xl font-black text-adv-text mt-1 block">
+                {adsAnalytics?.totalPublishedLive ?? 0}
+              </span>
+              <span className="text-[11px] text-adv-secondary mt-1 block">
+                Meta Graph API v21.0
+              </span>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-adv-sidebar flex items-center justify-center border border-adv-border text-blue-500">
+              <Send size={22} />
+            </div>
+          </div>
+
+          <div className="bg-adv-surface border border-adv-border p-5 rounded-2xl flex items-center justify-between shadow-sm">
+            <div>
+              <span className="text-xs text-adv-secondary font-medium uppercase tracking-wider block">
+                Simulated Published
+              </span>
+              <span className="text-3xl font-black text-adv-text mt-1 block">
+                {adsAnalytics?.totalPublishedSimulated ?? 0}
+              </span>
+              <span className="text-[11px] text-adv-secondary mt-1 block">
+                Demo mode verification
+              </span>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-adv-sidebar flex items-center justify-center border border-adv-border text-amber-500">
+              <Users size={22} />
+            </div>
+          </div>
+        </div>
+
+        {/* Cohort Breakdown Table */}
+        {adsAnalytics?.cohorts?.length > 0 && (
+          <div className="bg-adv-surface border border-adv-border rounded-2xl p-6 space-y-4">
+            <h3 className="font-bold text-sm text-adv-text uppercase tracking-wider">
+              Production by Target Cohort
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="border-b border-adv-border text-adv-secondary font-mono text-[11px] uppercase">
+                    <th className="py-2.5 px-3">Cohort Market</th>
+                    <th className="py-2.5 px-3">Language</th>
+                    <th className="py-2.5 px-3">Age Band</th>
+                    <th className="py-2.5 px-3">Generated</th>
+                    <th className="py-2.5 px-3">Approved</th>
+                    <th className="py-2.5 px-3">Live Published</th>
+                    <th className="py-2.5 px-3">Simulated Published</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-adv-border/50">
+                  {adsAnalytics.cohorts.map((co: any) => (
+                    <tr key={co.cohortId} className="hover:bg-adv-surfaceHover/50">
+                      <td className="py-2.5 px-3 font-bold text-adv-text">{co.location}</td>
+                      <td className="py-2.5 px-3 font-mono text-adv-secondary">{co.language}</td>
+                      <td className="py-2.5 px-3 text-adv-secondary">{co.ageBand}</td>
+                      <td className="py-2.5 px-3 font-semibold text-adv-text">{co.generated}</td>
+                      <td className="py-2.5 px-3 font-semibold text-adv-success">{co.approved}</td>
+                      <td className="py-2.5 px-3 font-semibold text-blue-400">{co.publishedLive}</td>
+                      <td className="py-2.5 px-3 font-semibold text-amber-400">{co.publishedSimulated}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-[10px] text-adv-secondary italic">
+              * Metrics reflect verified generation records and social API jobs. Advision does not fabricate social engagement metrics.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Raw Event Stream Table */}
