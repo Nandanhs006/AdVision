@@ -130,7 +130,44 @@ export function ProceduralScene({
         ctx.lineWidth = 3;
         ctx.strokeRect(bx, by, bw, bh);
 
-        // Top Banner Tag (e.g. IN-SCENE AD · QLOO MATCH 94%)
+        // Brand-specific graphic accents on the billboard
+        const bId = campaign.id.toLowerCase();
+        if (bId.includes("repbull")) {
+          // Golden sun disc & racing silver wedge
+          ctx.fillStyle = "rgba(255, 204, 0, 0.4)";
+          ctx.beginPath();
+          ctx.arc(bx + bw * 0.82, by + bh * 0.45, bh * 0.35, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#ffd600";
+          ctx.font = "italic 900 12px sans-serif";
+          ctx.textAlign = "left";
+          ctx.fillText("⚡ GIVES YOU WINGS", bx + 16, by + bh - 50);
+        } else if (bId.includes("sony")) {
+          // Camera aperture glowing ring & Sony α mark
+          ctx.strokeStyle = "#ff6600";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(bx + bw * 0.82, by + bh * 0.45, bh * 0.28, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.fillStyle = "#ff6600";
+          ctx.font = "italic 900 24px Georgia, serif";
+          ctx.textAlign = "center";
+          ctx.fillText("α", bx + bw * 0.82, by + bh * 0.45 + 8);
+        } else if (bId.includes("mrf")) {
+          // Racing tyre tread lines & motorsport badge
+          ctx.strokeStyle = "#d3112a";
+          ctx.lineWidth = 3;
+          for (let i = 0; i < 4; i++) {
+            ctx.beginPath();
+            ctx.moveTo(bx + bw * 0.72 + i * 8, by + 12);
+            ctx.lineTo(bx + bw * 0.82 + i * 8, by + bh * 0.7);
+            ctx.stroke();
+          }
+        }
+
+        // Top Banner Tag (e.g. IN-SCENE AD · QLOO MATCH 96%)
         ctx.fillStyle = palette.accent;
         ctx.font = "bold 11px monospace";
         ctx.textAlign = "left";
@@ -150,7 +187,7 @@ export function ProceduralScene({
 
         // Localized Headline
         ctx.fillStyle = palette.fg;
-        ctx.font = "bold 16px -apple-system, sans-serif, 'Noto Sans JP', 'Noto Sans Telugu'";
+        ctx.font = "900 16px -apple-system, sans-serif, 'Noto Sans JP', 'Noto Sans Telugu'";
         
         // Multi-line wrap
         const words = textHeadline.split(" ");
