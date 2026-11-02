@@ -2,11 +2,11 @@
 """
 SceneCast 2.5-Minute Master Video Generator
 - Professional voiceover via Microsoft Edge TTS (en-US-AndrewNeural at rate +14%)
-- Target duration: ~151 seconds (~2.5 minutes)
+- Target duration: ~152 seconds (~2.5 minutes)
 - Full 1080p automated recording via Playwright
 - Structure:
   1. Introduction & Dashboard (Dark Mode)
-  2. In-Scene Cinema Player & 3D Homography (Profile Personalization, Pause-to-Shop)
+  2. In-Scene Cinema Player on Times Square Midnight (Accurate Persona Switching: Ren/Sony, Aarav/MRF, Leo & Mia/Kids PSA, Alex/RepBull, Pause-to-Shop)
   3. 4-Way Persona Sync (Frame-accurate synchronized streaming)
   4. Spatial Studio Editor & AI Slot Scout (Quad pins & real-time slot heuristic)
   5. Intent Classification & Ad Network Inspector
@@ -40,12 +40,14 @@ NARRATION_SECTIONS = [
     },
     {
         "id": "part2_cinema_player",
-        "title": "In-Scene Cinema Player & 3D Homography",
+        "title": "In-Scene Cinema Player on Times Square & Persona Switching",
         "text": (
-            "Here in the Cinema Player, we are watching locked 1080p footage of Times Square. "
+            "Here in the Cinema Player, we are watching locked 1080p footage of Times Square at midnight. "
             "Using mathematical 3D perspective homography, ads are sub-pixel mapped to the physical structure. "
-            "As we toggle viewer profiles, the placement adapts dynamically: Alex sees Red Bull based on sports intent, Maya sees Sony Alpha for photography, "
-            "and Liam on a kids profile receives a civic public-service announcement. "
+            "As we toggle viewer profiles, the placement adapts dynamically: "
+            "Ren in Japan sees Sony Alpha for photography, "
+            "Aarav sees MRF performance tires, "
+            "and Leo and Mia on a kids profile receive a civic public-service announcement. "
             "Pausing the video reveals an interactive Pause-to-Shop QR checkout."
         ),
     },
@@ -109,7 +111,6 @@ async def generate_speech_tracks():
     for idx, sec in enumerate(NARRATION_SECTIONS):
         audio_file = os.path.join(TEMP_DIR, f"narration_{idx:02d}_{sec['id']}.mp3")
         print(f"Generating audio {idx+1}/{len(NARRATION_SECTIONS)}: {sec['title']}...")
-        # rate +14% yields exactly ~151 seconds (~2.5 minutes) total
         communicate = edge_tts.Communicate(sec["text"], "en-US-AndrewNeural", rate="+14%")
         await communicate.save(audio_file)
         
@@ -168,7 +169,7 @@ def record_playwright_video(durations):
         page.wait_for_load_state("networkidle")
         time.sleep(1.5)
         
-        # Smooth hover over cards
+        # Smooth hover over cards, highlighting Times Square Midnight
         cards = page.locator(".grid a[href*='/watch/']")
         card_count = cards.count()
         if card_count > 0:
@@ -184,58 +185,60 @@ def record_playwright_video(durations):
         time.sleep(rem)
 
         # =====================================================================
-        # PART 2: In-Scene Cinema Player (/watch/proj-tokyo-nightfall)
+        # PART 2: In-Scene Cinema Player on Times Square Midnight (/watch/proj-times-square-night)
         # =====================================================================
         t0 = time.time()
         target_dur2 = durations[1]
-        print(f"[Part 2] Cinema Player & Homography (Target: {target_dur2:.2f}s)...")
-        page.goto("http://localhost:3000/watch/proj-tokyo-nightfall")
+        print(f"[Part 2] Cinema Player on Times Square Midnight & Live Persona Switching (Target: {target_dur2:.2f}s)...")
+        page.goto("http://localhost:3000/watch/proj-times-square-night")
         page.wait_for_load_state("networkidle")
         time.sleep(2.5)
 
-        # Switch persona to Maya (Sony Alpha)
+        # 1. Switch persona to Ren Takahashi (Japan) -> Sony Alpha Optics
         try:
-            maya_btn = page.locator("button:has-text('Maya')").first
-            if maya_btn.is_visible():
-                maya_btn.click()
-                print("Switched to Maya (Sony Alpha)")
-            time.sleep(2.5)
-        except Exception:
-            pass
+            ren_btn = page.locator("button:has-text('Ren Takahashi')").first
+            if ren_btn.is_visible():
+                ren_btn.click()
+                print(">>> SWITCHED TO: Ren Takahashi (Sony Alpha Optics) <<<")
+            time.sleep(3.5)
+        except Exception as e:
+            print("Ren switch error:", e)
 
-        # Switch persona to Alex (Red Bull)
+        # 2. Switch persona to Aarav Sharma (India) -> MRF ZLX Tyres
         try:
-            alex_btn = page.locator("button:has-text('Alex')").first
+            aarav_btn = page.locator("button:has-text('Aarav Sharma')").first
+            if aarav_btn.is_visible():
+                aarav_btn.click()
+                print(">>> SWITCHED TO: Aarav Sharma (MRF ZLX Tyres) <<<")
+            time.sleep(3.5)
+        except Exception as e:
+            print("Aarav switch error:", e)
+
+        # 3. Switch to Leo & Mia (Kids Profile) -> Public Library Network (Civic PSA)
+        try:
+            kids_btn = page.locator("button:has-text('Leo & Mia')").first
+            if kids_btn.is_visible():
+                kids_btn.click()
+                print(">>> SWITCHED TO: Leo & Mia (Kids Profile Civic PSA) <<<")
+            time.sleep(3.5)
+        except Exception as e:
+            print("Kids switch error:", e)
+
+        # 4. Switch back to Alex Miller (United States) -> RepBull Energy & Pause-to-Shop
+        try:
+            alex_btn = page.locator("button:has-text('Alex Miller')").first
             if alex_btn.is_visible():
                 alex_btn.click()
-                print("Switched to Alex (Red Bull)")
+                print(">>> SWITCHED TO: Alex Miller (RepBull Energy) <<<")
             time.sleep(2.5)
-        except Exception:
-            pass
-
-        # Switch to Liam (Kids Civic PSA)
-        try:
-            liam_btn = page.locator("button:has-text('Liam')").first
-            if liam_btn.is_visible():
-                liam_btn.click()
-                print("Switched to Liam (Kids Civic PSA)")
-            time.sleep(2.5)
-        except Exception:
-            pass
-
-        # Switch back to Alex and trigger Pause-to-Shop
-        try:
-            if alex_btn.is_visible():
-                alex_btn.click()
-            time.sleep(1.0)
-            # Click video container to pause
+            # Click video to pause and display Pause-to-Shop QR
             player_vid = page.locator("video").first
             if player_vid.is_visible():
                 player_vid.click()
-                print("Paused video to show Pause-to-Shop QR")
-            time.sleep(2.5)
-        except Exception:
-            pass
+                print("Paused video to show Pause-to-Shop QR checkout")
+            time.sleep(3.0)
+        except Exception as e:
+            print("Alex/pause error:", e)
 
         elapsed = time.time() - t0
         rem = max(0.5, target_dur2 - elapsed)
