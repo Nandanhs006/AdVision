@@ -38,6 +38,8 @@ next-env.d.ts
 /docdel/
 docdel/
 advision-demo-*.mp4
+scenecast-demo-*.mp4
+scripts/video_temp/
 
 # runtime generated social posters
 /public/rendered-ads/*.png
