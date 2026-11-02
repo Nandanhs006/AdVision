@@ -6,7 +6,7 @@ SceneCast 2.5-Minute Master Video Generator
 - Full 1080p automated recording via Playwright
 - Structure:
   1. Introduction & Dashboard (Dark Mode)
-  2. In-Scene Cinema Player on Times Square Midnight (Accurate Persona Switching: Ren/Sony, Aarav/MRF, Leo & Mia/Kids PSA, Alex/RepBull, Pause-to-Shop)
+  2. In-Scene Cinema Player on Tokyo Shibuya Scramble (QFRONT LED Screen, Persona Switching: Ren/Sony, Aarav/MRF, Leo & Mia/Kids PSA, Alex/RepBull, Pause-to-Shop)
   3. 4-Way Persona Sync (Frame-accurate synchronized streaming)
   4. Spatial Studio Editor & AI Slot Scout (Quad pins & real-time slot heuristic)
   5. Intent Classification & Ad Network Inspector
@@ -40,10 +40,10 @@ NARRATION_SECTIONS = [
     },
     {
         "id": "part2_cinema_player",
-        "title": "In-Scene Cinema Player on Times Square & Persona Switching",
+        "title": "In-Scene Cinema Player on Tokyo Shibuya Nights & Persona Switching",
         "text": (
-            "Here in the Cinema Player, we are watching locked 1080p footage of Times Square at midnight. "
-            "Using mathematical 3D perspective homography, ads are sub-pixel mapped to the physical structure. "
+            "Here in the Cinema Player, we are watching locked 1080p footage of Tokyo Shibuya Scramble at night. "
+            "Using mathematical 3D perspective homography, ads are sub-pixel mapped to the QFRONT digital super-screen. "
             "As we toggle viewer profiles, the placement adapts dynamically: "
             "Ren in Japan sees Sony Alpha for photography, "
             "Aarav sees MRF performance tires, "
@@ -169,7 +169,7 @@ def record_playwright_video(durations):
         page.wait_for_load_state("networkidle")
         time.sleep(1.5)
         
-        # Smooth hover over cards, highlighting Times Square Midnight
+        # Smooth hover over cards, highlighting Tokyo Shibuya Scramble
         cards = page.locator(".grid a[href*='/watch/']")
         card_count = cards.count()
         if card_count > 0:
@@ -185,12 +185,12 @@ def record_playwright_video(durations):
         time.sleep(rem)
 
         # =====================================================================
-        # PART 2: In-Scene Cinema Player on Times Square Midnight (/watch/proj-times-square-night)
+        # PART 2: In-Scene Cinema Player on Tokyo Shibuya Nights (/watch/proj-tokyo-nightfall)
         # =====================================================================
         t0 = time.time()
         target_dur2 = durations[1]
-        print(f"[Part 2] Cinema Player on Times Square Midnight & Live Persona Switching (Target: {target_dur2:.2f}s)...")
-        page.goto("http://localhost:3000/watch/proj-times-square-night")
+        print(f"[Part 2] Cinema Player on Tokyo Shibuya Nights & Live Persona Switching (Target: {target_dur2:.2f}s)...")
+        page.goto("http://localhost:3000/watch/proj-tokyo-nightfall")
         page.wait_for_load_state("networkidle")
         time.sleep(2.5)
 
