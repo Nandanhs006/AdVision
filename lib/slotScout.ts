@@ -62,49 +62,49 @@ export async function runSlotScout(params: {
         reason: "Elevated roadside billboard structure facing oncoming multilane highway commuter traffic.",
       },
     ];
-  } else if (titleLower.includes("munich") || titleLower.includes("neuhauser") || titleLower.includes("arcade") || titleLower.includes("promenade")) {
-    // Munich Promenade
-    sceneAtmosphere = ["continental", "pedestrian", "lifestyle", "shopping", "promenade"];
+  } else if (titleLower.includes("times square") || titleLower.includes("manhattan") || titleLower.includes("neon crossing") || titleLower.includes("broadway")) {
+    // Times Square Midnight
+    sceneAtmosphere = ["times-square", "manhattan", "neon", "nightlife", "urban", "high-visibility"];
     slots = [
       {
-        id: `slot-arcade-showcase-${Date.now()}-1`,
-        label: "Arcade Storefront Showcase",
+        id: `slot-broadway-tower-${Date.now()}-1`,
+        label: "Broadway Tower Mega-Billboard",
         quad: [
-          { x: 0.495, y: 0.020 },
-          { x: 0.583, y: 0.020 },
-          { x: 0.583, y: 0.518 },
-          { x: 0.495, y: 0.518 },
+          { x: 0.7156, y: 0.0000 },
+          { x: 0.9083, y: 0.0000 },
+          { x: 0.9083, y: 0.4028 },
+          { x: 0.7156, y: 0.4028 },
         ],
         startSec: 0.2,
         endSec: Math.min(durationSec, 14.8),
-        frameShare: 0.082,
-        placementScore: 92,
+        frameShare: 0.078,
+        placementScore: 98,
         suggestedCap: 0.35,
-        contrastRatio: "13.4:1 (AAA Pass)",
-        legibilityIndex: 90,
+        contrastRatio: "16.2:1 (AAA Pass)",
+        legibilityIndex: 96,
         occlusionRisk: "low",
-        suggestedMood: ["lifestyle", "boutique", "shopping", "promenade"],
-        reason: "Vertical street-level boutique display window with high pedestrian dwell time.",
+        suggestedMood: ["times-square", "neon", "hero-billboard", "urban"],
+        reason: "Prominent high-elevation digital billboard commanding primary pedestrian sightline.",
       },
       {
-        id: `slot-fascia-sign-${Date.now()}-2`,
-        label: "Pedestrian Boulevard Fascia Sign",
+        id: `slot-mid-screen-${Date.now()}-2`,
+        label: "Crossroads Mid-Plaza Digital Screen",
         quad: [
-          { x: 0.085, y: 0.015 },
-          { x: 0.395, y: 0.015 },
-          { x: 0.395, y: 0.165 },
-          { x: 0.085, y: 0.165 },
+          { x: 0.5094, y: 0.3657 },
+          { x: 0.5745, y: 0.3657 },
+          { x: 0.5745, y: 0.5407 },
+          { x: 0.5094, y: 0.5407 },
         ],
         startSec: 0.2,
         endSec: Math.min(durationSec, 14.8),
-        frameShare: 0.062,
-        placementScore: 88,
+        frameShare: 0.025,
+        placementScore: 91,
         suggestedCap: 0.25,
-        contrastRatio: "11.1:1 (AAA Pass)",
-        legibilityIndex: 86,
+        contrastRatio: "14.0:1 (AAA Pass)",
+        legibilityIndex: 89,
         occlusionRisk: "low",
-        suggestedMood: ["retail", "fascia", "urban walk"],
-        reason: "Overhead commercial retail facade sign banner directly across pedestrian boulevard.",
+        suggestedMood: ["crossroads", "plaza", "digital-display"],
+        reason: "Eye-level digital plaza screen facing pedestrian foot traffic along Broadway & 7th.",
       },
     ];
   } else {
