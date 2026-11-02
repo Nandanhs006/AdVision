@@ -67,7 +67,7 @@
       }
     ],
     "rules": {
-      "allowedCategories": ["coffee", "books", "fashion", "tea", "audio", "travel"],
+      "allowedCategories": ["beverage", "electronics", "automotive", "coffee", "fashion", "audio", "travel"],
       "blockedCategories": ["spirits"],
       "prominenceCap": 0.25,
       "requireApproval": false,

@@ -25,7 +25,7 @@ const BRAND_IMAGE_PATHS: Record<string, string> = {
 
 const proceduralImageCache = new Map<string, HTMLImageElement>();
 
-function getProceduralBrandImage(key: string): HTMLImageElement | null {
+function getProceduralBrandImage(key: string, onLoaded?: () => void): HTMLImageElement | null {
   if (typeof window === "undefined") return null;
   const path = BRAND_IMAGE_PATHS[key];
   if (!path) return null;
@@ -34,6 +34,9 @@ function getProceduralBrandImage(key: string): HTMLImageElement | null {
   if (!img) {
     img = new Image();
     img.src = path;
+    if (onLoaded) {
+      img.onload = () => onLoaded();
+    }
     proceduralImageCache.set(path, img);
   }
   return img;
@@ -204,60 +207,60 @@ export function ProceduralScene({
               ctx.stroke();
             }
           }
-        }
 
-        // Top Banner Tag (e.g. IN-SCENE AD · QLOO MATCH 96%)
-        ctx.fillStyle = palette.accent;
-        ctx.font = "bold 11px monospace";
-        ctx.textAlign = "left";
-        ctx.fillText(
-          (publicService ? "PUBLIC SERVICE · " : "QLOO SPONSOR · ") + brandName.toUpperCase(),
-          bx + 16,
-          by + 28
-        );
+          // Top Banner Tag (e.g. IN-SCENE AD · QLOO MATCH 96%)
+          ctx.fillStyle = palette.accent;
+          ctx.font = "bold 11px monospace";
+          ctx.textAlign = "left";
+          ctx.fillText(
+            (publicService ? "PUBLIC SERVICE · " : "QLOO SPONSOR · ") + brandName.toUpperCase(),
+            bx + 16,
+            by + 28
+          );
 
-        // Divider
-        ctx.strokeStyle = palette.accent + "66";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(bx + 16, by + 36);
-        ctx.lineTo(bx + bw - 16, by + 36);
-        ctx.stroke();
+          // Divider
+          ctx.strokeStyle = palette.accent + "66";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(bx + 16, by + 36);
+          ctx.lineTo(bx + bw - 16, by + 36);
+          ctx.stroke();
 
-        // Localized Headline
-        ctx.fillStyle = palette.fg;
-        ctx.font = "900 16px -apple-system, sans-serif, 'Noto Sans JP', 'Noto Sans Telugu'";
-        
-        // Multi-line wrap
-        const words = textHeadline.split(" ");
-        let line = "";
-        let lineY = by + 62;
-        const maxTextW = bw - 32;
+          // Localized Headline
+          ctx.fillStyle = palette.fg;
+          ctx.font = "900 16px -apple-system, sans-serif, 'Noto Sans JP', 'Noto Sans Telugu'";
+          
+          // Multi-line wrap
+          const words = textHeadline.split(" ");
+          let line = "";
+          let lineY = by + 62;
+          const maxTextW = bw - 32;
 
-        for (let n = 0; n < words.length; n++) {
-          const testLine = line + words[n] + " ";
-          const metrics = ctx.measureText(testLine);
-          if (metrics.width > maxTextW && n > 0) {
-            ctx.fillText(line, bx + 16, lineY);
-            line = words[n] + " ";
-            lineY += 20;
-          } else {
-            line = testLine;
+          for (let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + " ";
+            const metrics = ctx.measureText(testLine);
+            if (metrics.width > maxTextW && n > 0) {
+              ctx.fillText(line, bx + 16, lineY);
+              line = words[n] + " ";
+              lineY += 20;
+            } else {
+              line = testLine;
+            }
           }
+          ctx.fillText(line, bx + 16, lineY);
+
+          // Call to action button pill at bottom of billboard
+          const btnY = by + bh - 38;
+          ctx.fillStyle = palette.accent;
+          ctx.beginPath();
+          ctx.roundRect(bx + 16, btnY, bw - 32, 26, 6);
+          ctx.fill();
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 11px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(textCta.toUpperCase() + "  →", bx + bw / 2, btnY + 17);
         }
-        ctx.fillText(line, bx + 16, lineY);
-
-        // Call to action button pill at bottom of billboard
-        const btnY = by + bh - 38;
-        ctx.fillStyle = palette.accent;
-        ctx.beginPath();
-        ctx.roundRect(bx + 16, btnY, bw - 32, 26, 6);
-        ctx.fill();
-
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 11px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText(textCta.toUpperCase() + "  →", bx + bw / 2, btnY + 17);
 
         // Scanline television effect
         ctx.fillStyle = "rgba(0, 0, 0, 0.15)";

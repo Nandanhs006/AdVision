@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Zone, Rules, Viewer, Decision, Point2D } from "@/lib/schema";
-import { calculateQuadArea } from "@/lib/homography";
+import { Zone, Rules, Viewer, Decision, Point2D, Project } from "@/lib/schema";
+import { calculateQuadArea, getQuadMatrix3d } from "@/lib/homography";
 import { ProceduralScene } from "@/components/ProceduralScene";
+import { AdPoster } from "@/components/AdPoster";
 import viewersJson from "@/data/viewers.json";
 import projectsJson from "@/data/projects.json";
 import {
@@ -21,12 +22,25 @@ import {
   Radar,
   Gauge,
   Award,
+  Film,
 } from "lucide-react";
 import { ScoutedSlot } from "@/lib/slotScout";
 
 export default function StudioEditorPage() {
-  const [projects] = useState(projectsJson);
-  const activeProject = projects[0];
+  const projects = projectsJson as Project[];
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(projects[0].id);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const pid = urlParams.get("projectId");
+      if (pid && projects.some((p) => p.id === pid)) {
+        setSelectedProjectId(pid);
+      }
+    }
+  }, [projects]);
+
+  const activeProject = projects.find((p) => p.id === selectedProjectId) || projects[0];
 
   // Active Zone state
   const [zones, setZones] = useState<Zone[]>(activeProject.zones);
@@ -36,10 +50,39 @@ export default function StudioEditorPage() {
   // Rules state
   const [rules, setRules] = useState<Rules>(activeProject.rules);
 
+  // When project changes, update zones and rules
+  useEffect(() => {
+    setZones(activeProject.zones);
+    setSelectedZoneIndex(0);
+    setRules(activeProject.rules);
+  }, [selectedProjectId, activeProject]);
+
   // Playback state
   const [currentTime, setCurrentTime] = useState<number>(2.5);
-  const [playing, setPlaying] = useState<boolean>(false);
-  const [videoDuration] = useState<number>(15);
+  const [playing, setPlaying] = useState<boolean>(true);
+  const [useVideo, setUseVideo] = useState<boolean>(true);
+  const videoDuration = activeProject.durationSec || 15;
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Container sizing for 3D matrix
+  const [containerSize, setContainerSize] = useState<{ w: number; h: number }>({ w: 800, h: 450 });
+
+  // Preview viewer persona
+  const [previewViewerId, setPreviewViewerId] = useState<string>("viewer-us");
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (overlayRef.current) {
+        setContainerSize({
+          w: overlayRef.current.clientWidth,
+          h: overlayRef.current.clientHeight,
+        });
+      }
+    };
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
 
   // Interactive Dragging state for 4 corners
   const [draggingCorner, setDraggingCorner] = useState<number | null>(null);
@@ -49,6 +92,13 @@ export default function StudioEditorPage() {
   const [decisions, setDecisions] = useState<Decision[]>([]);
   const [loadingDecisions, setLoadingDecisions] = useState<boolean>(false);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
+
+  const previewViewer = (viewersJson as Viewer[]).find((v) => v.id === previewViewerId) || (viewersJson as Viewer[])[0];
+  const previewDecision = decisions.find((d) => d.viewerId === previewViewerId);
+  const activeWinningCampaign = previewDecision?.winningCampaign;
+  const posterW = 380;
+  const posterH = 260;
+  const matrix3d = getQuadMatrix3d(currentZone.quad, containerSize.w, containerSize.h, posterW, posterH);
 
   // Trim mode toggle
   const [isTrimming, setIsTrimming] = useState<boolean>(false);
@@ -224,7 +274,7 @@ export default function StudioEditorPage() {
     setSelectedZoneIndex(next.length - 1);
   };
 
-  const availableCategories = ["spirits", "coffee", "tea", "books", "fashion", "travel", "audio"];
+  const availableCategories = ["spirits", "beverage", "electronics", "automotive", "coffee", "tea", "books", "fashion", "travel", "audio"];
   const availableMoods = ["rainy", "cyberpunk", "neon", "introspective", "classical", "warm", "nature", "urban"];
 
   return (
@@ -263,6 +313,33 @@ export default function StudioEditorPage() {
             <span>Save Rules & Zones</span>
           </button>
         </div>
+      </div>
+
+      {/* Project Switcher Bar */}
+      <div className="flex items-center gap-2 bg-adv-surface border border-adv-border p-2 rounded-xl overflow-x-auto">
+        <span className="text-xs font-semibold uppercase text-adv-secondary whitespace-nowrap pl-2 flex items-center gap-1.5">
+          <Film size={14} className="text-adv-accent" />
+          Active Scene:
+        </span>
+        {projects.map((p) => {
+          const active = p.id === selectedProjectId;
+          return (
+            <button
+              key={p.id}
+              onClick={() => {
+                setSelectedProjectId(p.id);
+                setCurrentTime(0);
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border ${
+                active
+                  ? "bg-adv-accent text-white border-adv-accent shadow-sm"
+                  : "bg-adv-sidebar border-adv-border text-adv-secondary hover:text-adv-text"
+              }`}
+            >
+              {p.name}
+            </button>
+          );
+        })}
       </div>
 
       {/* Main Studio Workspace: Left Editor Viewport & Right Rules Panel */}
@@ -305,17 +382,20 @@ export default function StudioEditorPage() {
               </button>
             </div>
 
-            {/* Visual-only action buttons */}
-            <div className="flex items-center gap-1 text-adv-secondary">
-              {["Split", "Speed", "Color", "Captions", "Crop"].map((tool) => (
-                <button
-                  key={tool}
-                  className="px-2.5 py-1 rounded-md hover:bg-adv-surfaceHover hover:text-adv-text transition-colors text-[11px]"
-                  title={`${tool} tool`}
-                >
-                  {tool}
-                </button>
-              ))}
+            {/* Persona Preview Selector */}
+            <div className="flex items-center gap-1.5 bg-adv-sidebar border border-adv-border px-2.5 py-1 rounded-lg">
+              <span className="text-[10px] font-mono text-adv-secondary uppercase">Preview Ad:</span>
+              <select
+                value={previewViewerId}
+                onChange={(e) => setPreviewViewerId(e.target.value)}
+                className="bg-transparent text-xs text-adv-text font-medium outline-none cursor-pointer"
+              >
+                {(viewersJson as Viewer[]).map((v) => (
+                  <option key={v.id} value={v.id} className="bg-adv-sidebar text-white">
+                    {v.name} ({v.country})
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -324,12 +404,49 @@ export default function StudioEditorPage() {
             ref={overlayRef}
             className="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-adv-border select-none shadow-2xl"
           >
-            <ProceduralScene
-              currentTime={currentTime}
-              duration={videoDuration}
-              playing={playing}
-              onTimeUpdate={(t) => setCurrentTime(t)}
-            />
+            {useVideo ? (
+              <video
+                ref={videoRef}
+                src={activeProject.videoUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+                onError={() => setUseVideo(false)}
+              />
+            ) : (
+              <ProceduralScene
+                currentTime={currentTime}
+                duration={videoDuration}
+                playing={playing}
+                onTimeUpdate={(t) => setCurrentTime(t)}
+              />
+            )}
+
+            {/* In-Scene Real Ad Overlay */}
+            {activeWinningCampaign && (
+              <div
+                className="absolute top-0 left-0 pointer-events-none z-10 overflow-hidden rounded-sm"
+                style={{
+                  width: `${posterW}px`,
+                  height: `${posterH}px`,
+                  transformOrigin: "0 0",
+                  transform: matrix3d,
+                  boxShadow: activeWinningCampaign?.palette?.accent
+                    ? `0 0 25px ${activeWinningCampaign.palette.accent}99`
+                    : "0 0 20px rgba(99, 102, 241, 0.6)",
+                  border: `2px solid ${activeWinningCampaign?.palette?.accent || "#6366f1"}`,
+                }}
+              >
+                <AdPoster
+                  campaign={activeWinningCampaign}
+                  language={previewViewer?.language || "en"}
+                  width={posterW}
+                  height={posterH}
+                />
+              </div>
+            )}
 
             {/* 4-Corner Draggable Quad Overlay */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none">

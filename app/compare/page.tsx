@@ -1,16 +1,194 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Zone, Viewer, Decision } from "@/lib/schema";
+import React, { useState, useEffect, useRef } from "react";
+import { Zone, Viewer, Decision, Project } from "@/lib/schema";
 import { getQuadMatrix3d } from "@/lib/homography";
 import { AdPoster } from "@/components/AdPoster";
 import { ProceduralScene } from "@/components/ProceduralScene";
 import viewersJson from "@/data/viewers.json";
 import projectsJson from "@/data/projects.json";
-import { Play, Pause, RotateCcw, Sparkles } from "lucide-react";
+import { Play, Pause, RotateCcw, Sparkles, Film } from "lucide-react";
+
+interface CompareViewportProps {
+  videoUrl: string;
+  duration: number;
+  zone: Zone;
+  viewer: Viewer;
+  decision?: Decision;
+  currentTime: number;
+  playing: boolean;
+}
+
+function CompareViewport({
+  videoUrl,
+  duration,
+  zone,
+  viewer,
+  decision,
+  currentTime,
+  playing,
+}: CompareViewportProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [useFallback, setUseFallback] = useState<boolean>(false);
+  const [containerSize, setContainerSize] = useState<{ w: number; h: number }>({ w: 560, h: 315 });
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        setContainerSize({
+          w: containerRef.current.clientWidth,
+          h: containerRef.current.clientHeight,
+        });
+      }
+    };
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
+  // Synchronize video element playback
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || useFallback) return;
+
+    if (playing) {
+      if (video.paused) {
+        video.play().catch(() => setUseFallback(true));
+      }
+    } else {
+      if (!video.paused) {
+        video.pause();
+      }
+    }
+  }, [playing, useFallback]);
+
+  // Synchronize scrub / loop
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || useFallback) return;
+
+    if (Math.abs(video.currentTime - currentTime) > 0.4) {
+      video.currentTime = currentTime;
+    }
+  }, [currentTime, useFallback]);
+
+  const isZoneActive = currentTime >= zone.startSec && currentTime <= zone.endSec;
+  const posterW = 380;
+  const posterH = 260;
+  const matrix3d = getQuadMatrix3d(zone.quad, containerSize.w, containerSize.h, posterW, posterH);
+
+  const isWinner = decision?.winningCampaign;
+  const isNeutral = decision?.winner === "neutral";
+  const isKids = viewer.adPreference === "kids";
+
+  return (
+    <div className="bg-adv-surface border border-adv-border rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between">
+      {/* Top Persona Header */}
+      <div className="p-3.5 bg-adv-sidebar border-b border-adv-border flex items-center justify-between text-xs">
+        <div>
+          <span className="font-bold text-adv-text text-sm block">
+            {viewer.name}
+          </span>
+          <span className="text-[11px] text-adv-secondary font-mono">
+            {viewer.country} ({viewer.language.toUpperCase()})
+          </span>
+        </div>
+
+        <div>
+          {isWinner && !isWinner.publicService ? (
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-successBg border border-adv-success/30 text-adv-success">
+              Qloo match {Math.round((decision?.ranked?.[0]?.qlooAffinity || 0.95) * 100)}%
+            </span>
+          ) : isKids ? (
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-accent/20 border border-adv-accent/30 text-adv-accent">
+              Brand-free (PSA)
+            </span>
+          ) : (
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-surfaceHover border border-adv-border text-adv-secondary">
+              No brand shown
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Viewport Scene Player */}
+      <div
+        ref={containerRef}
+        className="relative aspect-video bg-black select-none overflow-hidden"
+      >
+        {useFallback ? (
+          <ProceduralScene
+            currentTime={currentTime}
+            duration={duration}
+            playing={playing}
+            campaign={decision?.winningCampaign}
+            viewerLanguage={viewer.language}
+            isNeutral={isNeutral}
+            isZoneActive={isZoneActive}
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            onError={() => setUseFallback(true)}
+            className="w-full h-full object-cover"
+          />
+        )}
+
+        {/* 3D Perspective Homography Billboard Overlay */}
+        {isZoneActive && (
+          <div
+            className="absolute top-0 left-0 pointer-events-none transition-all duration-300 z-20 shadow-2xl rounded-sm overflow-hidden"
+            style={{
+              width: `${posterW}px`,
+              height: `${posterH}px`,
+              transformOrigin: "0 0",
+              transform: matrix3d,
+              boxShadow: decision?.winningCampaign?.palette?.accent
+                ? `0 0 35px ${decision.winningCampaign.palette.accent}99`
+                : "0 0 25px rgba(99, 102, 241, 0.6)",
+              border: `2px solid ${decision?.winningCampaign?.palette?.accent || "#6366f1"}`,
+            }}
+          >
+            <AdPoster
+              campaign={decision?.winningCampaign}
+              language={viewer.language}
+              isNeutral={isNeutral}
+              isPending={decision?.status === "pending"}
+              width={posterW}
+              height={posterH}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Bottom Persona Banner Note */}
+      <div className="p-3 bg-adv-sidebar/70 border-t border-adv-border text-xs flex items-center justify-between text-adv-secondary">
+        <span className="truncate max-w-[280px]">
+          {isWinner
+            ? isWinner.headline[viewer.language] || isWinner.headline.en
+            : isNeutral
+            ? "Neutral architectural artwork (subscriber tier)"
+            : "Public-service civic message"}
+        </span>
+        <span className="font-mono text-[10px] text-adv-text font-bold">
+          {isWinner?.brandName || (isNeutral ? "Mural" : "PSA")}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export default function CompareSyncPage() {
-  const project = projectsJson[0];
+  const projects = projectsJson as Project[];
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(projects[0].id);
+
+  const project = projects.find((p) => p.id === selectedProjectId) || projects[0];
   const zone = project.zones[0] as Zone;
   const allViewers = viewersJson as Viewer[];
 
@@ -25,11 +203,30 @@ export default function CompareSyncPage() {
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const [currentTime, setCurrentTime] = useState<number>(2.0);
   const [playing, setPlaying] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [, setLoading] = useState<boolean>(true);
 
   const duration = project.durationSec || 15;
-  const isZoneActive = currentTime >= zone.startSec && currentTime <= zone.endSec;
 
+  // Master playback timer
+  useEffect(() => {
+    let animId: number;
+    let last = performance.now();
+
+    const loop = (now: number) => {
+      const delta = (now - last) / 1000;
+      last = now;
+
+      if (playing) {
+        setCurrentTime((prev) => (prev + delta) % duration);
+      }
+      animId = requestAnimationFrame(loop);
+    };
+
+    animId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animId);
+  }, [playing, duration]);
+
+  // Fetch decisions whenever project or zone changes
   useEffect(() => {
     const fetchAll = async () => {
       setLoading(true);
@@ -59,7 +256,7 @@ export default function CompareSyncPage() {
 
     fetchAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedProjectId, zone]);
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-6">
@@ -78,7 +275,7 @@ export default function CompareSyncPage() {
             One scene. Four viewers. One story.
           </h1>
           <p className="text-sm text-adv-secondary mt-1">
-            Same actors, same timing. Only the billboard changes.
+            Same footage, same timing, zero camera drift. Billboard adapts dynamically per viewer persona.
           </p>
         </div>
 
@@ -103,105 +300,47 @@ export default function CompareSyncPage() {
         </div>
       </div>
 
-      {/* 2x2 Grid of 4 Viewers */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {fourViewers.map((v) => {
-          const dec = decisions[v.id];
-          const isWinner = dec?.winningCampaign;
-          const isNeutral = dec?.winner === "neutral";
-          const isKids = v.adPreference === "kids";
-
-          // Calculate homography matrix for this container
-          const matrix = getQuadMatrix3d(zone.quad, 480, 270);
-
+      {/* Project Switcher Bar */}
+      <div className="flex items-center gap-2 bg-adv-surface border border-adv-border p-2 rounded-xl overflow-x-auto">
+        <span className="text-xs font-semibold uppercase text-adv-secondary whitespace-nowrap pl-2 flex items-center gap-1.5">
+          <Film size={14} className="text-adv-accent" />
+          Active Scene:
+        </span>
+        {projects.map((p) => {
+          const active = p.id === selectedProjectId;
           return (
-            <div
-              key={v.id}
-              className="bg-adv-surface border border-adv-border rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between"
+            <button
+              key={p.id}
+              onClick={() => {
+                setSelectedProjectId(p.id);
+                setCurrentTime(0);
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border ${
+                active
+                  ? "bg-adv-accent text-white border-adv-accent shadow-sm"
+                  : "bg-adv-sidebar border-adv-border text-adv-secondary hover:text-adv-text"
+              }`}
             >
-              {/* Top Persona Header */}
-              <div className="p-3.5 bg-adv-sidebar border-b border-adv-border flex items-center justify-between text-xs">
-                <div>
-                  <span className="font-bold text-adv-text text-sm block">
-                    {v.name}
-                  </span>
-                  <span className="text-[11px] text-adv-secondary font-mono">
-                    {v.country} ({v.language.toUpperCase()})
-                  </span>
-                </div>
-
-                <div>
-                  {isWinner && !isWinner.publicService ? (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-successBg border border-adv-success/30 text-adv-success">
-                      Qloo match {Math.round((dec.ranked[0]?.qlooAffinity || 0.9) * 100)}%
-                    </span>
-                  ) : isKids ? (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-accent/20 border border-adv-accent/30 text-adv-accent">
-                      Brand-free (PSA)
-                    </span>
-                  ) : (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-surfaceHover border border-adv-border text-adv-secondary">
-                      No brand shown
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Viewport Scene Player */}
-              <div className="relative aspect-video bg-black select-none overflow-hidden">
-                <ProceduralScene
-                  currentTime={currentTime}
-                  duration={duration}
-                  playing={playing}
-                  onTimeUpdate={(t) => setCurrentTime(t)}
-                  campaign={dec?.winningCampaign}
-                  viewerLanguage={v.language}
-                  isNeutral={isNeutral}
-                  isZoneActive={isZoneActive}
-                />
-
-                {/* Composited Billboard Zone */}
-                {isZoneActive && (
-                  <div
-                    className="absolute pointer-events-none transition-all duration-300 z-20 shadow-2xl rounded-sm overflow-hidden"
-                    style={{
-                      left: `${zone.quad[0].x * 100}%`,
-                      top: `${zone.quad[0].y * 100}%`,
-                      width: `${(zone.quad[1].x - zone.quad[0].x) * 100}%`,
-                      height: `${(zone.quad[2].y - zone.quad[0].y) * 100}%`,
-                      boxShadow: dec?.winningCampaign?.palette?.accent
-                        ? `0 0 20px ${dec.winningCampaign.palette.accent}77`
-                        : "0 0 15px rgba(99, 102, 241, 0.4)",
-                      border: `2px solid ${dec?.winningCampaign?.palette?.accent || "#6366f1"}`,
-                    }}
-                  >
-                    <AdPoster
-                      campaign={dec?.winningCampaign}
-                      language={v.language}
-                      isNeutral={isNeutral}
-                      width={280}
-                      height={200}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Bottom Persona Banner Note */}
-              <div className="p-3 bg-adv-sidebar/70 border-t border-adv-border text-xs flex items-center justify-between text-adv-secondary">
-                <span className="truncate max-w-[280px]">
-                  {isWinner
-                    ? isWinner.headline[v.language] || isWinner.headline.en
-                    : isNeutral
-                    ? "Neutral architectural artwork (subscriber tier)"
-                    : "Public-service civic message"}
-                </span>
-                <span className="font-mono text-[10px] text-adv-text font-bold">
-                  {isWinner?.brandName || (isNeutral ? "Mural" : "PSA")}
-                </span>
-              </div>
-            </div>
+              {p.name}
+            </button>
           );
         })}
+      </div>
+
+      {/* 2x2 Grid of 4 Viewers */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {fourViewers.map((v) => (
+          <CompareViewport
+            key={v.id}
+            videoUrl={project.videoUrl}
+            duration={duration}
+            zone={zone}
+            viewer={v}
+            decision={decisions[v.id]}
+            currentTime={currentTime}
+            playing={playing}
+          />
+        ))}
       </div>
     </div>
   );
