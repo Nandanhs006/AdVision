@@ -52,6 +52,21 @@ export function Sidebar() {
               </span>
             </div>
           </Link>
+
+          {/* Quick Header Theme Switcher (Light / Dark Mode) */}
+          <button
+            onClick={toggleTheme}
+            type="button"
+            className="p-2 rounded-lg border border-adv-border bg-adv-surface hover:bg-adv-surfaceHover text-adv-text transition-all flex items-center justify-center shadow-sm group"
+            title={`Switch to ${theme === "dark" ? "Light (Warm Neutral)" : "Dark (Charcoal)"} Mode`}
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? (
+              <Sun size={16} className="text-amber-400 group-hover:rotate-45 transition-transform" />
+            ) : (
+              <Moon size={16} className="text-adv-accent group-hover:-rotate-12 transition-transform" />
+            )}
+          </button>
         </div>
 
         {/* Navigation */}
