@@ -37,6 +37,7 @@ next-env.d.ts
 # docdel / temporary private documents
 /docdel/
 docdel/
+advision-demo-*.mp4
 
 # runtime generated social posters
 /public/rendered-ads/*.png
