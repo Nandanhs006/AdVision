@@ -58,17 +58,17 @@ export default function TargetingPage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-adv-accent/20 text-adv-accent border border-adv-accent/30">
-              Taste Intelligence Inspector
+              Contextual AI & Intent Inspector
             </span>
             <span className="text-xs text-adv-secondary">
-              Deep-Dive Analysis
+              Google AdSense & Meta Ads Integration
             </span>
           </div>
           <h1 className="text-3xl font-extrabold text-adv-text tracking-tight mt-1">
-            Qloo Targeting & Affinity Trace
+            Intent Classification & Ad Network Inspector
           </h1>
           <p className="text-sm text-adv-secondary mt-1">
-            Examine how Qloo&apos;s taste graph maps individual viewer cultural signals to brand rankings, and how editorial safety rules filter the final placement.
+            Examine how SceneCast&apos;s intent engine maps individual viewer intent signals, in-market behavior, and scene context to Google AdSense & Meta Ads bids, and how editorial safety rules filter the final placement.
           </p>
         </div>
       </div>
@@ -81,13 +81,13 @@ export default function TargetingPage() {
           </div>
           <div>
             <span className="text-xs font-mono uppercase text-adv-accent font-bold block">
-              Step 1: Signal Join
+              Step 1: Intent & Context Match
             </span>
             <h3 className="text-sm font-bold text-adv-text mt-0.5">
-              Qloo Ranks Taste Graph
+              AdSense & Meta Intent Engine
             </h3>
             <p className="text-xs text-adv-secondary mt-1">
-              Resolves viewer favorites into entities and scores brands against city demographics and scene mood.
+              Classifies viewer in-market search and purchase intent and scores candidate creatives against scene atmosphere.
             </p>
           </div>
         </div>

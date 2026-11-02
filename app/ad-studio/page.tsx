@@ -129,7 +129,7 @@ export default function AdStudioCreatePage() {
 
   const handleRemoveAnchor = (index: number) => {
     if (cohort.anchors.length <= 3) {
-      setError("At least 3 cultural anchors required for Qloo taste analysis.");
+      setError("At least 3 audience anchors required for intent analysis.");
       return;
     }
     setCohort({
@@ -173,15 +173,15 @@ export default function AdStudioCreatePage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-1 rounded-full bg-adv-accent/10 text-adv-accent text-xs font-semibold uppercase tracking-wider border border-adv-accent/20">
-              Ad Studio · Part 2
+              Ad Studio
             </span>
-            <span className="text-xs text-adv-secondary font-mono">Qloo Taste Graph</span>
+            <span className="text-xs text-adv-secondary font-mono">Google AdSense & Meta Ads</span>
           </div>
           <h1 className="text-2xl font-bold text-adv-text tracking-tight mt-1">
-            Generate Social Ad Creatives
+            Generate In-Scene & Social Ad Creatives
           </h1>
           <p className="text-sm text-adv-secondary mt-1">
-            Turn cultural cohort taste signals into multi-aspect social posters, localized copy, and Instagram/Facebook posts.
+            Turn audience intent signals and in-market data into multi-aspect responsive posters, localized copy, and AdSense/Meta ad units.
           </p>
         </div>
 
@@ -591,7 +591,7 @@ export default function AdStudioCreatePage() {
           <div className="border-b border-adv-border pb-4">
             <h2 className="text-lg font-bold text-adv-text">3. Ready to Generate Ad Studio Creatives</h2>
             <p className="text-xs text-adv-secondary mt-1">
-              Qloo will query the cultural taste graph for this cohort, deterministically construct 3 design variants, generate localized copy, and render multi-aspect PNG posters.
+              SceneCast will query the intent classification engine for this cohort, deterministically construct 3 design variants, generate localized copy, and render multi-aspect PNG posters.
             </p>
           </div>
 

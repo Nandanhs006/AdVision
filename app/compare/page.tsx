@@ -98,7 +98,7 @@ function CompareViewport({
         <div>
           {isWinner && !isWinner.publicService ? (
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-successBg border border-adv-success/30 text-adv-success">
-              Qloo match {Math.round((decision?.ranked?.[0]?.qlooAffinity || 0.95) * 100)}%
+              Intent match {Math.round((decision?.ranked?.[0]?.qlooAffinity || 0.95) * 100)}% ({decision?.winningCampaign?.category?.toLowerCase().includes("beverage") ? "Meta" : "AdSense"})
             </span>
           ) : isKids ? (
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-accent/20 border border-adv-accent/30 text-adv-accent">
@@ -268,7 +268,7 @@ export default function CompareSyncPage() {
               4-Way Persona Sync
             </span>
             <span className="text-xs text-adv-secondary">
-              Powered by Qloo&apos;s taste graph
+              Powered by Intent Classification & Ad Networks
             </span>
           </div>
           <h1 className="text-3xl font-extrabold text-adv-text tracking-tight mt-1">

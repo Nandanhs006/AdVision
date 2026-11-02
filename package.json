@@ -1,8 +1,8 @@
 {
-  "name": "advision",
+  "name": "scenecast",
   "version": "1.0.0",
   "private": true,
-  "description": "Advision: Qloo-powered in-scene ad placement for video editing and dynamic personalization",
+  "description": "SceneCast: Intent-based in-scene ad placement integrated with Google AdSense and Meta Ads",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

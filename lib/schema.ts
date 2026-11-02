@@ -82,7 +82,10 @@ export const RankedCampaignSchema = z.object({
   campaignId: z.string(),
   brandName: z.string().optional(),
   category: z.string().optional(),
-  qlooAffinity: z.number(), // 0 to 1
+  qlooAffinity: z.number(), // 0 to 1 (backward compatible)
+  intentScore: z.number().optional(), // 0 to 1 intent-based classification score
+  adNetwork: z.enum(["google_adsense", "meta_ads", "programmatic_dsp", "direct"]).optional(),
+  intentSignals: z.array(z.string()).optional(),
   finalScore: z.number().optional(),
   status: z.enum([
     "selected",
@@ -106,8 +109,9 @@ export const DecisionSchema = z.object({
   reasons: z.array(z.string()),
   trace: z.array(QlooTraceEntrySchema),
   explanation: z.string(),
-  source: z.enum(["qloo", "fixture", "fallback"]),
+  source: z.enum(["qloo", "fixture", "fallback", "google_adsense", "meta_ads", "intent_engine"]),
   status: z.enum(["approved", "pending", "bypassed"]).default("approved"),
+  adNetwork: z.string().optional(),
 });
 export type Decision = z.infer<typeof DecisionSchema>;
 

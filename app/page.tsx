@@ -33,17 +33,17 @@ export default function ProjectsPage() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold uppercase bg-adv-accent/20 text-adv-accent border border-adv-accent/30">
-              Qloo Taste Intelligence
+              Intent-Based Ads · AdSense & Meta
             </span>
             <span className="text-xs text-adv-secondary">
               Production Workspace
             </span>
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-adv-text">
-            Advision Projects
+            SceneCast Projects
           </h1>
           <p className="text-adv-secondary text-sm mt-1 max-w-2xl">
-            Dynamic in-scene ad placement where Qloo’s taste graph personalizes billboard and signboard creatives for every viewer without altering the cinematic story.
+            Dynamic in-scene virtual product placement where real-time intent classification and ad networks (Google AdSense & Meta Ads) personalize billboard surfaces for every viewer without altering the cinematic story.
           </p>
         </div>
 

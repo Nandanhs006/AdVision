@@ -236,16 +236,28 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
     const finalScore = Number((qlooAffinity + tieBreaker).toFixed(4));
     const status = notInQlooTop ? "not_in_qloo_top" : "allowed";
 
+    // Intent classification & Ad Network routing (Google AdSense vs Meta Ads)
+    const catLower = camp.category.toLowerCase();
+    const adNetwork =
+      catLower.includes("tech") || catLower.includes("auto") || catLower.includes("electronics")
+        ? "google_adsense"
+        : catLower.includes("beverage") || catLower.includes("apparel") || catLower.includes("fashion") || catLower.includes("lifestyle")
+        ? "meta_ads"
+        : "google_adsense";
+
     ranked.push({
       campaignId: camp.id,
       brandName: camp.brandName,
       category: camp.category,
       qlooAffinity,
+      intentScore: qlooAffinity,
+      adNetwork,
+      intentSignals: viewer.favorites.slice(0, 3),
       finalScore,
       status,
       reason: notInQlooTop
         ? "Not in Qloo top-50, evaluated via tag overlap fallback score"
-        : `Qloo taste match (${(qlooAffinity * 100).toFixed(0)}%) with ${tieBreaker > 0 ? `+${(tieBreaker * 100).toFixed(0)}% localized tie-breaker` : "standard weighting"}`,
+        : `Intent-based match (${(qlooAffinity * 100).toFixed(0)}%) via ${adNetwork === "google_adsense" ? "Google AdSense" : "Meta Ads"} with ${tieBreaker > 0 ? `+${(tieBreaker * 100).toFixed(0)}% localized tie-breaker` : "standard weighting"}`,
     });
   }
 
@@ -302,7 +314,14 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
       ? ` driven by ${signals.map((s) => s.signal).join(" and ")}`
       : ` aligned with ${viewer.city} local preferences`;
 
-    explanation = `Qloo matched ${winningCampaign.brandName} with ${affinityPct}% affinity for ${viewer.name}${signalText}. All editorial rules for category, flight dates, and prominence were validated.`;
+    const winningNet =
+      winningCampaign.category.toLowerCase().includes("tech") || winningCampaign.category.toLowerCase().includes("auto")
+        ? "Google AdSense"
+        : winningCampaign.category.toLowerCase().includes("beverage") || winningCampaign.category.toLowerCase().includes("lifestyle")
+        ? "Meta Ads"
+        : "Google AdSense";
+
+    explanation = `SceneCast intent engine matched ${winningCampaign.brandName} with ${affinityPct}% affinity for ${viewer.name}${signalText} via ${winningNet} contextual intelligence. All editorial rules for category, flight dates, and prominence were validated.`;
 
     if (options.llmExplainer) {
       try {

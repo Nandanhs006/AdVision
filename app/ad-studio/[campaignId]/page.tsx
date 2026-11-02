@@ -286,7 +286,7 @@ Language: ${campaignId.includes("sony") ? "Japanese" : "English"}`;
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
         <RefreshCw size={28} className="animate-spin text-adv-accent" />
         <p className="text-sm text-adv-secondary font-mono">
-          Loading Qloo taste models and rendering creative variants...
+          Loading intent models and rendering creative variants...
         </p>
       </div>
     );
@@ -311,7 +311,7 @@ Language: ${campaignId.includes("sony") ? "Japanese" : "English"}`;
             )}
           </div>
           <h1 className="text-2xl font-bold text-adv-text tracking-tight mt-1">
-            Qloo-Engineered Social Ad Variants
+            Intent-Engineered Ad Variants (AdSense & Meta)
           </h1>
         </div>
 
@@ -773,7 +773,7 @@ Language: ${campaignId.includes("sony") ? "Japanese" : "English"}`;
               <div>
                 <h2 className="text-lg font-bold text-adv-text">Why this creative?</h2>
                 <p className="text-xs text-adv-secondary">
-                  Complete explainability: Qloo taste tags, cultural entities, and style tokens.
+                  Complete explainability: In-market intent tags, audience entities, and style tokens.
                 </p>
               </div>
               <button
@@ -784,11 +784,11 @@ Language: ${campaignId.includes("sony") ? "Japanese" : "English"}`;
               </button>
             </div>
 
-            {/* Qloo Top Tags */}
+            {/* Top Intent Tags */}
             {tasteProfile && (
               <div className="space-y-3">
                 <span className="text-xs font-bold text-adv-secondary uppercase tracking-wider block">
-                  1. Top Qloo Taste Tags (Affinity-Weighted)
+                  1. Top Intent & Audience Tags (Affinity-Weighted)
                 </span>
                 <div className="space-y-1.5">
                   {tasteProfile.topTags.map((tag) => (
@@ -860,7 +860,7 @@ Language: ${campaignId.includes("sony") ? "Japanese" : "English"}`;
             {tasteProfile?.traces && (
               <div className="space-y-3">
                 <span className="text-xs font-bold text-adv-secondary uppercase tracking-wider block">
-                  4. Raw Qloo Trace Log
+                  4. Raw Intent & Telemetry Trace Log
                 </span>
                 <div className="space-y-1 font-mono text-[11px] text-adv-secondary bg-adv-bg p-3 rounded-lg border border-adv-border overflow-x-auto max-h-40">
                   {tasteProfile.traces.map((tr, idx) => (

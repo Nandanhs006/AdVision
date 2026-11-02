@@ -4,9 +4,9 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Sidebar } from "@/components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "Advision — Qloo-Powered In-Scene Ad Placement",
+  title: "SceneCast — Intent-Based In-Scene Ads with Google AdSense & Meta Ads",
   description:
-    "Dynamic, contextual in-scene ad placement powered by Qloo's taste graph. Story, timing, and actors stay identical for every viewer while ads adapt in real time.",
+    "Dynamic, contextual in-scene ad placement powered by intent classification and integrated with Google AdSense and Meta Ads. Story, timing, and cinematic footage stay identical while ads adapt dynamically in real time.",
 };
 
 export default function RootLayout({

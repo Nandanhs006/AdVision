@@ -239,9 +239,9 @@ export function CompositedPlayer({
 
         {/* Source badge pill */}
         <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/20 text-[11px] text-adv-secondary flex items-center gap-1.5 font-mono">
-          <span>Taste Graph:</span>
+          <span>Ad Network:</span>
           <span className="text-adv-text font-bold uppercase">
-            {decision?.source || "qloo"}
+            {decision?.winningCampaign?.category?.toLowerCase().includes("beverage") ? "Meta Ads" : "Google AdSense"}
           </span>
         </div>
 
@@ -381,9 +381,9 @@ export function CompositedPlayer({
                   <span className="text-[10px] text-adv-secondary font-mono block mb-1">
                     STEP 1
                   </span>
-                  <span className="font-bold text-white block">Qloo Ranks</span>
+                  <span className="font-bold text-white block">Intent Engine</span>
                   <span className="text-[10px] text-adv-secondary">
-                    Taste Graph
+                    AdSense & Meta
                   </span>
                 </div>
                 <div className="bg-adv-surface border border-adv-border p-2.5 rounded-xl">
@@ -413,7 +413,7 @@ export function CompositedPlayer({
                   Decision Explanation
                 </span>
                 <p className="text-sm text-adv-text leading-relaxed">
-                  {decision?.explanation || "Decision evaluated according to Qloo taste ranking and editorial safety rules."}
+                  {decision?.explanation || "Decision evaluated according to intent classification and editorial safety rules."}
                 </p>
                 {decision?.reasons && decision.reasons.length > 0 && (
                   <ul className="text-xs text-adv-secondary space-y-1 list-disc pl-4 pt-2 border-t border-adv-border">

@@ -21,11 +21,11 @@ import { useTheme } from "./ThemeProvider";
 const navItems = [
   { label: "Projects", href: "/", icon: Film },
   { label: "Studio Editor", href: "/studio", icon: SlidersHorizontal },
-  { label: "Qloo Targeting", href: "/targeting", icon: Sparkles },
+  { label: "Intent Targeting", href: "/targeting", icon: Sparkles },
   { label: "Player", href: "/watch/proj-tokyo-nightfall", icon: PlaySquare },
   { label: "4-Way Sync", href: "/compare", icon: Columns3 },
   { label: "Ad Studio", href: "/ad-studio", icon: Palette },
-  { label: "Social Connect", href: "/connections", icon: Share2 },
+  { label: "Ad Networks & Social", href: "/connections", icon: Share2 },
   { label: "Brand Studio", href: "/campaigns", icon: Megaphone },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
 ];
@@ -40,15 +40,15 @@ export function Sidebar() {
         {/* Brand Header */}
         <div className="flex items-center justify-between pb-6 border-b border-adv-border mb-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-adv-accent flex items-center justify-center font-bold text-white shadow-md">
-              A
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-adv-accent flex items-center justify-center font-black text-white shadow-md text-base">
+              S
             </div>
             <div>
               <span className="font-bold text-lg tracking-tight text-adv-text block leading-none">
-                Advision
+                SceneCast
               </span>
               <span className="text-[10px] text-adv-secondary font-mono tracking-wider uppercase mt-1 block">
-                In-Scene Ads · Qloo AI
+                Intent Ads · AdSense & Meta
               </span>
             </div>
           </Link>
@@ -86,14 +86,14 @@ export function Sidebar() {
 
       {/* Bottom status & controls */}
       <div className="pt-4 border-t border-adv-border space-y-3">
-        {/* Taste Graph engine pill */}
+        {/* Intent Engine status pill */}
         <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-adv-surface border border-adv-border text-xs">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-adv-success animate-pulse" />
-            <span className="text-adv-secondary font-medium">Taste Engine</span>
+            <span className="text-adv-secondary font-medium">Intent Engine</span>
           </div>
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-adv-successBg text-adv-success border border-adv-success/30 font-semibold">
-            Qloo Active
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-adv-successBg text-adv-success border border-adv-success/30 font-semibold">
+            AdSense + Meta
           </span>
         </div>
 
