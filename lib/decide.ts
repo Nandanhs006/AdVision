@@ -5,16 +5,17 @@ import {
   Campaign,
   Decision,
   RankedCampaign,
-  QlooTraceEntry,
+  DecisionTraceEntry,
 } from "./schema";
-import { QlooClient, getQlooClient } from "./qloo/client";
+import { IntentEngineClient, getIntentClient } from "./intent/client";
 
 export interface DecisionOptions {
   zone: Zone;
   rules: Rules;
   viewer: Viewer;
   campaigns: Campaign[];
-  qlooClient?: QlooClient;
+  intentClient?: IntentEngineClient;
+  qlooClient?: IntentEngineClient; // Backward compatibility alias
   now?: string; // YYYY-MM-DD for deterministic testing
   llmExplainer?: (data: {
     winnerName: string;
@@ -28,9 +29,10 @@ export interface DecisionOptions {
  * Pure, deterministic rules & scoring pipeline
  */
 export async function runDecisionPipeline(options: DecisionOptions): Promise<Decision> {
-  const { zone, rules, viewer, campaigns, qlooClient = getQlooClient(), now = "2026-10-31" } = options;
+  const intentClient = options.intentClient || options.qlooClient || getIntentClient();
+  const { zone, rules, viewer, campaigns, now = "2026-10-31" } = options;
 
-  const traces: QlooTraceEntry[] = [];
+  const traces: DecisionTraceEntry[] = [];
   const reasons: string[] = [];
 
   // ==========================================
@@ -69,6 +71,7 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
         campaignId: c.id,
         brandName: c.brandName,
         category: c.category,
+        intentScore: 1.0,
         qlooAffinity: 1.0,
         finalScore: 1.0,
         status: c.id === winnerId ? "selected" : "allowed",
@@ -86,7 +89,7 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
   // Step 2: Resolve Signals
   // ==========================================
   const searchPromises = viewer.favorites.slice(0, 5).map((fav) =>
-    qlooClient.search(fav, undefined, 1)
+    intentClient.search(fav, undefined, 1)
   );
   const searchResults = await Promise.all(searchPromises);
   const resolvedEntityIds: string[] = [];
@@ -98,7 +101,7 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
 
   // Resolve scene mood tags
   const moodTagPromises = (rules.sceneMood.length > 0 ? rules.sceneMood.slice(0, 4) : ["urban", "neon"]).map((m) =>
-    qlooClient.resolveTags(m)
+    intentClient.resolveTags(m)
   );
   const moodResults = await Promise.all(moodTagPromises);
   const resolvedTagIds: string[] = [];
@@ -109,9 +112,9 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
   });
 
   // ==========================================
-  // Step 3: Qloo Ranking (Brand Insights)
+  // Step 3: Intent Classification & Ad Network Ranking
   // ==========================================
-  const insightsRes = await qlooClient.brandInsights({
+  const insightsRes = await intentClient.brandInsights({
     entityIds: resolvedEntityIds,
     tagIds: resolvedTagIds,
     locationQuery: viewer.country || viewer.city,
@@ -119,7 +122,7 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
   });
 
   // Collect trace entries recorded during this request
-  traces.push(...qlooClient.getTraces());
+  traces.push(...intentClient.getTraces());
 
   const brandAffinityMap = new Map<string, { affinity: number; explainability?: Array<{ signal: string; contribution: number }> }>();
   insightsRes.brands.forEach((b) => {
@@ -140,15 +143,16 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
       continue; // PSAs are fallbacks, not commercial contenders
     }
 
-    let qlooAffinity = 0;
-    let notInQlooTop = false;
+    let intentScore = 0;
+    let notInTopTier = false;
+    const entityUrn = camp.intentEntityId || camp.qlooEntityId;
 
-    if (camp.qlooEntityId && brandAffinityMap.has(camp.qlooEntityId)) {
-      const info = brandAffinityMap.get(camp.qlooEntityId)!;
-      qlooAffinity = info.affinity;
+    if (entityUrn && brandAffinityMap.has(entityUrn)) {
+      const info = brandAffinityMap.get(entityUrn)!;
+      intentScore = info.affinity;
     } else {
       // Tag overlap fallback score capped at 0.5
-      notInQlooTop = true;
+      notInTopTier = true;
       const favLower = viewer.favorites.map((f) => f.toLowerCase());
       const moodLower = rules.sceneMood.map((m) => m.toLowerCase());
       const combinedViewerInterests = [...favLower, ...moodLower];
@@ -159,7 +163,7 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
           overlap += 1;
         }
       });
-      qlooAffinity = Math.min(0.5, (overlap / Math.max(1, camp.tags.length)) * 0.5);
+      intentScore = Math.min(0.5, (overlap / Math.max(1, camp.tags.length)) * 0.5);
     }
 
     // Rules Evaluation
@@ -171,7 +175,8 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
         campaignId: camp.id,
         brandName: camp.brandName,
         category: camp.category,
-        qlooAffinity,
+        intentScore,
+        qlooAffinity: intentScore,
         finalScore: 0,
         status: "expired",
         reason: `Campaign flight ended on ${flightEnd} (current: ${now})`,
@@ -185,7 +190,8 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
         campaignId: camp.id,
         brandName: camp.brandName,
         category: camp.category,
-        qlooAffinity,
+        intentScore,
+        qlooAffinity: intentScore,
         finalScore: 0,
         status: "blocked",
         reason: `Category '${camp.category}' is explicitly blocked by editor rules`,
@@ -202,7 +208,8 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
         campaignId: camp.id,
         brandName: camp.brandName,
         category: camp.category,
-        qlooAffinity,
+        intentScore,
+        qlooAffinity: intentScore,
         finalScore: 0,
         status: "blocked",
         reason: `Category '${camp.category}' is not in editor's allowed categories`,
@@ -216,7 +223,8 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
         campaignId: camp.id,
         brandName: camp.brandName,
         category: camp.category,
-        qlooAffinity,
+        intentScore,
+        qlooAffinity: intentScore,
         finalScore: 0,
         status: "capped",
         reason: `Zone area (${(zone.frameShare * 100).toFixed(1)}%) exceeds prominence cap (${(rules.prominenceCap * 100).toFixed(1)}%)`,
@@ -233,8 +241,8 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
       tieBreaker += 0.05;
     }
 
-    const finalScore = Number((qlooAffinity + tieBreaker).toFixed(4));
-    const status = notInQlooTop ? "not_in_qloo_top" : "allowed";
+    const finalScore = Number((intentScore + tieBreaker).toFixed(4));
+    const status = notInTopTier ? "not_in_intent_top" : "allowed";
 
     // Intent classification & Ad Network routing (Google AdSense vs Meta Ads)
     const catLower = camp.category.toLowerCase();
@@ -249,15 +257,15 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
       campaignId: camp.id,
       brandName: camp.brandName,
       category: camp.category,
-      qlooAffinity,
-      intentScore: qlooAffinity,
+      intentScore,
+      qlooAffinity: intentScore,
       adNetwork,
       intentSignals: viewer.favorites.slice(0, 3),
       finalScore,
       status,
-      reason: notInQlooTop
-        ? "Not in Qloo top-50, evaluated via tag overlap fallback score"
-        : `Intent-based match (${(qlooAffinity * 100).toFixed(0)}%) via ${adNetwork === "google_adsense" ? "Google AdSense" : "Meta Ads"} with ${tieBreaker > 0 ? `+${(tieBreaker * 100).toFixed(0)}% localized tie-breaker` : "standard weighting"}`,
+      reason: notInTopTier
+        ? "Not in top tier intent index, evaluated via tag overlap fallback score"
+        : `Intent-based match (${(intentScore * 100).toFixed(0)}%) via ${adNetwork === "google_adsense" ? "Google AdSense" : "Meta Ads"} with ${tieBreaker > 0 ? `+${(tieBreaker * 100).toFixed(0)}% localized tie-breaker` : "standard weighting"}`,
     });
   }
 
@@ -268,7 +276,7 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
   ranked.sort((a, b) => (b.finalScore || 0) - (a.finalScore || 0));
 
   const eligibleCandidates = ranked.filter(
-    (r) => r.status === "allowed" || r.status === "not_in_qloo_top"
+    (r) => r.status === "allowed" || r.status === "not_in_intent_top" || (r.status as string) === "not_in_qloo_top"
   );
 
   let winnerId: string = "neutral";
@@ -306,10 +314,11 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
     explanation = `Displaying civic public announcement for ${winningCampaign.brandName} as no commercial sponsors matched editor constraints.`;
   } else if (winningCampaign) {
     const topRanked = ranked.find((r) => r.campaignId === winnerId);
-    const affinityPct = Math.round((topRanked?.qlooAffinity || 0) * 100);
+    const affinityPct = Math.round(((topRanked?.intentScore ?? topRanked?.qlooAffinity) || 0) * 100);
 
     // Get signals if available
-    const signals = brandAffinityMap.get(winningCampaign.qlooEntityId || "")?.explainability;
+    const entityUrn = winningCampaign.intentEntityId || winningCampaign.qlooEntityId || "";
+    const signals = brandAffinityMap.get(entityUrn)?.explainability;
     const signalText = signals && signals.length > 0
       ? ` driven by ${signals.map((s) => s.signal).join(" and ")}`
       : ` aligned with ${viewer.city} local preferences`;
@@ -351,7 +360,7 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
     reasons,
     trace: traces,
     explanation,
-    source: insightsRes.source === "qloo" ? "qloo" : "fixture",
+    source: insightsRes.source === "intent_engine" ? "intent_engine" : "fixture",
     status: decisionStatus,
   };
 }

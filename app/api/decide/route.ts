@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(decision);
   } catch {
     return NextResponse.json(
-      { error: "qloo_error", message: "Decision pipeline failed while querying taste intelligence" },
+      { error: "decision_error", message: "Decision pipeline failed while querying intent intelligence" },
       { status: 502 }
     );
   }

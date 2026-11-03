@@ -432,7 +432,7 @@ export function CompositedPlayer({
                   </h4>
                   <div className="space-y-2">
                     {decision.ranked.map((item) => {
-                      const pct = Math.round(item.qlooAffinity * 100);
+                      const pct = Math.round(((item.intentScore ?? item.qlooAffinity) || 0) * 100);
                       const isWinner = item.status === "selected";
                       const isBlocked = item.status === "blocked";
                       const isCapped = item.status === "capped";
@@ -490,11 +490,11 @@ export function CompositedPlayer({
                 </div>
               )}
 
-              {/* Raw Qloo Trace Table */}
+              {/* Raw Ad Network & Intent Trace Table */}
               {decision?.trace && decision.trace.length > 0 && (
                 <div className="space-y-2">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-adv-secondary">
-                    Raw Qloo Trace Entries
+                    Raw Ad Network & Intent Traces
                   </h4>
                   <div className="bg-adv-main border border-adv-border rounded-xl p-3 font-mono text-[11px] space-y-2 overflow-x-auto">
                     {decision.trace.map((tr, idx) => (

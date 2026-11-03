@@ -49,7 +49,8 @@
       "fg": "#ffffff",
       "accent": "#db0a40"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:repbull_energy"
   },
   {
     "id": "camp-sony-alpha",
@@ -101,7 +102,8 @@
       "fg": "#f8f8f8",
       "accent": "#ff6600"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:sony_alpha"
   },
   {
     "id": "camp-mrf-tyres",
@@ -152,7 +154,8 @@
       "fg": "#ffffff",
       "accent": "#d3112a"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:mrf_tyres"
   },
   {
     "id": "camp-kissa-coffee",
@@ -199,7 +202,8 @@
       "fg": "#f4efe6",
       "accent": "#4aa130"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:generic:kissa_craft_roasters"
   },
   {
     "id": "camp-malabar-chai",
@@ -246,7 +250,8 @@
       "fg": "#fdf8ee",
       "accent": "#d19633"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:generic:malabar_hill_spiced_tea"
   },
   {
     "id": "camp-lumina-audio",
@@ -297,7 +302,8 @@
       "fg": "#edf2ff",
       "accent": "#6366f1"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:generic:lumina_spatial_sound"
   },
   {
     "id": "camp-atlantis-books",
@@ -347,7 +353,8 @@
       "fg": "#f5f0fa",
       "accent": "#a855f7"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:generic:folio_&_horizon_press"
   },
   {
     "id": "camp-solstice-apparel",
@@ -395,7 +402,8 @@
       "fg": "#fbf8f5",
       "accent": "#e07a5f"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:generic:atelier_solstice"
   },
   {
     "id": "camp-nordic-voyage",
@@ -443,7 +451,8 @@
       "fg": "#edf6fa",
       "accent": "#38bdf8"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:generic:fjordline_expedition_rail"
   },
   {
     "id": "camp-islay-whisky",
@@ -491,7 +500,8 @@
       "fg": "#faeae6",
       "accent": "#e0675f"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:generic:cask_&_peat_distillers"
   },
   {
     "id": "camp-vintage-archive",
@@ -538,7 +548,8 @@
       "fg": "#e5e5e5",
       "accent": "#a3a3a3"
     },
-    "publicService": false
+    "publicService": false,
+    "intentEntityId": "urn:entity:generic:retrochronicle_watches"
   },
   {
     "id": "psa-civic-library",
@@ -589,7 +600,8 @@
       "fg": "#e6f4fa",
       "accent": "#2dd4bf"
     },
-    "publicService": true
+    "publicService": true,
+    "intentEntityId": "urn:entity:brand:public_library_network"
   },
   {
     "id": "psa-road-safety",
@@ -639,6 +651,7 @@
       "fg": "#faeeee",
       "accent": "#f43f5e"
     },
-    "publicService": true
+    "publicService": true,
+    "intentEntityId": "urn:entity:brand:vision_zero_safety"
   }
 ]

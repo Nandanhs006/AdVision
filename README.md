@@ -75,9 +75,9 @@ flowchart TD
 
 SceneCast exposes a Streamable Model Context Protocol (MCP) server endpoint at `/api/mcp` allowing autonomous AI agents to query SceneCast tools:
 
-- `qloo_search`: Resolve entity queries to Qloo URNs.
-- `qloo_brand_insights`: Query Qloo brand affinities for a market.
-- `resolve_tags`: Map scene mood descriptors to tag entities.
+- `intent_search`: Resolve entity queries to commercial intent URNs.
+- `brand_insights`: Query purchase intent and ad network affinity for a market.
+- `resolve_tags`: Map scene mood descriptors to commercial intent taxonomy tags.
 - `decide_ad`: Execute the full end-to-end decision pipeline.
 
 ### Querying the MCP Endpoint
@@ -112,10 +112,11 @@ cp .env.example .env.local
 ### Environment Variables (`.env.local`)
 
 ```ini
-# Qloo Taste Intelligence
-QLOO_API_KEY=your_qloo_api_key_here
-QLOO_BASE_URL=https://hackathon.api.qloo.com
-QLOO_MODE=live   # Set to 'fixture' to use offline realistic sample data
+# SceneCast Commercial Intent & RTB Engine
+INTENT_ENGINE_MODE=simulated
+GOOGLE_ADSENSE_PUBLISHER_ID=pub-9482-1048-2847
+GOOGLE_ADSENSE_API_KEY=
+META_GRAPH_API_VERSION=v21.0
 
 # LLM Orchestration (Groq or any OpenAI-compatible provider)
 GROQ_API_KEY=your_groq_api_key_here
@@ -169,35 +170,35 @@ npm install -g vercel
 vercel
 ```
 
-Add the environment variables (`QLOO_API_KEY`, `GROQ_API_KEY`, `QLOO_MODE`) in the Vercel Project Settings. Verify health status by checking the public endpoint:
+Add the environment variables in Vercel Project Settings. Verify health status by checking the public endpoint:
 ```
 GET /api/health
 ```
 
 ---
 
-## Part 2: Ad Studio (Qloo-Designed Social Ads & Meta Connect)
+## Part 2: Ad Studio (Intent-Driven Social Ads & Meta Connect)
 
-Advision Part 2 extends the platform into a brand-side **Ad Studio**. A brand enters a product brief and defines a target **cohort** (e.g. *Tokyo Indie Enthusiasts*, *NYC Street Culture*, or *Coastal Arts Community*). Qloo's cultural taste graph analyzes that cohort across artists, films, places, and brands, and Advision deterministically turns the taste profile into **production-grade social ad templates** (palette, typography, layout archetype, motif, and tone) plus localized copy.
+SceneCast Part 2 extends the platform into a brand-side **Ad Studio**. A brand enters a product brief and defines a target **cohort** (e.g. *Tokyo Tech Creators*, *NYC Street Culture*, or *Coastal Arts Community*). SceneCast's commercial purchase intent engine classifies that cohort across artists, films, places, and brands, and deterministically turns the intent profile into **production-grade social ad templates** (palette, typography, layout archetype, motif, and tone) plus localized copy.
 
 The brand previews the creatives inside Instagram feed, Instagram story, and Facebook post mockups, exports multi-aspect PNG posters (1:1, 4:5, 9:16), and publishes them directly or simulates publication through connected social accounts.
 
 ```mermaid
 flowchart TD
-    Cohort["Target Cohort\n(City, Country, 3-5 Cultural Anchors)"] --> TastePipeline["Qloo Taste Pipeline\n(lib/ads/taste-profile.ts)"]
+    Cohort["Target Cohort\n(City, Country, 3-5 Cultural Anchors)"] --> TastePipeline["Intent Classification Pipeline\n(lib/ads/taste-profile.ts)"]
     Brief["Brand Brief\n(Product, Category, Goal, Palette)"] --> Studio["Ad Studio Engine\n(lib/ads/copy.ts & render.ts)"]
 
-    subgraph QlooTasteGraph ["Qloo Cultural Intelligence"]
-        QSearch["qloo.search (Resolve Anchors)"]
-        QTags["qloo.resolveTags (Category & Mood)"]
-        QInsights["qloo.insights (Artists, Movies, Places, Brands)"]
+    subgraph IntentEngine ["SceneCast Intent & Ad Network Engine"]
+        QSearch["intent.search (Resolve Anchors)"]
+        QTags["intent.resolveTags (Category & Mood)"]
+        QInsights["intent.insights (Demographics, RTB, Interests)"]
     end
 
     TastePipeline --> QSearch
     TastePipeline --> QTags
     TastePipeline --> QInsights
 
-    QInsights --> Profile["Taste Profile\n(Top Tags, Top Entities, Affinities)"]
+    QInsights --> Profile["Intent Profile\n(Top Tags, Top Entities, Affinities)"]
     Profile --> TasteToStyle["Deterministic Taste-to-Style Map\n(data/taste-style-map.json)"]
     
     TasteToStyle --> Tokens["3 Style Variants\n(Primary, Contrast, Safe)"]
@@ -219,18 +220,18 @@ flowchart TD
     Previews -->|Use as in-scene creative| InScene["Part 1 Cinema Billboard\n(/watch/proj-tokyo-nightfall)"]
 ```
 
-### How Qloo Powers the Ad Studio (Calls & Taste Pipeline)
-1. **Anchor Resolution (`/search`):** Parallel resolution of 3 to 5 cultural anchors (e.g. *Haruki Murakami*, *Tyler The Creator*, *Dumbo Brooklyn*) into verified Qloo entity URNs.
-2. **Multi-Domain Cultural Insights (`/v2/insights`):** Queries cultural affinity vectors across at least four distinct entity categories:
+### How Intent Classification Powers the Ad Studio
+1. **Anchor Resolution (`/search`):** Parallel resolution of 3 to 5 cultural and intent anchors (e.g. *Haruki Murakami*, *Tyler The Creator*, *Dumbo Brooklyn*) into verified taxonomy entity URNs.
+2. **Multi-Domain Commercial Intent Insights (`/v2/insights`):** Queries commercial affinity vectors across at least four distinct entity categories:
    - `urn:entity:artist` — Musical and performing artists defining cohort sonic taste.
    - `urn:entity:movie` — Cinematic, film, and television aesthetics.
    - `urn:entity:place` — Architectural landmarks, third wave cafes, and neighborhood cultural hubs.
    - `urn:entity:brand` — Existing commercial brands with high cohort affinity.
-3. **Affinity-Weighted Tag Aggregation:** Extracts explainability signals and descriptive tags from top entities, normalizes weights, strips uninformative stop words (*general, item, brand, correlation*), and isolates the **top 8 taste tags**.
-4. **Why the Output Depends on Qloo:** If you change the city from Tokyo to New York, or change the anchors from *Ryuichi Sakamoto* to *Formula 1*, the extracted Qloo tags shift from *ambient, meditative, minimalist* to *high-energy, industrial, street*. These tags trigger different deterministic rules in `data/taste-style-map.json`, resulting in visibly different color palettes, layout archetypes, typography, and motifs.
+3. **Affinity-Weighted Tag Aggregation:** Extracts explainability signals and descriptive tags from top entities, normalizes weights, strips uninformative stop words (*general, item, brand, correlation*), and isolates the **top 8 intent tags**.
+4. **Contextual Ad Network Routing:** Automatically identifies whether the campaign maps to Google AdSense / Google Ad Manager (optics, electronics, automotive, tech) or Meta Ads (beverages, apparel, lifestyle, food).
 
 ### Deterministic Taste-to-Style Mapping Table (28 Rules)
-Design tokens are selected deterministically by scoring tag rules against Qloo tag weights (tie-broken stably via cohort ID hashing):
+Design tokens are selected deterministically by scoring tag rules against intent tag weights (tie-broken stably via cohort ID hashing):
 
 | Domain / Mood | Trigger Keywords | Layout Archetype | Type Style | Palette (bg / fg / accent) | Visual Motif |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -277,7 +278,7 @@ Under Meta developer policies, unapproved apps in Development Mode can only make
 
 - **Creatives:** In this release, creatives are rendered as procedural, localized graphic posters on canvas. Photorealistic generative video repainting (diffusion-based in-painting) is planned for future roadmap iterations.
 - **Fictional Data Notice:** All brand names, campaign copy, and personas in this demo are fictional creative examples constructed for research and hackathon demonstration purposes.
-- **Qloo Fixture Mode:** When running without a `QLOO_API_KEY`, Advision automatically engages fixture mode, which supplies culturally accurate, mock taste graph data marked with visible badges.
+- **Simulated Mode:** When running in simulated mode (`INTENT_ENGINE_MODE=simulated`), SceneCast automatically supplies realistic commercial purchase intent scores and real-time bidding auction metrics marked with visible badges.
 
 ---
 
@@ -289,4 +290,4 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## Inspiration and Credits
 
-Inspired by the future of personalized cinematic storytelling and powered by **Qloo's Cultural AI Taste Graph**.
+Inspired by the future of personalized cinematic storytelling and powered by **Intent-Based In-Scene Advertising with Google AdSense & Meta Ads**.

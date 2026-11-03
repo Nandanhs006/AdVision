@@ -54,6 +54,7 @@ export const CampaignSchema = z.object({
   id: z.string(),
   brandName: z.string(),
   category: z.string(),
+  intentEntityId: z.string().optional(),
   qlooEntityId: z.string().optional(),
   tags: z.array(z.string()).default([]),
   countries: z.array(z.string()).optional(),
@@ -69,21 +70,23 @@ export const CampaignSchema = z.object({
 });
 export type Campaign = z.infer<typeof CampaignSchema>;
 
-export const QlooTraceEntrySchema = z.object({
+export const DecisionTraceEntrySchema = z.object({
   endpoint: z.string(),
   params: z.record(z.unknown()), // redacted
   status: z.number(),
   ms: z.number(),
   cached: z.boolean(),
 });
-export type QlooTraceEntry = z.infer<typeof QlooTraceEntrySchema>;
+export type DecisionTraceEntry = z.infer<typeof DecisionTraceEntrySchema>;
+export const QlooTraceEntrySchema = DecisionTraceEntrySchema;
+export type QlooTraceEntry = DecisionTraceEntry;
 
 export const RankedCampaignSchema = z.object({
   campaignId: z.string(),
   brandName: z.string().optional(),
   category: z.string().optional(),
-  qlooAffinity: z.number(), // 0 to 1 (backward compatible)
   intentScore: z.number().optional(), // 0 to 1 intent-based classification score
+  qlooAffinity: z.number().optional(), // 0 to 1 (backward compatible)
   adNetwork: z.enum(["google_adsense", "meta_ads", "programmatic_dsp", "direct"]).optional(),
   intentSignals: z.array(z.string()).optional(),
   finalScore: z.number().optional(),
@@ -93,6 +96,7 @@ export const RankedCampaignSchema = z.object({
     "capped",
     "blocked",
     "expired",
+    "not_in_intent_top",
     "not_in_qloo_top",
     "pending_approval",
   ]),
@@ -107,9 +111,9 @@ export const DecisionSchema = z.object({
   winningCampaign: CampaignSchema.optional(),
   ranked: z.array(RankedCampaignSchema),
   reasons: z.array(z.string()),
-  trace: z.array(QlooTraceEntrySchema),
+  trace: z.array(DecisionTraceEntrySchema),
   explanation: z.string(),
-  source: z.enum(["qloo", "fixture", "fallback", "google_adsense", "meta_ads", "intent_engine"]),
+  source: z.enum(["intent_engine", "google_adsense", "meta_ads", "fixture", "fallback", "qloo"]),
   status: z.enum(["approved", "pending", "bypassed"]).default("approved"),
   adNetwork: z.string().optional(),
 });

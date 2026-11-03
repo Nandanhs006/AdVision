@@ -16,8 +16,8 @@ export default function BrandStudioPage() {
   const [brandName, setBrandName] = useState<string>("Zenith Cold Brew");
   const [category, setCategory] = useState<string>("coffee");
   const [tags, setTags] = useState<string>("coffee, cafe, cold brew, organic");
-  const [qlooEntityId, setQlooEntityId] = useState<string>("urn:entity:brand:zenith_coffee");
-  const [resolvingQloo, setResolvingQloo] = useState<boolean>(false);
+  const [intentEntityId, setIntentEntityId] = useState<string>("urn:entity:brand:zenith_coffee");
+  const [resolvingIntent, setResolvingIntent] = useState<boolean>(false);
   const [resolvedStatus, setResolvedStatus] = useState<string | null>(null);
 
   const [startDate, setStartDate] = useState<string>("2025-01-01");
@@ -56,28 +56,28 @@ export default function BrandStudioPage() {
     fetchCampaigns();
   }, []);
 
-  // Resolve Qloo Entity
-  const handleResolveQloo = async () => {
+  // Resolve Intent Entity URN
+  const handleResolveIntent = async () => {
     if (!brandName.trim()) return;
-    setResolvingQloo(true);
+    setResolvingIntent(true);
     setResolvedStatus(null);
     try {
-      const res = await fetch(`/api/qloo/search?query=${encodeURIComponent(brandName.trim())}`);
+      const res = await fetch(`/api/intent/search?query=${encodeURIComponent(brandName.trim())}`);
       if (res.ok) {
         const data = await res.json();
         const topResult = data.results?.[0];
         if (topResult) {
-          setQlooEntityId(topResult.id);
+          setIntentEntityId(topResult.id);
           setResolvedStatus(`Resolved to "${topResult.name}" (${topResult.id})`);
         } else {
-          setQlooEntityId(`urn:entity:brand:${brandName.toLowerCase().replace(/\s+/g, "_")}`);
+          setIntentEntityId(`urn:entity:brand:${brandName.toLowerCase().replace(/\s+/g, "_")}`);
           setResolvedStatus("Fallback generated entity URN");
         }
       }
     } catch {
-      setQlooEntityId(`urn:entity:brand:${brandName.toLowerCase().replace(/\s+/g, "_")}`);
+      setIntentEntityId(`urn:entity:brand:${brandName.toLowerCase().replace(/\s+/g, "_")}`);
     } finally {
-      setResolvingQloo(false);
+      setResolvingIntent(false);
     }
   };
 
@@ -86,7 +86,8 @@ export default function BrandStudioPage() {
     id: `camp-${Date.now()}`,
     brandName,
     category,
-    qlooEntityId,
+    intentEntityId,
+    qlooEntityId: intentEntityId,
     tags: tags.split(",").map((t) => t.trim()),
     countries: ["United States", "Japan", "India", "France"],
     languages: ["en", "ja", "te", "kn", "fr"],
@@ -145,7 +146,7 @@ export default function BrandStudioPage() {
             Create & Resolve Campaigns
           </h1>
           <p className="text-sm text-adv-secondary mt-1">
-            Build procedural brand creatives, link them to Qloo taste entities, and preview localized multi-language typography.
+            Build procedural brand creatives, link them to commercial intent entities, and preview localized multi-language typography.
           </p>
         </div>
       </div>
@@ -168,7 +169,7 @@ export default function BrandStudioPage() {
             )}
           </div>
 
-          {/* Brand Name & Qloo Resolver */}
+          {/* Brand Name & Intent Resolver */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-adv-secondary uppercase">
               Brand / Sponsor Name
@@ -184,12 +185,12 @@ export default function BrandStudioPage() {
               />
               <button
                 type="button"
-                onClick={handleResolveQloo}
-                disabled={resolvingQloo}
+                onClick={handleResolveIntent}
+                disabled={resolvingIntent}
                 className="px-3.5 py-2.5 rounded-xl bg-adv-surfaceHover hover:bg-adv-border border border-adv-border text-adv-text text-xs font-semibold flex items-center gap-1.5 transition-colors whitespace-nowrap"
               >
                 <Search size={13} />
-                <span>{resolvingQloo ? "Resolving..." : "Resolve Qloo"}</span>
+                <span>{resolvingIntent ? "Resolving..." : "Resolve Intent ID"}</span>
               </button>
             </div>
             {resolvedStatus && (
@@ -199,10 +200,10 @@ export default function BrandStudioPage() {
             )}
             <input
               type="text"
-              value={qlooEntityId}
-              onChange={(e) => setQlooEntityId(e.target.value)}
+              value={intentEntityId}
+              onChange={(e) => setIntentEntityId(e.target.value)}
               className="w-full bg-adv-sidebar/60 border border-adv-border/60 text-adv-secondary text-xs rounded-lg px-3 py-1.5 font-mono"
-              placeholder="Qloo Entity URN"
+              placeholder="Commercial Intent Entity URN"
             />
           </div>
 
@@ -389,9 +390,9 @@ export default function BrandStudioPage() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span>Qloo Entity:</span>
+                <span>Intent Entity:</span>
                 <span className="text-adv-accent truncate max-w-xs">
-                  {previewCampaign.qlooEntityId}
+                  {previewCampaign.intentEntityId || previewCampaign.qlooEntityId}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -413,7 +414,7 @@ export default function BrandStudioPage() {
               Active Brand Campaigns Catalog ({campaigns.length})
             </h3>
             <p className="text-xs text-adv-secondary">
-              Campaigns eligible for Qloo-driven in-scene billboard placement and Ad Studio export.
+              Campaigns eligible for intent-driven in-scene billboard placement and Ad Studio export.
             </p>
           </div>
         </div>

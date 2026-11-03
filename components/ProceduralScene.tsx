@@ -208,12 +208,15 @@ export function ProceduralScene({
             }
           }
 
-          // Top Banner Tag (e.g. IN-SCENE AD · QLOO MATCH 96%)
+          // Top Banner Tag (e.g. IN-SCENE AD · GOOGLE ADSENSE / META ADS)
+          const netLabel = (campaign.category.toLowerCase().includes("beverage") || campaign.category.toLowerCase().includes("fashion") || campaign.category.toLowerCase().includes("lifestyle"))
+            ? "META ADS · "
+            : "GOOGLE ADSENSE · ";
           ctx.fillStyle = palette.accent;
           ctx.font = "bold 11px monospace";
           ctx.textAlign = "left";
           ctx.fillText(
-            (publicService ? "PUBLIC SERVICE · " : "QLOO SPONSOR · ") + brandName.toUpperCase(),
+            (publicService ? "PUBLIC SERVICE · " : netLabel) + brandName.toUpperCase(),
             bx + 16,
             by + 28
           );

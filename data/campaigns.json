@@ -4,10 +4,32 @@
     "brandName": "RepBull Energy",
     "category": "beverage",
     "qlooEntityId": "urn:entity:brand:repbull_energy",
-    "tags": ["energy drink", "extreme sports", "formula 1", "action", "stamina", "racing"],
-    "countries": ["United States", "Japan", "India", "United Kingdom", "France"],
-    "languages": ["en", "ja", "te", "kn", "fr"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "energy drink",
+      "extreme sports",
+      "formula 1",
+      "action",
+      "stamina",
+      "racing"
+    ],
+    "countries": [
+      "United States",
+      "Japan",
+      "India",
+      "United Kingdom",
+      "France"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "te",
+      "kn",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Gives You Wings. Limitless Energy.",
       "ja": "翼をさずける、限界なき覚醒エナジー",
@@ -22,18 +44,45 @@
       "kn": "ಶಕ್ತಿ ಪಡೆಯಿರಿ",
       "fr": "Faire le plein"
     },
-    "palette": { "bg": "#001a30", "fg": "#ffffff", "accent": "#db0a40" },
-    "publicService": false
+    "palette": {
+      "bg": "#001a30",
+      "fg": "#ffffff",
+      "accent": "#db0a40"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:repbull_energy"
   },
   {
     "id": "camp-sony-alpha",
     "brandName": "Sony Alpha Optics",
     "category": "electronics",
     "qlooEntityId": "urn:entity:brand:sony_alpha",
-    "tags": ["camera", "photography", "mirrorless", "optics", "cinematography", "full-frame"],
-    "countries": ["Japan", "United States", "India", "France", "United Kingdom"],
-    "languages": ["en", "ja", "te", "kn", "fr"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "camera",
+      "photography",
+      "mirrorless",
+      "optics",
+      "cinematography",
+      "full-frame"
+    ],
+    "countries": [
+      "Japan",
+      "United States",
+      "India",
+      "France",
+      "United Kingdom"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "te",
+      "kn",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Capture the Unseen. Pure Full-Frame Precision.",
       "ja": "一瞬を永遠に。最先端αフルサイズ超解像",
@@ -48,18 +97,44 @@
       "kn": "ವಿವರ ನೋಡಿ",
       "fr": "Découvrir Alpha"
     },
-    "palette": { "bg": "#0c0c0e", "fg": "#f8f8f8", "accent": "#ff6600" },
-    "publicService": false
+    "palette": {
+      "bg": "#0c0c0e",
+      "fg": "#f8f8f8",
+      "accent": "#ff6600"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:sony_alpha"
   },
   {
     "id": "camp-mrf-tyres",
     "brandName": "MRF ZLX Tyres",
     "category": "automotive",
     "qlooEntityId": "urn:entity:brand:mrf_tyres",
-    "tags": ["automotive", "tyres", "racing", "highways", "cricket", "performance"],
-    "countries": ["India", "United States", "United Kingdom", "Japan"],
-    "languages": ["en", "te", "kn", "ja", "fr"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "automotive",
+      "tyres",
+      "racing",
+      "highways",
+      "cricket",
+      "performance"
+    ],
+    "countries": [
+      "India",
+      "United States",
+      "United Kingdom",
+      "Japan"
+    ],
+    "languages": [
+      "en",
+      "te",
+      "kn",
+      "ja",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Pace, Grip & Endless Highways.",
       "te": "అసాధారణ పట్టు, అసమానమైన ప్రయాణ వేగం.",
@@ -74,18 +149,40 @@
       "ja": "取扱店を探す",
       "fr": "Trouver un centre"
     },
-    "palette": { "bg": "#150406", "fg": "#ffffff", "accent": "#d3112a" },
-    "publicService": false
+    "palette": {
+      "bg": "#150406",
+      "fg": "#ffffff",
+      "accent": "#d3112a"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:mrf_tyres"
   },
   {
     "id": "camp-kissa-coffee",
     "brandName": "Kissa Craft Roasters",
     "category": "coffee",
     "qlooEntityId": "urn:entity:brand:kissa_coffee",
-    "tags": ["coffee", "specialty coffee", "cold brew", "cafe culture", "artisanal"],
-    "countries": ["Japan", "United States", "France"],
-    "languages": ["en", "ja", "fr"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "coffee",
+      "specialty coffee",
+      "cold brew",
+      "cafe culture",
+      "artisanal"
+    ],
+    "countries": [
+      "Japan",
+      "United States",
+      "France"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Cold brew, slow-dripped in Shibuya",
       "ja": "渋谷仕立ての水出し水滴珈琲",
@@ -100,18 +197,40 @@
       "te": "రుచి చూడండి",
       "kn": "ರುಚಿ ನೋಡಿ"
     },
-    "palette": { "bg": "#121b18", "fg": "#f4efe6", "accent": "#4aa130" },
-    "publicService": false
+    "palette": {
+      "bg": "#121b18",
+      "fg": "#f4efe6",
+      "accent": "#4aa130"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:kissa_coffee"
   },
   {
     "id": "camp-malabar-chai",
     "brandName": "Malabar Hill Spiced Tea",
     "category": "tea",
     "qlooEntityId": "urn:entity:brand:malabar_tea",
-    "tags": ["tea", "chai", "filter coffee", "spices", "beverages"],
-    "countries": ["India", "United States", "United Kingdom"],
-    "languages": ["en", "te", "kn"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "tea",
+      "chai",
+      "filter coffee",
+      "spices",
+      "beverages"
+    ],
+    "countries": [
+      "India",
+      "United States",
+      "United Kingdom"
+    ],
+    "languages": [
+      "en",
+      "te",
+      "kn"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Diwali harvest spiced cardamom brew",
       "te": "దీపావళి స్పెషల్ ఫిల్టర్ కాఫీ & చాయ్",
@@ -126,18 +245,44 @@
       "ja": "ブレンドを試す",
       "fr": "Déguster"
     },
-    "palette": { "bg": "#23180d", "fg": "#fdf8ee", "accent": "#d19633" },
-    "publicService": false
+    "palette": {
+      "bg": "#23180d",
+      "fg": "#fdf8ee",
+      "accent": "#d19633"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:malabar_tea"
   },
   {
     "id": "camp-lumina-audio",
     "brandName": "Lumina Spatial Sound",
     "category": "audio",
     "qlooEntityId": "urn:entity:brand:lumina_audio",
-    "tags": ["audio", "headphones", "indie music", "podcasts", "electronics"],
-    "countries": ["Japan", "United States", "France", "United Kingdom", "India"],
-    "languages": ["en", "ja", "fr", "te", "kn"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "audio",
+      "headphones",
+      "indie music",
+      "podcasts",
+      "electronics"
+    ],
+    "countries": [
+      "Japan",
+      "United States",
+      "France",
+      "United Kingdom",
+      "India"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "fr",
+      "te",
+      "kn"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Immersive sound, tuned for acoustic realism",
       "ja": "音の粒子まで描く、純粋空間音響",
@@ -152,18 +297,43 @@
       "te": "వివరాలు చూడండి",
       "kn": "ಅನುಭವಿಸಿ ನೋಡಿ"
     },
-    "palette": { "bg": "#14172b", "fg": "#edf2ff", "accent": "#6366f1" },
-    "publicService": false
+    "palette": {
+      "bg": "#14172b",
+      "fg": "#edf2ff",
+      "accent": "#6366f1"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:lumina_audio"
   },
   {
     "id": "camp-atlantis-books",
     "brandName": "Folio & Horizon Press",
     "category": "books",
     "qlooEntityId": "urn:entity:brand:folio_press",
-    "tags": ["books", "literature", "science fiction", "indie bookstore", "design"],
-    "countries": ["United States", "Japan", "France", "United Kingdom", "India"],
-    "languages": ["en", "ja", "fr", "kn"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "books",
+      "literature",
+      "science fiction",
+      "indie bookstore",
+      "design"
+    ],
+    "countries": [
+      "United States",
+      "Japan",
+      "France",
+      "United Kingdom",
+      "India"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "fr",
+      "kn"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Speculative visions in letterpress print",
       "ja": "活版印刷で紡ぐ、新たな思索の地平",
@@ -178,18 +348,41 @@
       "kn": "ಪುಸ್ತಕ ನೋಡಿ",
       "te": "చదవండి"
     },
-    "palette": { "bg": "#1a1622", "fg": "#f5f0fa", "accent": "#a855f7" },
-    "publicService": false
+    "palette": {
+      "bg": "#1a1622",
+      "fg": "#f5f0fa",
+      "accent": "#a855f7"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:folio_press"
   },
   {
     "id": "camp-solstice-apparel",
     "brandName": "Atelier Solstice",
     "category": "fashion",
     "qlooEntityId": "urn:entity:brand:solstice_atelier",
-    "tags": ["fashion", "minimalist", "sustainable apparel", "design", "outerwear"],
-    "countries": ["France", "Japan", "United States", "United Kingdom"],
-    "languages": ["en", "fr", "ja"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "fashion",
+      "minimalist",
+      "sustainable apparel",
+      "design",
+      "outerwear"
+    ],
+    "countries": [
+      "France",
+      "Japan",
+      "United States",
+      "United Kingdom"
+    ],
+    "languages": [
+      "en",
+      "fr",
+      "ja"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Zero-waste merino weave for all weather",
       "fr": "Laine mérinos éco-responsable pour chaque saison",
@@ -204,18 +397,41 @@
       "te": "సేకరణను చూడండి",
       "kn": "ವಿವರ ನೋಡಿ"
     },
-    "palette": { "bg": "#1d1a18", "fg": "#fbf8f5", "accent": "#e07a5f" },
-    "publicService": false
+    "palette": {
+      "bg": "#1d1a18",
+      "fg": "#fbf8f5",
+      "accent": "#e07a5f"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:solstice_atelier"
   },
   {
     "id": "camp-nordic-voyage",
     "brandName": "Fjordline Expedition Rail",
     "category": "travel",
     "qlooEntityId": "urn:entity:brand:fjordline_rail",
-    "tags": ["travel", "train journeys", "nature", "scandinavia", "mountains"],
-    "countries": ["United States", "France", "Japan", "United Kingdom"],
-    "languages": ["en", "fr", "ja"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "travel",
+      "train journeys",
+      "nature",
+      "scandinavia",
+      "mountains"
+    ],
+    "countries": [
+      "United States",
+      "France",
+      "Japan",
+      "United Kingdom"
+    ],
+    "languages": [
+      "en",
+      "fr",
+      "ja"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Glacier routes under the aurora canopy",
       "fr": "Traversée des fjords sous les aurores boréales",
@@ -230,18 +446,41 @@
       "te": "ప్రయాణ వివరాలు",
       "kn": "ಮಾರ್ಗ ತಿಳಿಯಿರಿ"
     },
-    "palette": { "bg": "#101924", "fg": "#edf6fa", "accent": "#38bdf8" },
-    "publicService": false
+    "palette": {
+      "bg": "#101924",
+      "fg": "#edf6fa",
+      "accent": "#38bdf8"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:fjordline_rail"
   },
   {
     "id": "camp-islay-whisky",
     "brandName": "Cask & Peat Distillers",
     "category": "spirits",
     "qlooEntityId": "urn:entity:brand:cask_peat_spirits",
-    "tags": ["spirits", "whisky", "cocktails", "nightlife", "craft spirits"],
-    "countries": ["United Kingdom", "United States", "France", "Japan"],
-    "languages": ["en", "ja", "fr"],
-    "flight": { "start": "2025-01-01", "end": "2027-12-31" },
+    "tags": [
+      "spirits",
+      "whisky",
+      "cocktails",
+      "nightlife",
+      "craft spirits"
+    ],
+    "countries": [
+      "United Kingdom",
+      "United States",
+      "France",
+      "Japan"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2027-12-31"
+    },
     "headline": {
       "en": "Single malt aged in coastal oak barrels",
       "ja": "海風香るオーク樽仕込みシングルモルト",
@@ -256,18 +495,40 @@
       "te": "మరింత సమాచారం",
       "kn": "ಹೆಚ್ಚು ತಿಳಿಯಿರಿ"
     },
-    "palette": { "bg": "#23110e", "fg": "#faeae6", "accent": "#e0675f" },
-    "publicService": false
+    "palette": {
+      "bg": "#23110e",
+      "fg": "#faeae6",
+      "accent": "#e0675f"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:cask_peat_spirits"
   },
   {
     "id": "camp-vintage-archive",
     "brandName": "RetroChronicle Watches",
     "category": "fashion",
     "qlooEntityId": "urn:entity:brand:retro_watches",
-    "tags": ["fashion", "watches", "vintage", "design", "accessories"],
-    "countries": ["Japan", "France", "United States"],
-    "languages": ["en", "ja", "fr"],
-    "flight": { "start": "2023-01-01", "end": "2024-01-01" },
+    "tags": [
+      "fashion",
+      "watches",
+      "vintage",
+      "design",
+      "accessories"
+    ],
+    "countries": [
+      "Japan",
+      "France",
+      "United States"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "fr"
+    ],
+    "flight": {
+      "start": "2023-01-01",
+      "end": "2024-01-01"
+    },
     "headline": {
       "en": "Mechanical chronographs from 1974",
       "ja": "1974年の鼓動を宿す機械式時計",
@@ -282,18 +543,44 @@
       "te": "పూర్తయింది",
       "kn": "ಆರ್ಕೈವ್"
     },
-    "palette": { "bg": "#1c1c1c", "fg": "#e5e5e5", "accent": "#a3a3a3" },
-    "publicService": false
+    "palette": {
+      "bg": "#1c1c1c",
+      "fg": "#e5e5e5",
+      "accent": "#a3a3a3"
+    },
+    "publicService": false,
+    "intentEntityId": "urn:entity:brand:retro_watches"
   },
   {
     "id": "psa-civic-library",
     "brandName": "Public Library Network",
     "category": "public_service",
     "qlooEntityId": "urn:entity:brand:public_library_network",
-    "tags": ["books", "community", "education", "public service", "reading"],
-    "countries": ["United States", "Japan", "India", "France", "United Kingdom"],
-    "languages": ["en", "ja", "te", "kn", "fr"],
-    "flight": { "start": "2025-01-01", "end": "2028-12-31" },
+    "tags": [
+      "books",
+      "community",
+      "education",
+      "public service",
+      "reading"
+    ],
+    "countries": [
+      "United States",
+      "Japan",
+      "India",
+      "France",
+      "United Kingdom"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "te",
+      "kn",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2028-12-31"
+    },
     "headline": {
       "en": "Free books, audio, and community spaces for all",
       "ja": "だれでも、いつでも。あなたの街の公立図書館へ",
@@ -308,18 +595,43 @@
       "kn": "ಉಚಿತ ಕಾರ್ಡ್ ಪಡೆಯಿರಿ",
       "fr": "S'inscrire gratuitement"
     },
-    "palette": { "bg": "#0f1c24", "fg": "#e6f4fa", "accent": "#2dd4bf" },
-    "publicService": true
+    "palette": {
+      "bg": "#0f1c24",
+      "fg": "#e6f4fa",
+      "accent": "#2dd4bf"
+    },
+    "publicService": true,
+    "intentEntityId": "urn:entity:brand:public_library_network"
   },
   {
     "id": "psa-road-safety",
     "brandName": "Vision Zero Road Safety",
     "category": "public_service",
     "qlooEntityId": "urn:entity:brand:vision_zero_safety",
-    "tags": ["safety", "public service", "transport", "community"],
-    "countries": ["United States", "Japan", "India", "France", "United Kingdom"],
-    "languages": ["en", "ja", "te", "kn", "fr"],
-    "flight": { "start": "2025-01-01", "end": "2028-12-31" },
+    "tags": [
+      "safety",
+      "public service",
+      "transport",
+      "community"
+    ],
+    "countries": [
+      "United States",
+      "Japan",
+      "India",
+      "France",
+      "United Kingdom"
+    ],
+    "languages": [
+      "en",
+      "ja",
+      "te",
+      "kn",
+      "fr"
+    ],
+    "flight": {
+      "start": "2025-01-01",
+      "end": "2028-12-31"
+    },
     "headline": {
       "en": "Eyes on the crosswalk. Every second counts.",
       "ja": "横断歩道は歩行者優先。みんなの命を守る運転を。",
@@ -334,7 +646,12 @@
       "kn": "ಸುರಕ್ಷಿತವಾಗಿ ಚಲಿಸಿ",
       "fr": "Conduire prudemment"
     },
-    "palette": { "bg": "#1f1515", "fg": "#faeeee", "accent": "#f43f5e" },
-    "publicService": true
+    "palette": {
+      "bg": "#1f1515",
+      "fg": "#faeeee",
+      "accent": "#f43f5e"
+    },
+    "publicService": true,
+    "intentEntityId": "urn:entity:brand:vision_zero_safety"
   }
 ]

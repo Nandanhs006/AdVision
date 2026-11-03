@@ -763,12 +763,12 @@ export default function StudioEditorPage() {
               </h2>
             </div>
             <p className="text-xs text-adv-secondary mt-0.5">
-              Simulating in-scene billboard placement for all 7 seeded viewers based on Qloo taste affinity and editor rules.
+              Simulating in-scene billboard placement for all 7 seeded viewers based on Intent affinity and ad network rules.
             </p>
           </div>
           {loadingDecisions && (
             <span className="text-xs text-adv-accent font-mono animate-pulse">
-              Computing Qloo rankings...
+              Computing Intent & Ad Network rankings...
             </span>
           )}
         </div>
@@ -779,9 +779,9 @@ export default function StudioEditorPage() {
               <tr className="border-b border-adv-border text-adv-secondary font-mono text-[11px] uppercase">
                 <th className="py-2.5 px-3">Viewer</th>
                 <th className="py-2.5 px-3">Market</th>
-                <th className="py-2.5 px-3">Taste Graph Match</th>
+                <th className="py-2.5 px-3">Ad Network Match</th>
                 <th className="py-2.5 px-3">Category</th>
-                <th className="py-2.5 px-3">Qloo Affinity</th>
+                <th className="py-2.5 px-3">Intent Match</th>
                 <th className="py-2.5 px-3">Rule Status</th>
                 <th className="py-2.5 px-3">Reasoning Summary</th>
               </tr>
@@ -793,7 +793,7 @@ export default function StudioEditorPage() {
                 const topRank = decision?.ranked.find(
                   (r) => r.campaignId === decision.winner
                 );
-                const affinity = topRank ? Math.round(topRank.qlooAffinity * 100) : 0;
+                const affinity = topRank ? Math.round(((topRank.intentScore ?? topRank.qlooAffinity) || 0) * 100) : 0;
                 const status = topRank?.status || (viewer.adPreference === "adfree" ? "neutral" : "allowed");
 
                 return (

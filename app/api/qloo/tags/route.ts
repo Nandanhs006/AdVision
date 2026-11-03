@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getQlooClient } from "@/lib/qloo/client";
+import { getIntentClient } from "@/lib/intent/client";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -13,12 +13,12 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const qloo = getQlooClient();
-    const result = await qloo.resolveTags(term.trim());
+    const client = getIntentClient();
+    const result = await client.resolveTags(term.trim());
     return NextResponse.json(result);
   } catch {
     return NextResponse.json(
-      { error: "qloo_error", message: "Failed querying Qloo tags" },
+      { error: "intent_error", message: "Failed resolving intent tags" },
       { status: 502 }
     );
   }

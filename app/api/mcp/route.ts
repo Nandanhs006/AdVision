@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getQlooClient } from "@/lib/qloo/client";
+import { getIntentClient } from "@/lib/intent/client";
 import { runDecisionPipeline } from "@/lib/decide";
 import { buildTasteProfile } from "@/lib/ads/taste-profile";
 import { mapTasteToStyle } from "@/lib/ads/taste-to-style";
@@ -11,8 +11,8 @@ import { Campaign, Viewer, Zone, Rules } from "@/lib/schema";
 // Standard MCP tool definitions
 const MCP_TOOLS = [
   {
-    name: "qloo_search",
-    description: "Search Qloo taste graph for an entity ID by free-text name or query",
+    name: "intent_search",
+    description: "Search commercial intent graph and taxonomy for an entity ID by free-text name or query",
     inputSchema: {
       type: "object",
       properties: {
@@ -23,8 +23,8 @@ const MCP_TOOLS = [
     },
   },
   {
-    name: "qloo_brand_insights",
-    description: "Query Qloo for brand affinity scores in a target city based on entities and tags",
+    name: "brand_insights",
+    description: "Query brand purchase intent and ad network affinity scores in a target city based on entities and tags",
     inputSchema: {
       type: "object",
       properties: {
@@ -37,7 +37,7 @@ const MCP_TOOLS = [
   },
   {
     name: "resolve_tags",
-    description: "Resolve scene mood or descriptive terms into standardized Qloo tag IDs",
+    description: "Resolve scene mood or descriptive terms into standardized commercial intent taxonomy tags",
     inputSchema: {
       type: "object",
       properties: {
@@ -48,7 +48,7 @@ const MCP_TOOLS = [
   },
   {
     name: "decide_ad",
-    description: "Run the full Advision decision pipeline for a zone, rules, and viewer profile",
+    description: "Run the full SceneCast intent decision pipeline for a zone, rules, and viewer profile",
     inputSchema: {
       type: "object",
       properties: {
@@ -63,7 +63,7 @@ const MCP_TOOLS = [
   },
   {
     name: "ads_taste_profile",
-    description: "Build a Qloo taste profile for a cohort of viewers based on cultural anchors and geography (read-only)",
+    description: "Build an intent profile for a cohort of viewers based on cultural anchors and geography (read-only)",
     inputSchema: {
       type: "object",
       properties: {
@@ -79,7 +79,7 @@ const MCP_TOOLS = [
   },
   {
     name: "ads_generate_variants",
-    description: "Generate Qloo-informed ad style variants (palette, layout, motif, typeStyle) and tone reasons for a brand brief and cohort (read-only)",
+    description: "Generate intent-informed ad style variants (palette, layout, motif, typeStyle) and tone reasons for a brand brief and cohort (read-only)",
     inputSchema: {
       type: "object",
       properties: {
@@ -100,7 +100,7 @@ const MCP_TOOLS = [
 
 export async function GET() {
   return NextResponse.json({
-    name: "advision-mcp-server",
+    name: "scenecast-mcp-server",
     version: "1.0.0",
     protocolVersion: "2024-11-05",
     tools: MCP_TOOLS,
@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { method, params, id = "1" } = body;
-    const qloo = getQlooClient();
+    const client = getIntentClient();
 
     // 1. Tool Listing
     if (method === "tools/list") {
@@ -127,8 +127,8 @@ export async function POST(req: NextRequest) {
       const toolName = params?.name;
       const args = params?.arguments || {};
 
-      if (toolName === "qloo_search") {
-        const res = await qloo.search(String(args.query || ""), undefined, Number(args.take || 5));
+      if (toolName === "intent_search" || toolName === "qloo_search") {
+        const res = await client.search(String(args.query || ""), undefined, Number(args.take || 5));
         return NextResponse.json({
           jsonrpc: "2.0",
           id,
@@ -136,8 +136,8 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      if (toolName === "qloo_brand_insights") {
-        const res = await qloo.brandInsights({
+      if (toolName === "brand_insights" || toolName === "qloo_brand_insights") {
+        const res = await client.brandInsights({
           locationQuery: String(args.locationQuery || "Tokyo"),
           entityIds: Array.isArray(args.entityIds) ? args.entityIds : undefined,
           tagIds: Array.isArray(args.tagIds) ? args.tagIds : undefined,
@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
       }
 
       if (toolName === "resolve_tags") {
-        const res = await qloo.resolveTags(String(args.term || ""));
+        const res = await client.resolveTags(String(args.term || ""));
         return NextResponse.json({
           jsonrpc: "2.0",
           id,
@@ -177,7 +177,7 @@ export async function POST(req: NextRequest) {
           rules,
           viewer,
           campaigns,
-          qlooClient: qloo,
+          intentClient: client,
         });
 
         return NextResponse.json({
@@ -196,7 +196,7 @@ export async function POST(req: NextRequest) {
           anchors: Array.isArray(args.anchors) ? args.anchors : ["Ryuichi Sakamoto", "Haruki Murakami", "Daikanyama T-Site"],
           goal: (args.goal === "sales" || args.goal === "traffic" ? args.goal : "awareness") as "awareness" | "traffic" | "sales",
         };
-        const profile = await buildTasteProfile(cohort, { client: qloo });
+        const profile = await buildTasteProfile(cohort, { client });
         return NextResponse.json({
           jsonrpc: "2.0",
           id,
@@ -214,7 +214,7 @@ export async function POST(req: NextRequest) {
           goal: (args.goal === "sales" || args.goal === "traffic" ? args.goal : "awareness") as "awareness" | "traffic" | "sales",
         };
         const profile = await buildTasteProfile(cohort, {
-          client: qloo,
+          client,
           keywords: [String(args.category || ""), String(args.product || "")],
         });
         const styles = mapTasteToStyle(profile, `cohort-${cohort.city.toLowerCase()}`);
@@ -226,19 +226,19 @@ export async function POST(req: NextRequest) {
       }
 
       return NextResponse.json(
-        { jsonrpc: "2.0", id, error: { code: -32601, message: `Tool not found: ${toolName}` } },
+        { jsonrpc: "2.0", id, error: { code: -32601, message: `Method or tool '${toolName}' not found` } },
         { status: 404 }
       );
     }
 
     return NextResponse.json(
-      { jsonrpc: "2.0", id, error: { code: -32600, message: `Unsupported method: ${method}` } },
+      { jsonrpc: "2.0", id, error: { code: -32600, message: "Invalid Request: Unhandled JSON-RPC method" } },
       { status: 400 }
     );
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Internal error";
+    const message = err instanceof Error ? err.message : "Internal MCP Server Error";
     return NextResponse.json(
-      { jsonrpc: "2.0", error: { code: -32603, message } },
+      { jsonrpc: "2.0", id: "1", error: { code: -32603, message } },
       { status: 500 }
     );
   }

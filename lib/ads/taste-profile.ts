@@ -1,5 +1,5 @@
-import { Cohort, TasteProfile, TasteTag, TasteEntity, QlooTraceEntry } from "../schema";
-import { QlooClient, getQlooClient } from "../qloo/client";
+import { Cohort, TasteProfile, TasteTag, TasteEntity, DecisionTraceEntry } from "../schema";
+import { IntentEngineClient, getIntentClient } from "../intent/client";
 
 // Generic / Stop tags to remove from taste scoring
 const GENERIC_STOP_WORDS = new Set([
@@ -37,16 +37,16 @@ function extractTagNames(signalOrTerm: string): string[] {
 }
 
 /**
- * Builds a taste profile for a target audience cohort using Qloo's taste graph
+ * Builds a taste and intent profile for a target audience cohort
  */
 export async function buildTasteProfile(
   cohort: Cohort,
   options?: {
-    client?: QlooClient;
+    client?: IntentEngineClient;
     keywords?: string[];
   }
 ): Promise<TasteProfile> {
-  const client = options?.client || getQlooClient();
+  const client = options?.client || getIntentClient();
   const tracesBefore = client.getTraces().length;
 
   // 1. Parallel search of cohort anchors into entity IDs
@@ -179,7 +179,7 @@ export async function buildTasteProfile(
 
   // Capture traces recorded during this taste profile generation
   const allTraces = client.getTraces();
-  const traces: QlooTraceEntry[] = allTraces.slice(tracesBefore);
+  const traces: DecisionTraceEntry[] = allTraces.slice(tracesBefore);
 
   let source: "qloo" | "fixture" | "fallback" = "qloo";
   if (isAllFixture) {

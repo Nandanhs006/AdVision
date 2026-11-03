@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     return NextResponse.json(
       {
-        error: "qloo_error",
+        error: "intent_error",
         message: err instanceof Error ? err.message : "Failed to generate taste profile",
       },
       { status: 500 }

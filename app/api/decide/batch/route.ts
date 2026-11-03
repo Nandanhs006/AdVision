@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     });
   } catch {
     return NextResponse.json(
-      { error: "qloo_error", message: "Failed running batch decisions" },
+      { error: "batch_decision_error", message: "Failed running batch decisions" },
       { status: 502 }
     );
   }

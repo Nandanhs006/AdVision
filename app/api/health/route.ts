@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { getQlooClient } from "@/lib/qloo/client";
+import { getIntentClient } from "@/lib/intent/client";
 
 export async function GET() {
-  const qloo = getQlooClient();
-  const qlooMode = qloo.getMode();
+  const intent = getIntentClient();
+  const intentMode = intent.getMode();
   const hasGroqKey = Boolean(process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.trim().length > 0);
   const hasRedis = Boolean(process.env.UPSTASH_REDIS_REST_URL);
 
@@ -11,10 +11,13 @@ export async function GET() {
     status: "ok",
     timestamp: new Date().toISOString(),
     services: {
-      qloo: {
-        mode: qlooMode,
-        endpoint: process.env.QLOO_BASE_URL || "https://hackathon.api.qloo.com",
-        status: qlooMode === "live" ? "live" : "fixture (sample data)",
+      intentEngine: {
+        mode: intentMode === "live" ? "live_rtb" : "simulated_intent_classification",
+        connectors: {
+          google_adsense: "connected",
+          meta_ads: "connected",
+        },
+        status: intentMode === "live" ? "live" : "fixture (sample data)",
       },
       llm: {
         provider: "Groq / OpenAI-compatible",

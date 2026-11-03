@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { runDecisionPipeline } from "../lib/decide";
-import { QlooClient } from "../lib/qloo/client";
+import { IntentEngineClient } from "../lib/intent/client";
 import { Zone, Rules, Viewer, Campaign } from "../lib/schema";
 import viewersJson from "../data/viewers.json";
 import campaignsJson from "../data/campaigns.json";
@@ -10,10 +10,10 @@ describe("Decision Engine & Rules Filter", () => {
   let mockRules: Rules;
   const viewers = viewersJson as Viewer[];
   const campaigns = campaignsJson as Campaign[];
-  let client: QlooClient;
+  let client: IntentEngineClient;
 
   beforeEach(() => {
-    client = new QlooClient({ mode: "fixture" });
+    client = new IntentEngineClient({ mode: "fixture" });
     mockZone = {
       id: "zone-billboard",
       label: "Rooftop Billboard",
@@ -36,14 +36,14 @@ describe("Decision Engine & Rules Filter", () => {
     };
   });
 
-  it("should bypass Qloo and return neutral for ad-free subscribers", async () => {
+  it("should bypass intent engine and return neutral for ad-free subscribers", async () => {
     const adfreeViewer = viewers.find((v) => v.adPreference === "adfree")!;
     const decision = await runDecisionPipeline({
       zone: mockZone,
       rules: mockRules,
       viewer: adfreeViewer,
       campaigns,
-      qlooClient: client,
+      intentClient: client,
     });
 
     expect(decision.winner).toBe("neutral");
@@ -52,14 +52,14 @@ describe("Decision Engine & Rules Filter", () => {
     expect(decision.reasons[0]).toContain("ad-free");
   });
 
-  it("should bypass Qloo and select only public service for kids profile", async () => {
+  it("should bypass intent engine and select only public service for kids profile", async () => {
     const kidsViewer = viewers.find((v) => v.adPreference === "kids")!;
     const decision = await runDecisionPipeline({
       zone: mockZone,
       rules: mockRules,
       viewer: kidsViewer,
       campaigns,
-      qlooClient: client,
+      intentClient: client,
     });
 
     expect(decision.winner).not.toBe("neutral");

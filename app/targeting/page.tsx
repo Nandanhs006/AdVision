@@ -177,12 +177,12 @@ export default function TargetingPage() {
                   Campaign Ranking & Rule Evaluation
                 </h3>
                 <p className="text-xs text-adv-secondary mt-0.5">
-                  Taste affinities sorted with rule status badges (Selected, Allowed, Capped, Blocked, Expired)
+                  Intent affinities sorted with rule status badges (Selected, Allowed, Capped, Blocked, Expired)
                 </p>
               </div>
               {loading && (
                 <span className="text-xs text-adv-accent font-mono animate-pulse">
-                  Querying Qloo...
+                  Evaluating Intent & Ad Networks...
                 </span>
               )}
             </div>
@@ -215,7 +215,7 @@ export default function TargetingPage() {
             {/* Ranked List */}
             <div className="space-y-3 pt-2">
               {decision?.ranked.map((brand) => {
-                const pct = Math.round(brand.qlooAffinity * 100);
+                const pct = Math.round(((brand.intentScore ?? brand.qlooAffinity) || 0) * 100);
                 const isSelected = brand.status === "selected";
                 const isBlocked = brand.status === "blocked";
                 const isCapped = brand.status === "capped";
@@ -290,18 +290,18 @@ export default function TargetingPage() {
           </div>
         </div>
 
-        {/* Right Col: Raw Qloo Trace Inspector */}
+        {/* Right Col: Raw Ad Network & Intent Trace Inspector */}
         <div className="space-y-4">
           <div className="bg-adv-surface border border-adv-border rounded-2xl p-5 space-y-4">
             <div className="flex items-center gap-2 pb-3 border-b border-adv-border">
               <Terminal size={18} className="text-adv-accent" />
               <h3 className="font-bold text-base text-adv-text">
-                Raw Qloo API Trace
+                Raw Ad Network & Intent Trace
               </h3>
             </div>
 
             <p className="text-xs text-adv-secondary">
-              Live network telemetry recorded during this decision request:
+              Live network telemetry recorded during this intent decision request:
             </p>
 
             <div className="space-y-3">

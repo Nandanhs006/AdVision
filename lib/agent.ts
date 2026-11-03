@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Zone, Rules, Viewer, Campaign, Decision } from "./schema";
-import { QlooClient, getQlooClient } from "./qloo/client";
+import { IntentEngineClient, getIntentClient } from "./intent/client";
 import { runDecisionPipeline } from "./decide";
 
 export const ToolCallSchema = z.object({
@@ -28,13 +28,14 @@ export class DecisionAgent {
   private apiKey: string;
   private baseUrl: string;
   private model: string;
-  private qlooClient: QlooClient;
+  private intentClient: IntentEngineClient;
 
   constructor(options?: {
     apiKey?: string;
     baseUrl?: string;
     model?: string;
-    qlooClient?: QlooClient;
+    intentClient?: IntentEngineClient;
+    qlooClient?: IntentEngineClient;
   }) {
     this.apiKey = options?.apiKey || process.env.GROQ_API_KEY || "";
     this.baseUrl =
@@ -45,7 +46,7 @@ export class DecisionAgent {
       options?.model ||
       process.env.LLM_MODEL ||
       "llama-3.3-70b-versatile";
-    this.qlooClient = options?.qlooClient || getQlooClient();
+    this.intentClient = options?.intentClient || options?.qlooClient || getIntentClient();
   }
 
   hasLLMKey(): boolean {
@@ -62,7 +63,7 @@ export class DecisionAgent {
 
     // Guardrail: Shortcuts for ad-free and kids profiles bypass LLM entirely
     if (viewer.adPreference === "adfree" || viewer.adPreference === "kids") {
-      return runDecisionPipeline({ zone, rules, viewer, campaigns, qlooClient: this.qlooClient });
+      return runDecisionPipeline({ zone, rules, viewer, campaigns, intentClient: this.intentClient });
     }
 
     // If no LLM key configured, run deterministic pipeline with fallback label
@@ -72,7 +73,7 @@ export class DecisionAgent {
         rules,
         viewer,
         campaigns,
-        qlooClient: this.qlooClient,
+        intentClient: this.intentClient,
       });
     }
 
@@ -85,7 +86,7 @@ export class DecisionAgent {
         rules,
         viewer,
         campaigns,
-        qlooClient: this.qlooClient,
+        intentClient: this.intentClient,
       });
       return {
         ...fallbackDecision,
@@ -104,8 +105,8 @@ export class DecisionAgent {
       {
         type: "function",
         function: {
-          name: "qloo_search",
-          description: "Search Qloo taste graph for an entity by free-text name",
+          name: "intent_search",
+          description: "Search commercial intent graph and taxonomy for an entity by free-text name",
           parameters: {
             type: "object",
             properties: {
@@ -118,8 +119,8 @@ export class DecisionAgent {
       {
         type: "function",
         function: {
-          name: "qloo_brand_insights",
-          description: "Get brand affinity ranking for a viewer in a specific location",
+          name: "brand_insights",
+          description: "Get brand purchase intent and ad network affinity for a viewer in a specific location",
           parameters: {
             type: "object",
             properties: {
@@ -134,7 +135,7 @@ export class DecisionAgent {
         type: "function",
         function: {
           name: "resolve_tags",
-          description: "Resolve scene mood terms to Qloo tag IDs",
+          description: "Resolve scene mood terms to commercial intent taxonomy tags",
           parameters: {
             type: "object",
             properties: {
@@ -166,11 +167,11 @@ export class DecisionAgent {
     const messages: LLMMessage[] = [
       {
         role: "system",
-        content: `You are the Advision Decision Agent. Orchestrate Qloo taste queries and explain the winning brand placement for an in-scene billboard.
+        content: `You are the SceneCast Decision Agent. Orchestrate commercial purchase intent classification across Google AdSense & Meta Ads, and explain the winning brand placement for an in-scene billboard.
 Guidelines:
-1. Search viewer favorites using qloo_search.
-2. Query brand insights for the viewer's city with qloo_brand_insights.
-3. Every numeric claim must match the exact data returned by Qloo.
+1. Search viewer favorites using intent_search.
+2. Query brand purchase intent for the viewer's city with brand_insights.
+3. Every numeric claim must match the exact data returned by the Intent Engine.
 4. Keep explanations to 2 sentences strictly citing real affinity scores.`,
       },
       {
@@ -230,15 +231,15 @@ Plan and execute tool calls to pick the optimal brand.`,
         }
 
         let result: unknown = {};
-        if (fnName === "qloo_search") {
-          result = await this.qlooClient.search(String(args.query || ""));
-        } else if (fnName === "qloo_brand_insights") {
-          result = await this.qlooClient.brandInsights({
+        if (fnName === "intent_search" || fnName === "qloo_search") {
+          result = await this.intentClient.search(String(args.query || ""));
+        } else if (fnName === "brand_insights" || fnName === "qloo_brand_insights") {
+          result = await this.intentClient.brandInsights({
             locationQuery: String(args.locationQuery || viewer.city),
             entityIds: Array.isArray(args.entityIds) ? args.entityIds : undefined,
           });
         } else if (fnName === "resolve_tags") {
-          result = await this.qlooClient.resolveTags(String(args.term || ""));
+          result = await this.intentClient.resolveTags(String(args.term || ""));
         } else if (fnName === "explain_pick") {
           customExplanation = `${args.winnerName} matched with ${args.affinityPct}% affinity for ${viewer.name} in ${args.city}.`;
           result = { success: true, explanation: customExplanation };
@@ -259,7 +260,7 @@ Plan and execute tool calls to pick the optimal brand.`,
       rules,
       viewer,
       campaigns,
-      qlooClient: this.qlooClient,
+      intentClient: this.intentClient,
       llmExplainer: customExplanation ? async () => customExplanation! : undefined,
     });
 
