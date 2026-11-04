@@ -79,7 +79,7 @@ export default function AnalyticsPage() {
             </span>
           </div>
           <h1 className="text-3xl font-extrabold text-adv-text tracking-tight mt-1">
-            In-Scene Campaign Analytics
+            Ad Scene Campaign Analytics
           </h1>
           <p className="text-sm text-adv-secondary mt-1">
             Tracking impressions, pause-to-shop card engagements, and clicks across international markets and marked film surfaces.
