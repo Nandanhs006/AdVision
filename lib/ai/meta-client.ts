@@ -529,23 +529,23 @@ export class MetaAIClient {
     return [
       {
         id: "sam31-chicago-gantry",
-        label: "SAM 3.1: Highway Roadside Super-Billboard",
-        confidence: 0.965,
+        label: "SAM 3.1: Overhead Interstate Super-Billboard",
+        confidence: 0.985,
         maskPolygon: [
-          { x: 0.259, y: 0.382 },
-          { x: 0.373, y: 0.385 },
-          { x: 0.373, y: 0.448 },
-          { x: 0.259, y: 0.444 },
+          { x: 0.2432, y: 0.3358 },
+          { x: 0.5869, y: 0.3358 },
+          { x: 0.5869, y: 0.4834 },
+          { x: 0.2432, y: 0.4834 },
         ],
         quad: [
-          { x: 0.259, y: 0.382 },
-          { x: 0.373, y: 0.385 },
-          { x: 0.373, y: 0.448 },
-          { x: 0.259, y: 0.444 },
+          { x: 0.2432, y: 0.3358 },
+          { x: 0.5869, y: 0.3358 },
+          { x: 0.5869, y: 0.4834 },
+          { x: 0.2432, y: 0.4834 },
         ],
-        frameShare: 0.072,
-        contrastRatio: "5.1:1 (Optimal Day Contrast)",
-        suggestedCap: 0.25,
+        frameShare: 0.051,
+        contrastRatio: "8.6:1 (Daylight High Contrast)",
+        suggestedCap: 0.30,
       },
     ];
   }
