@@ -68,7 +68,7 @@ export default function TargetingPage() {
             Intent Classification & Meta Ad Network Inspector
           </h1>
           <p className="text-sm text-adv-secondary mt-1">
-            Examine how SceneCast&apos;s intent engine maps individual viewer intent signals, in-market behavior, and scene context to Meta Ads & Audience Network bids, and how editorial safety rules filter the final placement.
+            Examine how AdVision&apos;s intent engine maps individual viewer intent signals, in-market behavior, and scene context to Meta Ads & Audience Network bids, and how editorial safety rules filter the final placement.
           </p>
         </div>
       </div>

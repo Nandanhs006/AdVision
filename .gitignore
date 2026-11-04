@@ -38,7 +38,7 @@ next-env.d.ts
 /docdel/
 docdel/
 advision-demo-*.mp4
-scenecast-demo-*.mp4
+# advision demo mp4
 scripts/video_temp/
 
 # large video files & raw assets (never commit video files to GitHub)
@@ -48,6 +48,11 @@ scripts/video_temp/
 *.avi
 *.mkv
 /public/media/*.mp4
+
+# python cache
+__pycache__/
+*.pyc
+*.pyo
 
 # runtime generated social posters
 /public/rendered-ads/*.png

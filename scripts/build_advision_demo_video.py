@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SceneCast 2.5-Minute Master Video Generator
+AdVision 2.5-Minute Master Video Generator
 - Professional voiceover via Microsoft Edge TTS (en-US-AndrewNeural at rate +14%)
 - Target duration: ~152 seconds (~2.5 minutes)
 - Full 1080p automated recording via Playwright
@@ -21,20 +21,20 @@ import asyncio
 import subprocess
 import shutil
 
-BASE_DIR = "/Volumes/DiskD/HACKATHONS/scenecast"
+BASE_DIR = "/Volumes/DiskD/HACKATHONS/advision"
 TEMP_DIR = os.path.join(BASE_DIR, "scripts", "video_temp")
-OUTPUT_VIDEO = os.path.join(BASE_DIR, "scenecast-demo-2.5min.mp4")
-BACKUP_VIDEO = "/Volumes/DiskD/Devpost/Advision/scenecast-demo-2.5min.mp4"
+OUTPUT_VIDEO = os.path.join(BASE_DIR, "advision-demo-2.5min.mp4")
+BACKUP_VIDEO = "/Volumes/DiskD/Devpost/Advision/advision-demo-2.5min.mp4"
 
 os.makedirs(TEMP_DIR, exist_ok=True)
 
 NARRATION_SECTIONS = [
     {
         "id": "part1_intro_dashboard",
-        "title": "Introduction & SceneCast Dashboard",
+        "title": "Introduction & AdVision Dashboard",
         "text": (
-            "Welcome to SceneCast, the intent-based in-scene advertising platform that transforms video content into dynamic, programmatic ad inventory. "
-            "Instead of interruptive pre-roll or mid-roll commercials, SceneCast seamlessly blends brand creatives onto physical surfaces like billboards, "
+            "Welcome to AdVision, the intent-based in-scene advertising platform that transforms video content into dynamic, programmatic ad inventory. "
+            "Instead of interruptive pre-roll or mid-roll commercials, AdVision seamlessly blends brand creatives onto physical surfaces like billboards, "
             "digital facades, and transit screens directly inside video footage."
         ),
     },
@@ -74,7 +74,7 @@ NARRATION_SECTIONS = [
         "id": "part5_intent_inspector",
         "title": "Intent Classification & Ad Network Inspector",
         "text": (
-            "Under the Intent Targeting Inspector, SceneCast evaluates real-time commercial purchase intent signals. "
+            "Under the Intent Targeting Inspector, AdVision evaluates real-time commercial purchase intent signals. "
             "Winning creatives are ranked across Google AdSense programmatic auctions and Meta Ads social matching, "
             "then passed through deterministic guardrails for brand safety."
         ),
@@ -92,12 +92,12 @@ NARRATION_SECTIONS = [
         "id": "part7_light_mode_connections",
         "title": "Warm Neutral Light Mode & Ad Networks Connectivity",
         "text": (
-            "Now, let us switch to SceneCast Warm Neutral Light Mode to inspect our ad network distribution and connectivity. "
-            "SceneCast integrates directly with Google AdSense and Google Ad Manager for programmatic in-scene Real-Time Bidding, "
+            "Now, let us switch to AdVision Warm Neutral Light Mode to inspect our ad network distribution and connectivity. "
+            "AdVision integrates directly with Google AdSense and Google Ad Manager for programmatic in-scene Real-Time Bidding, "
             "auctioning video billboard real estate with dynamic eCPMs. "
             "Alongside AdSense, our Meta Ads connector bridges in-scene placements with Instagram Professional and Facebook Pages via Graph API v21.0. "
             "With AES-256 encrypted credentials and dual live and simulated modes, "
-            "SceneCast delivers non-intrusive, evergreen video monetization for the streaming era."
+            "AdVision delivers non-intrusive, evergreen video monetization for the streaming era."
         ),
     },
 ]

@@ -176,7 +176,7 @@ export class DecisionAgent {
     const messages: LLMMessage[] = [
       {
         role: "system",
-        content: `You are the SceneCast Decision Agent powered by Meta Muse Spark. Orchestrate commercial purchase intent classification across Meta Audience Network & Meta Ads, and explain the winning brand placement for an in-scene billboard.
+        content: `You are the AdVision Decision Agent powered by Meta Muse Spark. Orchestrate commercial purchase intent classification across Meta Audience Network & Meta Ads, and explain the winning brand placement for an in-scene billboard.
 Guidelines:
 1. Search viewer favorites using intent_search.
 2. Query brand purchase intent for the viewer's city with brand_insights.

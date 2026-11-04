@@ -41,11 +41,11 @@ export function Sidebar() {
         <div className="flex items-center justify-between pb-6 border-b border-adv-border mb-6">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-adv-accent flex items-center justify-center font-black text-white shadow-md text-base">
-              S
+              A
             </div>
             <div>
               <span className="font-bold text-lg tracking-tight text-adv-text block leading-none">
-                SceneCast
+                AdVision
               </span>
               <span className="text-[10px] text-adv-secondary font-mono tracking-wider uppercase mt-1 block">
                 Meta AI · Audience Net

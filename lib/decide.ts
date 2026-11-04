@@ -326,7 +326,7 @@ export async function runDecisionPipeline(options: DecisionOptions): Promise<Dec
         ? "Meta Audience Network"
         : "Meta Ads";
 
-    explanation = `SceneCast intent engine matched ${winningCampaign.brandName} with ${affinityPct}% affinity for ${viewer.name}${signalText} via ${winningNet} contextual intelligence. All editorial rules for category, flight dates, and prominence were validated.`;
+    explanation = `AdVision intent engine matched ${winningCampaign.brandName} with ${affinityPct}% affinity for ${viewer.name}${signalText} via ${winningNet} contextual intelligence. All editorial rules for category, flight dates, and prominence were validated.`;
 
     if (options.llmExplainer) {
       try {

@@ -48,7 +48,7 @@ const MCP_TOOLS = [
   },
   {
     name: "decide_ad",
-    description: "Run the full SceneCast intent decision pipeline for a zone, rules, and viewer profile",
+    description: "Run the full AdVision intent decision pipeline for a zone, rules, and viewer profile",
     inputSchema: {
       type: "object",
       properties: {
@@ -100,7 +100,7 @@ const MCP_TOOLS = [
 
 export async function GET() {
   return NextResponse.json({
-    name: "scenecast-mcp-server",
+    name: "advision-mcp-server",
     version: "1.0.0",
     protocolVersion: "2024-11-05",
     tools: MCP_TOOLS,

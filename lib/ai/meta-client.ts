@@ -533,7 +533,7 @@ export class MetaAIClient {
       });
     }
 
-    return "SceneCast Meta AI intent engine successfully verified viewer affinities and editorial safety rules via Meta Audience Network.";
+    return "AdVision Meta AI intent engine successfully verified viewer affinities and editorial safety rules via Meta Audience Network.";
   }
 }
 

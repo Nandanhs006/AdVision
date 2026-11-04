@@ -522,7 +522,7 @@ export default function StudioEditorPage() {
                 </div>
                 <h3 className="text-lg font-bold text-white">Drop your custom video here</h3>
                 <p className="text-xs text-zinc-300 max-w-sm mt-1">
-                  SceneCast will load your video locally and calibrate Meta SAM 3.1 & Muse Wonder surface detection.
+                  AdVision will load your video locally and calibrate Meta SAM 3.1 & Muse Wonder surface detection.
                 </p>
               </div>
             )}

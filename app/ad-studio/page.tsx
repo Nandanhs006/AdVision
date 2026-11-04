@@ -591,7 +591,7 @@ export default function AdStudioCreatePage() {
           <div className="border-b border-adv-border pb-4">
             <h2 className="text-lg font-bold text-adv-text">3. Ready to Generate Ad Studio Creatives</h2>
             <p className="text-xs text-adv-secondary mt-1">
-              SceneCast will query the intent classification engine for this cohort, deterministically construct 3 design variants, generate localized copy, and render multi-aspect PNG posters.
+              AdVision will query the intent classification engine for this cohort, deterministically construct 3 design variants, generate localized copy, and render multi-aspect PNG posters.
             </p>
           </div>
 

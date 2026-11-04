@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SceneCast Python Backend
+AdVision Python Backend
 - Intent-based classification engine for in-scene video ads
 - Google AdSense & Meta Ads connector services
 - Computer vision 3D planar homography calibration
@@ -14,7 +14,7 @@ import math
 import time
 
 app = FastAPI(
-    title="SceneCast Intent & Ad Network Backend",
+    title="AdVision Intent & Ad Network Backend",
     description="Python FastAPI service for intent classification, OpenCV homography, and AdSense/Meta ad network orchestration.",
     version="1.0.0",
 )
@@ -86,7 +86,7 @@ class HomographyResponse(BaseModel):
 def health():
     return {
         "status": "healthy",
-        "service": "scenecast-python-backend",
+        "service": "advision-python-backend",
         "framework": "FastAPI",
         "connectors": {
             "google_adsense": "connected",

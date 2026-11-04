@@ -1,4 +1,4 @@
-# SceneCast: Intent-Based In-Scene Ad Placement with Meta AI
+# AdVision: Intent-Based In-Scene Ad Placement with Meta AI
 
 > **Dynamic, contextual in-scene ad placement where Meta AI models (Muse Spark, SAM 3.1, Muse Image, Muse Wonder) and Meta Audience Network determine the brand each viewer sees, while story, timing, and cinematic actors remain 100% identical.**
 
@@ -10,22 +10,22 @@
 
 ## What We Built During the Meta Global AI Developer Hackathon (Oct 27 - Nov 4)
 
-- **Unified Meta Model API Adapter ([`lib/ai/meta-client.ts`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/ai/meta-client.ts)):** Complete client supporting **Muse Spark** (text reasoning & compliance copy), **Muse Wonder** (video atmosphere understanding), **Muse Image** (creative visual backdrops), and **SAM 3.1** (surface segmentation), with Baseten open-weight fallback (`meta-models/muse-spark-open-1026`) and simulated offline mode.
-- **Autonomous Editorial Decision Agent ([`lib/agent.ts`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/agent.ts)):** Multi-step tool reasoning engine powered by Muse Spark that queries viewer purchase intent, enforces category & prominence safety guardrails, and renders verifiable audit explanations.
-- **AI Surface Scout with SAM 3.1 ([`lib/slotScout.ts`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/slotScout.ts)):** Zero-shot video surface detection that automatically segments billboards, extracts planar polygons, and calculates optimal 4-corner bounding quadrilaterals for CSS `matrix3d` homography.
-- **Contextual Ad Creative Generator ([`lib/ads/copy.ts`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/ads/copy.ts)):** Generates strictly compliant multilingual ad copy and multi-aspect responsive social units (1:1, 4:5, 9:16) with Muse Spark.
-- **Meta Ads & Audience Network Ecosystem ([`lib/meta/`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/meta/)):** Full integration with Meta Graph API v21.0 (Instagram Stories & Feed publishing, Facebook Pages) and Meta Audience Network programmatic in-scene bidding.
+- **Unified Meta Model API Adapter ([`lib/ai/meta-client.ts`](lib/ai/meta-client.ts)):** Complete client supporting **Muse Spark** (text reasoning & compliance copy), **Muse Wonder** (video atmosphere understanding), **Muse Image** (creative visual backdrops), and **SAM 3.1** (surface segmentation), with Baseten open-weight fallback (`meta-models/muse-spark-open-1026`) and simulated offline mode.
+- **Autonomous Editorial Decision Agent ([`lib/agent.ts`](lib/agent.ts)):** Multi-step tool reasoning engine powered by Muse Spark that queries viewer purchase intent, enforces category & prominence safety guardrails, and renders verifiable audit explanations.
+- **AI Surface Scout with SAM 3.1 ([`lib/slotScout.ts`](lib/slotScout.ts)):** Zero-shot video surface detection that automatically segments billboards, extracts planar polygons, and calculates optimal 4-corner bounding quadrilaterals for CSS `matrix3d` homography.
+- **Contextual Ad Creative Generator ([`lib/ads/copy.ts`](lib/ads/copy.ts)):** Generates strictly compliant multilingual ad copy and multi-aspect responsive social units (1:1, 4:5, 9:16) with Muse Spark.
+- **Meta Ads & Audience Network Ecosystem ([`lib/meta/`](lib/meta/)):** Full integration with Meta Graph API v21.0 (Instagram Stories & Feed publishing, Facebook Pages) and Meta Audience Network programmatic in-scene bidding.
 
 ---
 
 ## What It Does
 
-SceneCast provides a next-generation video-editorial studio and programmatic ad insertion pipeline that allows filmmakers, streaming platforms, and advertisers to mark physical surfaces in footage (such as rooftop LED billboards, storefront signboards, highway gantry signs, or transit posters) and define editorial rules.
+AdVision provides a next-generation video-editorial studio and programmatic ad insertion pipeline that allows filmmakers, streaming platforms, and advertisers to mark physical surfaces in footage (such as rooftop LED billboards, storefront signboards, highway gantry signs, or transit posters) and define editorial rules.
 
-Traditional pre-roll and mid-roll commercials interrupt viewer immersion and suffer from high abandonment rates. SceneCast turns physical surfaces within the video itself into dynamic, non-intrusive programmatic ad units.
+Traditional pre-roll and mid-roll commercials interrupt viewer immersion and suffer from high abandonment rates. AdVision turns physical surfaces within the video itself into dynamic, non-intrusive programmatic ad units.
 
 For every individual viewer:
-1. **Intent-Based Contextual Classification:** SceneCast's intent engine analyzes viewer purchase intent signals, in-market behavior, and real-time scene context (mood, atmosphere, environment) to rank candidate ads.
+1. **Intent-Based Contextual Classification:** AdVision's intent engine analyzes viewer purchase intent signals, in-market behavior, and real-time scene context (mood, atmosphere, environment) to rank candidate ads.
 2. **Meta Audience Network Auctions & Meta Ads:** The system integrates with **Meta Audience Network** for contextual in-scene programmatic display bids and **Meta Ads Manager** for social intent matching.
 3. **Editorial Guardrails:** Plain, deterministic code enforces editor constraints—blocking forbidden categories, enforcing whitelist categories, respecting prominence caps, validating flight windows, and applying tie-breakers.
 4. **In-Scene 3D Perspective Compositing:** The winning brand creative is rendered and composited onto the marked 4-corner polygon using CSS `matrix3d` homography projections, seamlessly synchronized to the scene's timecode.
@@ -38,7 +38,7 @@ If a subscriber has opted into an ad-free tier or is on a kids profile, commerci
 
 ```mermaid
 flowchart TD
-    Viewer["Viewer Persona\n(Intent Signals, Location, Tier)"] --> Pipeline["SceneCast Intent Pipeline\n(lib/decide.ts)"]
+    Viewer["Viewer Persona\n(Intent Signals, Location, Tier)"] --> Pipeline["AdVision Intent Pipeline\n(lib/decide.ts)"]
     Editor["Editor Rules\n(Blocked Cats, Prominence, Mood)"] --> Pipeline
     Zone["Marked Zone Surface\n(4-Corner Quad, Timecode)"] --> Pipeline
 
@@ -85,7 +85,7 @@ flowchart TD
 
 ## MCP Server (`/api/mcp`)
 
-SceneCast exposes a Streamable Model Context Protocol (MCP) server endpoint at `/api/mcp` allowing autonomous AI agents to query SceneCast tools:
+AdVision exposes a Streamable Model Context Protocol (MCP) server endpoint at `/api/mcp` allowing autonomous AI agents to query AdVision tools:
 
 - `intent_search`: Resolve entity queries to commercial intent URNs.
 - `brand_insights`: Query purchase intent and ad network affinity for a market.
@@ -111,8 +111,8 @@ curl -X POST https://your-deployment.vercel.app/api/mcp \
 
 ```bash
 # Clone the repository
-git clone https://github.com/chiraghs/SceneCast.git
-cd SceneCast
+git clone https://github.com/Nandanhs006/AdVision.git
+cd AdVision
 
 # Install dependencies
 npm install
@@ -124,7 +124,7 @@ cp .env.example .env.local
 ### Environment Variables (`.env.local`)
 
 ```ini
-# SceneCast Commercial Intent & RTB Engine
+# AdVision Commercial Intent & RTB Engine
 INTENT_ENGINE_MODE=simulated
 GOOGLE_ADSENSE_PUBLISHER_ID=pub-9482-1048-2847
 GOOGLE_ADSENSE_API_KEY=
@@ -191,7 +191,7 @@ GET /api/health
 
 ## Part 2: Ad Studio (Intent-Driven Social Ads & Meta Connect)
 
-SceneCast Part 2 extends the platform into a brand-side **Ad Studio**. A brand enters a product brief and defines a target **cohort** (e.g. *Tokyo Tech Creators*, *NYC Street Culture*, or *Coastal Arts Community*). SceneCast's commercial purchase intent engine classifies that cohort across artists, films, places, and brands, and deterministically turns the intent profile into **production-grade social ad templates** (palette, typography, layout archetype, motif, and tone) plus localized copy.
+AdVision Part 2 extends the platform into a brand-side **Ad Studio**. A brand enters a product brief and defines a target **cohort** (e.g. *Tokyo Tech Creators*, *NYC Street Culture*, or *Coastal Arts Community*). AdVision's commercial purchase intent engine classifies that cohort across artists, films, places, and brands, and deterministically turns the intent profile into **production-grade social ad templates** (palette, typography, layout archetype, motif, and tone) plus localized copy.
 
 The brand previews the creatives inside Instagram feed, Instagram story, and Facebook post mockups, exports multi-aspect PNG posters (1:1, 4:5, 9:16), and publishes them directly or simulates publication through connected social accounts.
 
@@ -200,7 +200,7 @@ flowchart TD
     Cohort["Target Cohort\n(City, Country, 3-5 Cultural Anchors)"] --> TastePipeline["Intent Classification Pipeline\n(lib/ads/taste-profile.ts)"]
     Brief["Brand Brief\n(Product, Category, Goal, Palette)"] --> Studio["Ad Studio Engine\n(lib/ads/copy.ts & render.ts)"]
 
-    subgraph IntentEngine ["SceneCast Intent & Ad Network Engine"]
+    subgraph IntentEngine ["AdVision Intent & Ad Network Engine"]
         QSearch["intent.search (Resolve Anchors)"]
         QTags["intent.resolveTags (Category & Mood)"]
         QInsights["intent.insights (Demographics, RTB, Interests)"]
@@ -290,7 +290,7 @@ Under Meta developer policies, unapproved apps in Development Mode can only make
 
 - **Creatives:** In this release, creatives are rendered as procedural, localized graphic posters on canvas. Photorealistic generative video repainting (diffusion-based in-painting) is planned for future roadmap iterations.
 - **Fictional Data Notice:** All brand names, campaign copy, and personas in this demo are fictional creative examples constructed for research and hackathon demonstration purposes.
-- **Simulated Mode:** When running in simulated mode (`INTENT_ENGINE_MODE=simulated`), SceneCast automatically supplies realistic commercial purchase intent scores and real-time bidding auction metrics marked with visible badges.
+- **Simulated Mode:** When running in simulated mode (`INTENT_ENGINE_MODE=simulated`), AdVision automatically supplies realistic commercial purchase intent scores and real-time bidding auction metrics marked with visible badges.
 
 ---
 

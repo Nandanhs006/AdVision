@@ -40,7 +40,7 @@ export default function ProjectsPage() {
             </span>
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-adv-text">
-            SceneCast Projects
+            AdVision Projects
           </h1>
           <p className="text-adv-secondary text-sm mt-1 max-w-2xl">
             Dynamic in-scene virtual product placement where Meta AI models (Muse Spark, SAM 3.1) and Meta Audience Network personalize physical surfaces for every viewer without altering the cinematic story.

@@ -25,10 +25,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (urlTheme === "light" || urlTheme === "dark") {
       setThemeState(urlTheme);
       document.documentElement.classList.toggle("light", urlTheme === "light");
-      localStorage.setItem("scenecast_theme", urlTheme);
+      localStorage.setItem("advision_theme", urlTheme);
       return;
     }
-    const saved = (localStorage.getItem("scenecast_theme") || localStorage.getItem("advision_theme")) as Theme | null;
+    const saved = localStorage.getItem("advision_theme") as Theme | null;
     if (saved === "light" || saved === "dark") {
       setThemeState(saved);
       document.documentElement.classList.toggle("light", saved === "light");
@@ -39,7 +39,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setTheme = (t: Theme) => {
     setThemeState(t);
-    localStorage.setItem("scenecast_theme", t);
     localStorage.setItem("advision_theme", t);
     document.documentElement.classList.toggle("light", t === "light");
   };

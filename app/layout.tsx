@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Sidebar } from "@/components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "SceneCast — In-Scene Ads with Meta AI & Meta Audience Network",
+  title: "AdVision — In-Scene Ads with Meta AI & Meta Audience Network",
   description:
     "Dynamic, contextual in-scene ad placement powered by Meta AI models (Muse Spark, SAM 3.1, Muse Image) and Meta Ads / Audience Network. Story, timing, and cinematic footage stay identical while ads adapt dynamically in real time.",
 };

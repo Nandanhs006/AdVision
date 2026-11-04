@@ -86,10 +86,10 @@ export default function ConnectionsPage() {
           <span>Meta Ecosystem In-Scene Programmatic Notice</span>
         </div>
         <p className="text-xs text-adv-secondary leading-relaxed">
-          SceneCast orchestrates intent-based in-scene ad auctions exclusively across <strong>Meta Audience Network</strong> and <strong>Meta Ads Manager</strong>. In-scene placements are selected via semantic scene classification and real-time user intent signals, preserving viewer immersion while maximizing publisher yield.
+          AdVision orchestrates intent-based in-scene ad auctions exclusively across <strong>Meta Audience Network</strong> and <strong>Meta Ads Manager</strong>. In-scene placements are selected via semantic scene classification and real-time user intent signals, preserving viewer immersion while maximizing publisher yield.
         </p>
         <p className="text-xs text-adv-secondary leading-relaxed">
-          For local demonstration and development, SceneCast provides both live API and authenticated <strong>Simulated Mode</strong> for Meta Audience Network and Meta Graph API v21.0.
+          For local demonstration and development, AdVision provides both live API and authenticated <strong>Simulated Mode</strong> for Meta Audience Network and Meta Graph API v21.0.
         </p>
       </div>
 
