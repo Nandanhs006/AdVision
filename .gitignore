@@ -47,6 +47,7 @@ scripts/video_temp/
 *.mov
 *.avi
 *.mkv
+demo-videos/
 /public/media/*.mp4
 
 # python cache

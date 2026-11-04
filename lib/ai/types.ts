@@ -61,3 +61,25 @@ export interface VideoSceneAnalysis {
   brandSafetyRating: "safe" | "caution" | "restricted";
   candidateSurfaces: SurfaceSegment[];
 }
+
+export interface MetaIntentSynthesisResult {
+  prompt: string;
+  targetAudience: string;
+  dominantCategory: "beverage" | "automotive" | "fashion" | "electronics" | "audio" | "coffee" | "travel";
+  purchasingUrgency: "immediate_impulse" | "considered_purchase" | "lifestyle_aspiration";
+  receptivityIndex: number; // 0-100
+  psychologicalTriggers: string[];
+  metaAudienceNetwork: {
+    interests: Array<{ id: string; name: string }>;
+    demographics: { ageMin: number; ageMax: number; genders: string[] };
+    bidStrategy: string;
+    suggestedBidCPM: number;
+    graphApiPayload: Record<string, any>;
+  };
+  matchedCampaignId: string;
+  matchedBrandName: string;
+  generatedHeadline: string;
+  generatedCta: string;
+  reasoning: string;
+  modelOrigin: string;
+}

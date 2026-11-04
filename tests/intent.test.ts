@@ -68,4 +68,42 @@ describe("IntentEngineClient & Ad Network Routing", () => {
     expect(res.affinityScore).toBeGreaterThan(0);
     expect(res.sharedCategories.length).toBeGreaterThan(0);
   });
+
+  it("should synthesize natural language intent into Meta Audience Network targeting and ad copy", async () => {
+    const { getMetaAIClient } = await import("../lib/ai/meta-client");
+    const metaClient = getMetaAIClient();
+
+    const result = await metaClient.synthesizeIntentTargeting({
+      prompt: "College students cramming for finals at 2 AM craving high-caffeine energy drinks",
+      sceneContext: {
+        filmTitle: "Tokyo Shibuya Night",
+        lighting: "neon_night",
+        atmosphere: ["transit", "neon"],
+      },
+    });
+
+    expect(result.dominantCategory).toBe("beverage");
+    expect(result.matchedCampaignId).toBe("camp-repbull-energy");
+    expect(result.receptivityIndex).toBeGreaterThanOrEqual(90);
+    expect(result.psychologicalTriggers.length).toBeGreaterThan(0);
+    expect(result.metaAudienceNetwork.interests.length).toBeGreaterThan(0);
+    expect(result.metaAudienceNetwork.suggestedBidCPM).toBeGreaterThan(0);
+    expect(result.metaAudienceNetwork.graphApiPayload.targeting).toBeDefined();
+    expect(result.generatedHeadline).toBeDefined();
+    expect(result.generatedCta).toBeDefined();
+  });
+
+  it("should map coffee intent prompt to Starbucks with high in-scene receptivity", async () => {
+    const { getMetaAIClient } = await import("../lib/ai/meta-client");
+    const metaClient = getMetaAIClient();
+
+    const result = await metaClient.synthesizeIntentTargeting({
+      prompt: "Commuters stuck in heavy traffic on a hot afternoon craving cold iced coffee",
+    });
+
+    expect(result.dominantCategory).toBe("coffee");
+    expect(result.matchedCampaignId).toBe("camp-starbucks-coffee");
+    expect(result.receptivityIndex).toBeGreaterThanOrEqual(90);
+    expect(result.metaAudienceNetwork.interests[0].name).toContain("Coffee");
+  });
 });
