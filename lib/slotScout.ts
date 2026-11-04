@@ -43,7 +43,7 @@ export async function runSlotScout(params: {
 
   // If real frame image or point prompt is provided, run real vision surface detection
   if (frameImage || clickPoint) {
-    const detected = detectSurfacesFromFrame({ frameBase64: frameImage, clickPoint, filmTitle });
+    const detected = await detectSurfacesFromFrame({ frameBase64: frameImage, clickPoint, filmTitle });
     const slots: ScoutedSlot[] = detected.map((s, idx) => ({
       id: `slot-real-${Date.now()}-${idx + 1}`,
       label: s.label,

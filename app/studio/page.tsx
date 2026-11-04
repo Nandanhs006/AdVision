@@ -75,6 +75,10 @@ export default function StudioEditorPage() {
 
   const effectiveDuration = customVideoDuration || activeProject.durationSec || 15;
 
+  // Auto-scouting state for custom video uploads
+  const [needsAutoScout, setNeedsAutoScout] = useState<boolean>(false);
+  const [autoScoutStatus, setAutoScoutStatus] = useState<string | null>(null);
+
   const handleVideoUpload = (file: File) => {
     if (!file.type.startsWith("video/")) {
       alert("Please upload a video file (.mp4, .webm, .mov, etc.)");
@@ -89,6 +93,8 @@ export default function StudioEditorPage() {
     setUseVideo(true);
     setPlaying(true);
     setCurrentTime(0);
+    setNeedsAutoScout(true);
+    setAutoScoutStatus(`Uploaded "${file.name}" — Initializing Meta SAM 3.1 surface detector...`);
   };
 
   const handleClearCustomVideo = () => {
@@ -219,6 +225,54 @@ export default function StudioEditorPage() {
     }
   };
 
+  const triggerAutoScoutForUpload = async (videoTitle?: string) => {
+    setScouting(true);
+    setAutoScoutStatus("Meta SAM 3.1: Analyzing video frame for billboards and digital lightboxes...");
+    try {
+      const frameImage = captureCurrentFrame();
+      const res = await fetch("/api/studio/scout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filmTitle: videoTitle || (customVideoName ? `Custom Video: ${customVideoName}` : activeProject.filmTitle),
+          currentSec: currentTime || 0.2,
+          durationSec: effectiveDuration,
+          frameImage,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const discovered = data.slots as ScoutedSlot[];
+        setScoutedSlots(discovered);
+        if (discovered.length > 0) {
+          const top = discovered[0];
+          setActiveScorecard(top);
+
+          // Replace zones with newly discovered surfaces for the uploaded footage
+          const mappedZones: Zone[] = discovered.map((slot) => ({
+            id: slot.id,
+            label: slot.label,
+            quad: slot.quad,
+            startSec: 0.2,
+            endSec: Math.max(1, effectiveDuration - 0.5),
+            frameShare: slot.frameShare,
+          }));
+          setZones(mappedZones);
+          setSelectedZoneIndex(0);
+
+          setAutoScoutStatus(
+            `Meta SAM 3.1: Intelligently locked 4 pins onto ${top.label} (${top.placementScore}% Certainty)`
+          );
+          setTimeout(() => setAutoScoutStatus(null), 8000);
+        }
+      }
+    } catch {
+      setAutoScoutStatus(null);
+    } finally {
+      setScouting(false);
+    }
+  };
+
   const handleRunSlotScout = async () => {
     setScouting(true);
     try {
@@ -241,17 +295,31 @@ export default function StudioEditorPage() {
           const top = discovered[0];
           setActiveScorecard(top);
 
-          // Update zones list with top discovered slot
-          const mappedZone: Zone = {
-            id: top.id,
-            label: top.label,
-            quad: top.quad,
-            startSec: top.startSec,
-            endSec: top.endSec,
-            frameShare: top.frameShare,
-          };
-          setZones([mappedZone, ...zones.filter((z) => z.id !== top.id)]);
-          setSelectedZoneIndex(0);
+          if (customVideoName) {
+            // For custom uploaded video, replace all zones with the scouted surfaces
+            const mappedZones: Zone[] = discovered.map((slot) => ({
+              id: slot.id,
+              label: slot.label,
+              quad: slot.quad,
+              startSec: 0.2,
+              endSec: Math.max(1, effectiveDuration - 0.5),
+              frameShare: slot.frameShare,
+            }));
+            setZones(mappedZones);
+            setSelectedZoneIndex(0);
+          } else {
+            // Update zones list with top discovered slot
+            const mappedZone: Zone = {
+              id: top.id,
+              label: top.label,
+              quad: top.quad,
+              startSec: top.startSec,
+              endSec: top.endSec,
+              frameShare: top.frameShare,
+            };
+            setZones([mappedZone, ...zones.filter((z) => z.id !== top.id)]);
+            setSelectedZoneIndex(0);
+          }
 
           // Adopt suggested mood
           if (data.sceneAtmosphere) {
@@ -644,6 +712,26 @@ export default function StudioEditorPage() {
               </div>
             )}
 
+            {/* Meta SAM 3.1 Auto-Scout Feedback Toast */}
+            {autoScoutStatus && !pointPromptActive && (
+              <div className="absolute top-4 inset-x-0 mx-auto w-fit max-w-xl z-40 bg-emerald-950/95 border border-emerald-400/90 backdrop-blur-md px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                <span className="text-xs font-semibold text-white tracking-wide">
+                  {autoScoutStatus}
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setAutoScoutStatus(null);
+                  }}
+                  className="ml-2 text-[10px] bg-white/20 hover:bg-white/30 text-white px-2.5 py-0.5 rounded-full font-mono transition-colors"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+
             {/* Drag & Drop Overlay */}
             {isDraggingFile && (
               <div className="absolute inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-emerald-400 rounded-2xl pointer-events-none animate-in fade-in zoom-in-95 duration-150">
@@ -671,6 +759,14 @@ export default function StudioEditorPage() {
                 onLoadedMetadata={(e) => {
                   if (e.currentTarget.duration && !isNaN(e.currentTarget.duration)) {
                     setCustomVideoDuration(e.currentTarget.duration);
+                  }
+                }}
+                onLoadedData={() => {
+                  if (needsAutoScout) {
+                    setNeedsAutoScout(false);
+                    setTimeout(() => {
+                      triggerAutoScoutForUpload(customVideoName || undefined);
+                    }, 400);
                   }
                 }}
                 onError={() => setUseVideo(false)}
