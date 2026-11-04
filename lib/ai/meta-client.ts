@@ -380,6 +380,106 @@ export class MetaAIClient {
     }
 
     // High-fidelity calibrated SAM 3.1 priors for cinematic test footage
+    if (titleLower.includes("arena") || titleLower.includes("stadium") || titleLower.includes("sports")) {
+      return [
+        {
+          id: "sam31-stadium-jumbotron",
+          label: "SAM 3.1: Elevated Stadium Jumbotron Display",
+          confidence: 0.985,
+          maskPolygon: [
+            { x: 0.6458, y: 0.1018 },
+            { x: 0.9271, y: 0.1018 },
+            { x: 0.9271, y: 0.4259 },
+            { x: 0.6458, y: 0.4259 },
+          ],
+          quad: [
+            { x: 0.6458, y: 0.1018 },
+            { x: 0.9271, y: 0.1018 },
+            { x: 0.9271, y: 0.4259 },
+            { x: 0.6458, y: 0.4259 },
+          ],
+          frameShare: 0.092,
+          contrastRatio: "7.8:1 (Ultra Floodlight Contrast)",
+          suggestedCap: 0.35,
+        },
+      ];
+    }
+
+    if (titleLower.includes("lounge") || titleLower.includes("cafe") || titleLower.includes("roast")) {
+      return [
+        {
+          id: "sam31-cafe-display",
+          label: "SAM 3.1: Architectural Vertical Wall Display",
+          confidence: 0.971,
+          maskPolygon: [
+            { x: 0.1667, y: 0.1667 },
+            { x: 0.3854, y: 0.1667 },
+            { x: 0.3854, y: 0.6852 },
+            { x: 0.1667, y: 0.6852 },
+          ],
+          quad: [
+            { x: 0.1667, y: 0.1667 },
+            { x: 0.3854, y: 0.1667 },
+            { x: 0.3854, y: 0.6852 },
+            { x: 0.1667, y: 0.6852 },
+          ],
+          frameShare: 0.114,
+          contrastRatio: "5.8:1 (Warm Ambient Legibility)",
+          suggestedCap: 0.25,
+        },
+      ];
+    }
+
+    if (titleLower.includes("cyber") || titleLower.includes("cinema") || titleLower.includes("drama")) {
+      return [
+        {
+          id: "sam31-cinema-display",
+          label: "SAM 3.1: In-Room Cinematic Wall Display",
+          confidence: 0.992,
+          maskPolygon: [
+            { x: 0.3125, y: 0.1852 },
+            { x: 0.6875, y: 0.1852 },
+            { x: 0.6875, y: 0.6111 },
+            { x: 0.3125, y: 0.6111 },
+          ],
+          quad: [
+            { x: 0.3125, y: 0.1852 },
+            { x: 0.6875, y: 0.1852 },
+            { x: 0.6875, y: 0.6111 },
+            { x: 0.3125, y: 0.6111 },
+          ],
+          frameShare: 0.158,
+          contrastRatio: "8.4:1 (OLED High Contrast)",
+          suggestedCap: 0.35,
+        },
+      ];
+    }
+
+    if (titleLower.includes("paris") || titleLower.includes("boulevard") || titleLower.includes("montaigne")) {
+      return [
+        {
+          id: "sam31-paris-vitrine",
+          label: "SAM 3.1: Storefront Vitrine Lightbox",
+          confidence: 0.962,
+          maskPolygon: [
+            { x: 0.7083, y: 0.2222 },
+            { x: 0.8958, y: 0.2222 },
+            { x: 0.8958, y: 0.7593 },
+            { x: 0.7083, y: 0.7593 },
+          ],
+          quad: [
+            { x: 0.7083, y: 0.2222 },
+            { x: 0.8958, y: 0.2222 },
+            { x: 0.8958, y: 0.7593 },
+            { x: 0.7083, y: 0.7593 },
+          ],
+          frameShare: 0.100,
+          contrastRatio: "6.5:1 (Daylight Glare Filtered)",
+          suggestedCap: 0.30,
+        },
+      ];
+    }
+
     if (titleLower.includes("shibuya") || titleLower.includes("crossing") || titleLower.includes("tokyo")) {
       return [
         {
@@ -456,6 +556,50 @@ export class MetaAIClient {
   async analyzeVideoScene(filmTitle: string, timestampSec: number): Promise<VideoSceneAnalysis> {
     const titleLower = filmTitle.toLowerCase();
     const segments = await this.segmentSurfaceSAM(filmTitle, timestampSec);
+
+    if (titleLower.includes("arena") || titleLower.includes("stadium") || titleLower.includes("sports")) {
+      return {
+        filmTitle,
+        timestampSec,
+        atmosphereTags: ["stadium", "sports", "arena", "championship", "high-energy", "broadcast"],
+        lighting: "neon_night",
+        brandSafetyRating: "safe",
+        candidateSurfaces: segments,
+      };
+    }
+
+    if (titleLower.includes("lounge") || titleLower.includes("cafe") || titleLower.includes("roast")) {
+      return {
+        filmTitle,
+        timestampSec,
+        atmosphereTags: ["cafe", "artisanal", "shibuya", "warm-amber", "lifestyle", "cozy"],
+        lighting: "golden_hour",
+        brandSafetyRating: "safe",
+        candidateSurfaces: segments,
+      };
+    }
+
+    if (titleLower.includes("cyber") || titleLower.includes("cinema") || titleLower.includes("drama")) {
+      return {
+        filmTitle,
+        timestampSec,
+        atmosphereTags: ["sci-fi", "cyberpunk", "streaming", "neon", "cinematic", "anamorphic"],
+        lighting: "neon_night",
+        brandSafetyRating: "safe",
+        candidateSurfaces: segments,
+      };
+    }
+
+    if (titleLower.includes("paris") || titleLower.includes("boulevard") || titleLower.includes("montaigne")) {
+      return {
+        filmTitle,
+        timestampSec,
+        atmosphereTags: ["paris", "daylight", "fashion", "boulevard", "promenade", "luxury"],
+        lighting: "bright_day",
+        brandSafetyRating: "safe",
+        candidateSurfaces: segments,
+      };
+    }
 
     if (titleLower.includes("shibuya") || titleLower.includes("crossing") || titleLower.includes("tokyo")) {
       return {

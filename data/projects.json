@@ -120,5 +120,133 @@
     },
     "createdAt": "2026-10-28T09:15:00Z",
     "updatedAt": "2026-11-02T10:45:00Z"
+  },
+  {
+    "id": "proj-sports-arena",
+    "name": "Championship Sports Arena (Courtside Cut)",
+    "filmTitle": "Metaverse Arena: Championship Finals",
+    "videoUrl": "/demo-videos/01-sports-arena-courtside.mp4",
+    "durationSec": 15,
+    "status": "live",
+    "zones": [
+      {
+        "id": "zone-arena-jumbotron",
+        "label": "Elevated Stadium Jumbotron Display",
+        "quad": [
+          { "x": 0.6458, "y": 0.1018 },
+          { "x": 0.9271, "y": 0.1018 },
+          { "x": 0.9271, "y": 0.4259 },
+          { "x": 0.6458, "y": 0.4259 }
+        ],
+        "startSec": 0.2,
+        "endSec": 14.8,
+        "frameShare": 0.092
+      }
+    ],
+    "rules": {
+      "allowedCategories": ["beverage", "electronics", "automotive", "audio", "fashion"],
+      "blockedCategories": ["spirits"],
+      "prominenceCap": 0.35,
+      "requireApproval": false,
+      "sceneMood": ["stadium", "sports", "arena", "championship", "high-energy"]
+    },
+    "createdAt": "2026-11-04T12:00:00Z",
+    "updatedAt": "2026-11-04T12:00:00Z"
+  },
+  {
+    "id": "proj-luxury-lounge",
+    "name": "Tokyo Craft Roastery (Lounge Cut)",
+    "filmTitle": "Kissa Shibuya: Artisanal Roast",
+    "videoUrl": "/demo-videos/02-luxury-lounge-cafe.mp4",
+    "durationSec": 15,
+    "status": "live",
+    "zones": [
+      {
+        "id": "zone-cafe-menu-wall",
+        "label": "Architectural Vertical Wall Display",
+        "quad": [
+          { "x": 0.1667, "y": 0.1667 },
+          { "x": 0.3854, "y": 0.1667 },
+          { "x": 0.3854, "y": 0.6852 },
+          { "x": 0.1667, "y": 0.6852 }
+        ],
+        "startSec": 0.2,
+        "endSec": 14.8,
+        "frameShare": 0.114
+      }
+    ],
+    "rules": {
+      "allowedCategories": ["coffee", "beverage", "fashion", "audio", "books"],
+      "blockedCategories": ["spirits"],
+      "prominenceCap": 0.25,
+      "requireApproval": false,
+      "sceneMood": ["cafe", "artisanal", "shibuya", "warm-amber", "lifestyle"]
+    },
+    "createdAt": "2026-11-04T12:00:00Z",
+    "updatedAt": "2026-11-04T12:00:00Z"
+  },
+  {
+    "id": "proj-cyber-cinema",
+    "name": "Neo-Tokyo 2049 (Streaming Cut)",
+    "filmTitle": "Cyber Noir: The Crossing Episode 4",
+    "videoUrl": "/demo-videos/03-cyber-cinema-drama.mp4",
+    "durationSec": 15,
+    "status": "live",
+    "zones": [
+      {
+        "id": "zone-cyber-display",
+        "label": "In-Room Cinematic Wall Display",
+        "quad": [
+          { "x": 0.3125, "y": 0.1852 },
+          { "x": 0.6875, "y": 0.1852 },
+          { "x": 0.6875, "y": 0.6111 },
+          { "x": 0.3125, "y": 0.6111 }
+        ],
+        "startSec": 0.2,
+        "endSec": 14.8,
+        "frameShare": 0.158
+      }
+    ],
+    "rules": {
+      "allowedCategories": ["electronics", "automotive", "fashion", "audio", "beverage"],
+      "blockedCategories": [],
+      "prominenceCap": 0.35,
+      "requireApproval": false,
+      "sceneMood": ["sci-fi", "cyberpunk", "streaming", "neon", "cinematic"]
+    },
+    "createdAt": "2026-11-04T12:00:00Z",
+    "updatedAt": "2026-11-04T12:00:00Z"
+  },
+  {
+    "id": "proj-paris-boulevard",
+    "name": "Paris Fashion Promenade (Daylight Cut)",
+    "filmTitle": "Avenue Montaigne: High Fashion Walk",
+    "videoUrl": "/demo-videos/04-paris-daylight-boulevard.mp4",
+    "durationSec": 15,
+    "status": "live",
+    "zones": [
+      {
+        "id": "zone-paris-vitrine",
+        "label": "Street-Level Storefront Vitrine Lightbox",
+        "quad": [
+          { "x": 0.7083, "y": 0.2222 },
+          { "x": 0.8958, "y": 0.2222 },
+          { "x": 0.8958, "y": 0.7593 },
+          { "x": 0.7083, "y": 0.7593 }
+        ],
+        "startSec": 0.2,
+        "endSec": 14.8,
+        "frameShare": 0.100
+      }
+    ],
+    "rules": {
+      "allowedCategories": ["fashion", "luxury", "audio", "travel", "coffee"],
+      "blockedCategories": [],
+      "prominenceCap": 0.30,
+      "requireApproval": false,
+      "sceneMood": ["paris", "daylight", "fashion", "boulevard", "promenade", "luxury"]
+    },
+    "createdAt": "2026-11-04T12:00:00Z",
+    "updatedAt": "2026-11-04T12:00:00Z"
   }
 ]
