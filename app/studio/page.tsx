@@ -151,14 +151,36 @@ export default function StudioEditorPage() {
   // Trim mode toggle
   const [isTrimming, setIsTrimming] = useState<boolean>(false);
 
-  // AI Slot Scout State
+  // AI Slot Scout & SAM 3.1 Point Prompt State
   const [scouting, setScouting] = useState<boolean>(false);
+  const [pointPromptActive, setPointPromptActive] = useState<boolean>(false);
   const [scoutedSlots, setScoutedSlots] = useState<ScoutedSlot[] | null>(null);
   const [activeScorecard, setActiveScorecard] = useState<ScoutedSlot | null>(null);
 
-  const handleRunSlotScout = async () => {
+  const captureCurrentFrame = (): string | null => {
+    if (!videoRef.current) return null;
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.min(videoRef.current.videoWidth || 640, 640);
+      canvas.height = Math.min(videoRef.current.videoHeight || 360, 360);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+      ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL("image/jpeg", 0.8);
+    } catch {
+      return null;
+    }
+  };
+
+  const handleCanvasClickPrompt = async (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!pointPromptActive || !overlayRef.current) return;
+    const rect = overlayRef.current.getBoundingClientRect();
+    const clickX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const clickY = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+
     setScouting(true);
     try {
+      const frameImage = captureCurrentFrame();
       const res = await fetch("/api/studio/scout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -166,6 +188,49 @@ export default function StudioEditorPage() {
           filmTitle: customVideoName ? `Custom Video: ${customVideoName}` : activeProject.filmTitle,
           currentSec: currentTime,
           durationSec: effectiveDuration,
+          frameImage,
+          clickPoint: { x: clickX, y: clickY },
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const discovered = data.slots as ScoutedSlot[];
+        if (discovered.length > 0) {
+          const top = discovered[0];
+          setActiveScorecard(top);
+          const mappedZone: Zone = {
+            id: top.id,
+            label: top.label,
+            quad: top.quad,
+            startSec: 0.2,
+            endSec: effectiveDuration - 0.5,
+            frameShare: top.frameShare,
+          };
+          setZones([mappedZone, ...zones.filter((z) => z.id !== top.id)]);
+          setSelectedZoneIndex(0);
+        }
+      }
+    } catch {
+      // ignore
+    } finally {
+      setScouting(false);
+      setPointPromptActive(false);
+    }
+  };
+
+  const handleRunSlotScout = async () => {
+    setScouting(true);
+    try {
+      const frameImage = captureCurrentFrame();
+      const res = await fetch("/api/studio/scout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filmTitle: customVideoName ? `Custom Video: ${customVideoName}` : activeProject.filmTitle,
+          currentSec: currentTime,
+          durationSec: effectiveDuration,
+          frameImage,
         }),
       });
       if (res.ok) {
@@ -476,10 +541,23 @@ export default function StudioEditorPage() {
                 onClick={handleRunSlotScout}
                 disabled={scouting}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-adv-accent to-purple-600 text-white font-semibold hover:brightness-110 transition-all shadow-md"
-                title="AI Slot Scout: Auto-detect ad surfaces in current footage"
+                title="AI Slot Scout: Auto-detect real ad surfaces in current footage frame"
               >
                 <Radar size={13} className={scouting ? "animate-spin" : ""} />
-                <span>{scouting ? "Scouting..." : "AI Slot Scout"}</span>
+                <span>{scouting ? "Analyzing Frame..." : "AI Slot Scout"}</span>
+              </button>
+
+              <button
+                onClick={() => setPointPromptActive(!pointPromptActive)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
+                  pointPromptActive
+                    ? "bg-purple-600 text-white border-purple-400 shadow-md font-bold animate-pulse"
+                    : "bg-adv-surfaceHover border-adv-border text-adv-text font-medium hover:bg-adv-border"
+                }`}
+                title="Click any billboard, wall, or sign on your video to snap SAM 3.1 points onto it"
+              >
+                <Crosshair size={13} className={pointPromptActive ? "text-amber-300" : ""} />
+                <span>{pointPromptActive ? "Click any surface on video..." : "SAM 3.1 Point Snap"}</span>
               </button>
 
               <button
@@ -525,6 +603,7 @@ export default function StudioEditorPage() {
           {/* Interactive Video / Zone Canvas with Drag-and-Drop */}
           <div
             ref={overlayRef}
+            onClick={pointPromptActive ? handleCanvasClickPrompt : undefined}
             onDragOver={(e) => {
               e.preventDefault();
               setIsDraggingFile(true);
@@ -538,11 +617,33 @@ export default function StudioEditorPage() {
               }
             }}
             className={`relative w-full aspect-video bg-black rounded-2xl overflow-hidden border transition-all duration-200 select-none shadow-2xl ${
-              isDraggingFile
+              pointPromptActive
+                ? "cursor-crosshair ring-4 ring-purple-500/80 border-purple-400"
+                : isDraggingFile
                 ? "border-emerald-400 ring-4 ring-emerald-400/30 scale-[1.01]"
                 : "border-adv-border"
             }`}
           >
+            {/* Meta SAM 3.1 Point Prompting HUD Banner */}
+            {pointPromptActive && (
+              <div className="absolute top-4 inset-x-0 mx-auto w-fit z-40 bg-purple-950/95 border border-purple-400/90 backdrop-blur-md px-4 py-2 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                <span className="text-xs font-semibold text-white tracking-wide">
+                  Meta SAM 3.1 Active: Click any billboard, screen, or surface to snap 4 points
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPointPromptActive(false);
+                  }}
+                  className="ml-2 text-[10px] bg-white/20 hover:bg-white/30 text-white px-2.5 py-0.5 rounded-full font-mono transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+
             {/* Drag & Drop Overlay */}
             {isDraggingFile && (
               <div className="absolute inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-emerald-400 rounded-2xl pointer-events-none animate-in fade-in zoom-in-95 duration-150">
@@ -560,6 +661,7 @@ export default function StudioEditorPage() {
               <video
                 ref={videoRef}
                 src={customVideoUrl || activeProject.videoUrl}
+                crossOrigin="anonymous"
                 autoPlay
                 loop
                 muted
@@ -621,6 +723,7 @@ export default function StudioEditorPage() {
             {currentZone.quad.map((corner, idx) => (
               <div
                 key={idx}
+                onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => handleMouseDownCorner(idx, e)}
                 style={{
                   left: `${corner.x * 100}%`,

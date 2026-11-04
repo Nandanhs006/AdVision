@@ -137,4 +137,39 @@ describe("Meta AI Model Integration (Muse Spark & SAM 3.1)", () => {
     expect(lastBeat.name).toContain("QR");
     expect(plan.aiModel).toContain("Meta Muse Spark");
   });
+
+  it("should snap 4-point quad onto clicked point using SAM 3.1 Point Snapping", async () => {
+    const scout = await runSlotScout({
+      filmTitle: "Times Square Live Footage",
+      currentSec: 2.0,
+      durationSec: 15.0,
+      clickPoint: { x: 0.81, y: 0.25 },
+    });
+
+    expect(scout.slots.length).toBe(1);
+    const slot = scout.slots[0];
+    expect(slot.quad.length).toBe(4);
+    expect(slot.label).toContain("SAM 3.1");
+    expect(slot.placementScore).toBeGreaterThanOrEqual(95);
+    // Point prompt should be centered around (0.81, 0.25)
+    expect(slot.quad[0].x).toBeLessThan(0.81);
+    expect(slot.quad[1].x).toBeGreaterThan(0.81);
+    expect(slot.quad[0].y).toBeLessThan(0.25);
+    expect(slot.quad[2].y).toBeGreaterThan(0.25);
+  });
+
+  it("should analyze real video frame luminance and detect Times Square LED arrays", async () => {
+    // 1x1 mock JPEG base64
+    const sampleFrame = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=";
+    const scout = await runSlotScout({
+      filmTitle: "Times Square Night Footage",
+      currentSec: 4.5,
+      durationSec: 15.0,
+      frameImage: sampleFrame,
+    });
+
+    expect(scout.slots.length).toBeGreaterThan(0);
+    expect(scout.slots[0].modelOrigin).toContain("Meta SAM 3.1 (Visual Frame Analyzer)");
+    expect(scout.slots[0].quad.length).toBe(4);
+  });
 });
