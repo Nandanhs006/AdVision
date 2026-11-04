@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { AdCopy, AdCopySchema, Brief } from "../schema";
 import copyTemplatesData from "@/data/copy-templates.json";
+import { getMetaAIClient } from "../ai/meta-client";
 
 // Banned words & unverifiable claims
 const BANNED_CLAIM_PATTERNS = [
@@ -146,7 +147,7 @@ export function getFallbackCopy(
 }
 
 /**
- * Generates tightly constrained ad copy using LLM with deterministic fallback
+ * Generates tightly constrained ad copy using Meta Muse Spark with deterministic fallback
  */
 export async function generateAdCopy(params: {
   brief: Brief;
@@ -159,12 +160,14 @@ export async function generateAdCopy(params: {
   model?: string;
 }): Promise<CopyGenerationResult> {
   const { brief, tone, language, goal, platform = "instagram" } = params;
-  const apiKey = params.apiKey || process.env.GROQ_API_KEY || "";
-  const baseUrl = params.baseUrl || process.env.LLM_BASE_URL || "https://api.groq.com/openai/v1";
-  const model = params.model || process.env.LLM_MODEL || "llama-3.3-70b-versatile";
+  const metaClient = getMetaAIClient({
+    apiKey: params.apiKey,
+    apiBase: params.baseUrl,
+    textModel: params.model,
+  });
 
-  // If no LLM key, return verified compliant template
-  if (!apiKey || apiKey.trim().length === 0) {
+  // If running in simulated mode with no live keys configured, return verified compliant template
+  if (!metaClient.hasLiveKey()) {
     return {
       copy: getFallbackCopy(language, goal, brief.brandName),
       source: "fallback",
@@ -172,7 +175,7 @@ export async function generateAdCopy(params: {
   }
 
   try {
-    const prompt = `You are an advertising copywriter for a social media campaign on ${platform}.
+    const prompt = `You are Meta Muse Spark, an advertising copy specialist for a social campaign on ${platform}.
 Generate strictly compliant ad copy based on this brief:
 Brand: "${brief.brandName}"
 Product: "${brief.product}"
@@ -199,37 +202,16 @@ STRICT ADVERTISING RULES:
   "altText": string
 }`;
 
-    const res = await fetch(`${baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          {
-            role: "system",
-            content: "You are a professional multilingual copywriter. You only respond with pure JSON, no markdown codeblocks.",
-          },
-          { role: "user", content: prompt },
-        ],
-        temperature: 0.7,
-        response_format: { type: "json_object" },
-      }),
-    });
-
-    if (!res.ok) {
-      return {
-        copy: getFallbackCopy(language, goal, brief.brandName),
-        source: "fallback",
-        violations: [`LLM HTTP error: ${res.status}`],
-      };
-    }
-
-    const data = await res.json();
-    const rawContent = data.choices?.[0]?.message?.content;
-    const parsedJson = JSON.parse(rawContent);
+    const parsedJson = await metaClient.chatJSON<AdCopy>(
+      [
+        {
+          role: "system",
+          content: "You are Meta Muse Spark, a professional multilingual copywriter. You only respond with pure JSON, no markdown codeblocks.",
+        },
+        { role: "user", content: prompt },
+      ],
+      AdCopySchema
+    );
 
     // Validate generated copy
     const validation = validateAdCopy(parsedJson, {

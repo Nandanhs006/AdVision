@@ -12,7 +12,7 @@ export type IntentSearchResultItem = z.infer<typeof IntentSearchResultItemSchema
 
 export const IntentSearchResponseSchema = z.object({
   results: z.array(IntentSearchResultItemSchema).default([]),
-  source: z.enum(["intent_engine", "google_adsense", "meta_ads", "fixture"]).default("intent_engine"),
+  source: z.enum(["intent_engine", "meta_audience_network", "meta_ads", "fixture"]).default("intent_engine"),
 });
 export type IntentSearchResponse = z.infer<typeof IntentSearchResponseSchema>;
 
@@ -21,7 +21,7 @@ export const IntentBrandItemSchema = z.object({
   name: z.string(),
   affinity: z.number().min(0).max(1), // intent affinity score
   intentScore: z.number().min(0).max(1).optional(),
-  adNetwork: z.enum(["google_adsense", "meta_ads", "programmatic_dsp", "direct"]).optional(),
+  adNetwork: z.enum(["meta_audience_network", "meta_ads", "programmatic_dsp", "direct"]).optional(),
   explainability: z
     .array(
       z.object({
@@ -36,7 +36,7 @@ export type IntentBrandItem = z.infer<typeof IntentBrandItemSchema>;
 
 export const IntentInsightsResponseSchema = z.object({
   brands: z.array(IntentBrandItemSchema).default([]),
-  source: z.enum(["intent_engine", "google_adsense", "meta_ads", "fixture"]).default("intent_engine"),
+  source: z.enum(["intent_engine", "meta_audience_network", "meta_ads", "fixture"]).default("intent_engine"),
 });
 export type IntentInsightsResponse = z.infer<typeof IntentInsightsResponseSchema>;
 
@@ -313,7 +313,7 @@ export class IntentEngineClient {
   }): Promise<{
     items: IntentBrandItem[];
     brands: IntentBrandItem[];
-    source: "intent_engine" | "google_adsense" | "meta_ads" | "fixture";
+    source: "intent_engine" | "meta_audience_network" | "meta_ads" | "fixture";
   }> {
     const start = performance.now();
     const type = args.type || "brand";
@@ -322,7 +322,7 @@ export class IntentEngineClient {
     const cached = this.cache.get<{
       items: IntentBrandItem[];
       brands: IntentBrandItem[];
-      source: "intent_engine" | "google_adsense" | "meta_ads" | "fixture";
+      source: "intent_engine" | "meta_audience_network" | "meta_ads" | "fixture";
     }>(cacheKey);
 
     if (cached) {
@@ -419,7 +419,7 @@ export class IntentEngineClient {
           name: String(b.name || b.title || "Entity"),
           affinity: Math.max(0, Math.min(1, affinityVal)),
           intentScore: Math.max(0, Math.min(1, affinityVal)),
-          adNetwork: (isMetaCategory ? "meta_ads" : "google_adsense") as "google_adsense" | "meta_ads",
+          adNetwork: (isMetaCategory ? "meta_ads" : "meta_audience_network") as "meta_audience_network" | "meta_ads",
           explainability: explainArray,
           category: cat,
         };
@@ -532,7 +532,7 @@ export class IntentEngineClient {
     if (this.mode === "fixture") {
       const res = {
         audiences: [
-          { id: "aud_young_urban", name: "Young Urban Trendsetters (Google AdSense / Meta)" },
+          { id: "aud_young_urban", name: "Young Urban Trendsetters (Meta Audience Network)" },
           { id: "aud_arts_culture", name: "Arts & Indie Enthusiasts" },
           { id: "aud_tech_early_adopters", name: "Tech Pioneers & Digital Creators" },
         ],
@@ -798,7 +798,7 @@ export class IntentEngineClient {
       };
     }
 
-    // Default: Brand Insights across Google AdSense & Meta Ads
+    // Default: Brand Insights across Meta Audience Network & Meta Ads
     // 1. United States -> RepBull Energy (0.96)
     if (loc.includes("united states") || loc.includes("us") || loc.includes("america") || loc.includes("san francisco") || loc.includes("seattle") || loc.includes("new york")) {
       return {
@@ -820,16 +820,16 @@ export class IntentEngineClient {
             name: "Lumina Spatial Sound",
             affinity: 0.88,
             intentScore: 0.88,
-            adNetwork: "google_adsense",
+            adNetwork: "meta_audience_network",
             category: "audio",
-            explainability: [{ signal: "Google AdSense high-intent spatial audio search intent", contribution: 0.45 }],
+            explainability: [{ signal: "Meta Audience Network high-intent spatial audio search intent", contribution: 0.45 }],
           },
           {
             id: "urn:entity:brand:folio_press",
             name: "Folio & Horizon Press",
             affinity: 0.82,
             intentScore: 0.82,
-            adNetwork: "google_adsense",
+            adNetwork: "meta_audience_network",
             category: "books",
             explainability: [{ signal: "Speculative fiction reader intent score", contribution: 0.40 }],
           },
@@ -877,10 +877,10 @@ export class IntentEngineClient {
             name: "Sony Alpha Optics",
             affinity: 0.96,
             intentScore: 0.96,
-            adNetwork: "google_adsense" as const,
+            adNetwork: "meta_audience_network" as const,
             category: "electronics",
             explainability: [
-              { signal: "Google AdSense mirrorless optics high-intent search score", contribution: 0.55 },
+              { signal: "Meta Audience Network mirrorless optics high-intent search score", contribution: 0.55 },
               { signal: "Tokyo street photography contextual RTB auction match", contribution: 0.41 },
             ],
           };
@@ -891,7 +891,7 @@ export class IntentEngineClient {
             name: "Sony Alpha Optics",
             affinity: 0.91,
             intentScore: 0.91,
-            adNetwork: "google_adsense" as const,
+            adNetwork: "meta_audience_network" as const,
             category: "electronics",
             explainability: [
               { signal: "Tokyo street photography contextual match", contribution: 0.41 },
@@ -918,7 +918,7 @@ export class IntentEngineClient {
             name: "Lumina Spatial Sound",
             affinity: 0.85,
             intentScore: 0.85,
-            adNetwork: "google_adsense",
+            adNetwork: "meta_audience_network",
             category: "audio",
             explainability: [{ signal: "Hi-res lossless spatial audio intent", contribution: 0.42 }],
           },
@@ -954,10 +954,10 @@ export class IntentEngineClient {
             name: "MRF ZLX Tyres",
             affinity: 0.97,
             intentScore: 0.97,
-            adNetwork: "google_adsense",
+            adNetwork: "meta_audience_network",
             category: "automotive",
             explainability: [
-              { signal: "Google AdSense premium tyre replacement intent", contribution: 0.58 },
+              { signal: "Meta Audience Network premium tyre replacement intent", contribution: 0.58 },
               { signal: "Cricket broadcast & highway safety contextual affinity", contribution: 0.39 },
             ],
           },
@@ -975,7 +975,7 @@ export class IntentEngineClient {
             name: "Lumina Spatial Sound",
             affinity: 0.81,
             intentScore: 0.81,
-            adNetwork: "google_adsense",
+            adNetwork: "meta_audience_network",
             category: "audio",
             explainability: [{ signal: "Cinematic dialogue clarity audio intent", contribution: 0.40 }],
           },
@@ -1010,7 +1010,7 @@ export class IntentEngineClient {
           name: "Sony Alpha Optics",
           affinity: 0.92,
           intentScore: 0.92,
-          adNetwork: "google_adsense",
+          adNetwork: "meta_audience_network",
           category: "electronics",
           explainability: [{ signal: "Contextual cinematography intent", contribution: 0.50 }],
         },
@@ -1028,7 +1028,7 @@ export class IntentEngineClient {
           name: "MRF ZLX Tyres",
           affinity: 0.84,
           intentScore: 0.84,
-          adNetwork: "google_adsense",
+          adNetwork: "meta_audience_network",
           category: "automotive",
           explainability: [{ signal: "Transit & highway safety intent", contribution: 0.40 }],
         },

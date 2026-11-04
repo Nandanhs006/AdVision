@@ -62,13 +62,13 @@ export default function ConnectionsPage() {
           <span className="px-2.5 py-0.5 rounded-full bg-adv-accent/10 text-adv-accent text-xs font-semibold uppercase tracking-wider border border-adv-accent/20">
             Ad Networks & Distribution
           </span>
-          <span className="text-xs text-adv-secondary font-mono">Google AdSense + Meta Ads Graph API</span>
+          <span className="text-xs text-adv-secondary font-mono">Meta Audience Network + Meta Graph API v21.0</span>
         </div>
         <h1 className="text-2xl font-bold text-adv-text tracking-tight mt-1">
-          Connected Ad Networks & Social Platforms
+          Connected Meta Ad Networks & Social Platforms
         </h1>
         <p className="text-sm text-adv-secondary mt-1">
-          Connect your Google AdSense / Ad Manager inventory and Meta Ads accounts to auction, personalize, and publish intent-based in-scene ad creatives.
+          Connect your Meta Audience Network inventory and Meta Ads accounts to auction, personalize, and publish intent-based in-scene ad creatives.
         </p>
       </div>
 
@@ -83,28 +83,28 @@ export default function ConnectionsPage() {
       <div className="p-4 rounded-xl bg-adv-surface border border-adv-border space-y-2">
         <div className="flex items-center gap-2 text-adv-text font-bold text-xs uppercase tracking-wider">
           <Info size={15} className="text-adv-accent" />
-          <span>Intent Classification & Programmatic Integration Notice</span>
+          <span>Meta Ecosystem In-Scene Programmatic Notice</span>
         </div>
         <p className="text-xs text-adv-secondary leading-relaxed">
-          SceneCast orchestrates intent-based in-scene ad auctions across <strong>Google AdSense / Google Ad Manager</strong> and <strong>Meta Ads</strong>. Ads are selected via semantic scene classification and real-time user intent signals, ensuring viewer immersion is preserved while maximizing publisher yield.
+          SceneCast orchestrates intent-based in-scene ad auctions exclusively across <strong>Meta Audience Network</strong> and <strong>Meta Ads Manager</strong>. In-scene placements are selected via semantic scene classification and real-time user intent signals, preserving viewer immersion while maximizing publisher yield.
         </p>
         <p className="text-xs text-adv-secondary leading-relaxed">
-          For local demonstration and development, SceneCast provides both live API and authenticated <strong>Simulated Mode</strong> for Google AdSense and Meta Graph API v21.0.
+          For local demonstration and development, SceneCast provides both live API and authenticated <strong>Simulated Mode</strong> for Meta Audience Network and Meta Graph API v21.0.
         </p>
       </div>
 
       {/* Ad Network Integration Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Google AdSense Card */}
+        {/* Meta Audience Network Card */}
         <div className="p-5 rounded-xl bg-adv-surface border border-adv-border space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-amber-500 to-green-500 flex items-center justify-center text-white font-bold text-base shadow-sm">
-                G
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-sky-500 flex items-center justify-center text-white font-bold text-base shadow-sm">
+                AN
               </div>
               <div>
-                <h3 className="text-sm font-bold text-adv-text">Google AdSense</h3>
-                <span className="text-[11px] text-adv-secondary font-mono">RTB & Contextual Ads</span>
+                <h3 className="text-sm font-bold text-adv-text">Meta Audience Network</h3>
+                <span className="text-[11px] text-adv-secondary font-mono">In-Scene RTB Bidding</span>
               </div>
             </div>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-adv-successBg text-adv-success border border-adv-success/30 font-semibold">
@@ -112,28 +112,28 @@ export default function ConnectionsPage() {
             </span>
           </div>
           <p className="text-xs text-adv-secondary leading-relaxed">
-            Fill in-scene video surfaces (billboards, highway gantries, store signs) with dynamic Google AdSense responsive and intent-classified creatives.
+            Fill in-scene video surfaces (billboards, highway gantries, storefront signs) with dynamic Meta Audience Network intent-classified video and display creatives.
           </p>
           <div className="pt-1 text-[11px] font-mono text-adv-secondary space-y-1 bg-adv-sidebar p-2.5 rounded-lg border border-adv-border/60">
             <div className="flex justify-between">
-              <span>Publisher ID:</span>
-              <span className="text-adv-text font-bold">pub-9482-1048-2847</span>
+              <span>Placement ID:</span>
+              <span className="text-adv-text font-bold">in_scene_billboard_shibuya_01</span>
             </div>
             <div className="flex justify-between">
               <span>Auction Mode:</span>
-              <span className="text-adv-accent font-bold">Hybrid RTB</span>
+              <span className="text-adv-accent font-bold">Meta RTB Hybrid</span>
             </div>
           </div>
           <div className="flex items-center gap-2 pt-1">
             <button
               onClick={() => {
-                setActionMessage("Google AdSense inventory re-synced successfully.");
+                setActionMessage("Meta Audience Network placements re-synced successfully.");
                 setTimeout(() => setActionMessage(null), 3000);
               }}
-              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition-colors"
             >
               <RefreshCw size={13} />
-              <span>Sync AdSense Inventory</span>
+              <span>Sync Audience Network</span>
             </button>
           </div>
         </div>

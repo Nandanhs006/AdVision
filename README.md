@@ -1,9 +1,20 @@
-# SceneCast: Intent-Based In-Scene Ad Placement
+# SceneCast: Intent-Based In-Scene Ad Placement with Meta AI
 
-> **Dynamic, contextual in-scene ad placement where real-time intent classification and ad networks (Google AdSense & Meta Ads) determine the brand each viewer sees, while story, timing, and cinematic actors remain 100% identical.**
+> **Dynamic, contextual in-scene ad placement where Meta AI models (Muse Spark, SAM 3.1, Muse Image, Muse Wonder) and Meta Audience Network determine the brand each viewer sees, while story, timing, and cinematic actors remain 100% identical.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Check](https://img.shields.io/badge/Check-Passing-4aa130.svg)](#testing)
+[![Meta Hackathon](https://img.shields.io/badge/Meta_Global_AI_Hackathon-2026-0668E1.svg)](#meta-hackathon)
+
+---
+
+## What We Built During the Meta Global AI Developer Hackathon (Oct 27 - Nov 4)
+
+- **Unified Meta Model API Adapter ([`lib/ai/meta-client.ts`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/ai/meta-client.ts)):** Complete client supporting **Muse Spark** (text reasoning & compliance copy), **Muse Wonder** (video atmosphere understanding), **Muse Image** (creative visual backdrops), and **SAM 3.1** (surface segmentation), with Baseten open-weight fallback (`meta-models/muse-spark-open-1026`) and simulated offline mode.
+- **Autonomous Editorial Decision Agent ([`lib/agent.ts`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/agent.ts)):** Multi-step tool reasoning engine powered by Muse Spark that queries viewer purchase intent, enforces category & prominence safety guardrails, and renders verifiable audit explanations.
+- **AI Surface Scout with SAM 3.1 ([`lib/slotScout.ts`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/slotScout.ts)):** Zero-shot video surface detection that automatically segments billboards, extracts planar polygons, and calculates optimal 4-corner bounding quadrilaterals for CSS `matrix3d` homography.
+- **Contextual Ad Creative Generator ([`lib/ads/copy.ts`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/ads/copy.ts)):** Generates strictly compliant multilingual ad copy and multi-aspect responsive social units (1:1, 4:5, 9:16) with Muse Spark.
+- **Meta Ads & Audience Network Ecosystem ([`lib/meta/`](file:///Volumes/DiskD/Nanda/Advision%20-%20Scenecast/lib/meta/)):** Full integration with Meta Graph API v21.0 (Instagram Stories & Feed publishing, Facebook Pages) and Meta Audience Network programmatic in-scene bidding.
 
 ---
 
@@ -15,7 +26,7 @@ Traditional pre-roll and mid-roll commercials interrupt viewer immersion and suf
 
 For every individual viewer:
 1. **Intent-Based Contextual Classification:** SceneCast's intent engine analyzes viewer purchase intent signals, in-market behavior, and real-time scene context (mood, atmosphere, environment) to rank candidate ads.
-2. **Ad Network Auctions (Google AdSense & Meta Ads):** The system integrates with **Google AdSense / Google Ad Manager** for contextual and programmatic display bids and **Meta Ads (Audience Network / Ads Manager)** for social intent matching.
+2. **Meta Audience Network Auctions & Meta Ads:** The system integrates with **Meta Audience Network** for contextual in-scene programmatic display bids and **Meta Ads Manager** for social intent matching.
 3. **Editorial Guardrails:** Plain, deterministic code enforces editor constraints—blocking forbidden categories, enforcing whitelist categories, respecting prominence caps, validating flight windows, and applying tie-breakers.
 4. **In-Scene 3D Perspective Compositing:** The winning brand creative is rendered and composited onto the marked 4-corner polygon using CSS `matrix3d` homography projections, seamlessly synchronized to the scene's timecode.
 
@@ -31,26 +42,27 @@ flowchart TD
     Editor["Editor Rules\n(Blocked Cats, Prominence, Mood)"] --> Pipeline
     Zone["Marked Zone Surface\n(4-Corner Quad, Timecode)"] --> Pipeline
 
-    subgraph AdNetworks ["Intent & Ad Network Engine"]
-        AdSense["Google AdSense / Ad Manager\n(Contextual RTB Bidding)"]
-        MetaAds["Meta Ads / Audience Network\n(Social Intent Matching)"]
-        ContextClassifier["Semantic Context Classifier\n(Scene Mood & Atmosphere)"]
+    subgraph MetaEcosystem ["Meta AI & Ad Network Engine"]
+        AudienceNet["Meta Audience Network\n(Contextual In-Scene RTB)"]
+        MetaAds["Meta Ads / Graph API v21.0\n(Social Intent Matching)"]
+        MuseWonder["Meta Muse Wonder\n(Scene Mood & Video Atmosphere)"]
+        SAM31["Meta SAM 3.1\n(Automated Surface Segmentation)"]
     end
 
-    Pipeline --> AdSense
+    Pipeline --> AudienceNet
     Pipeline --> MetaAds
-    Pipeline --> ContextClassifier
+    Pipeline --> MuseWonder
 
-    AdSense --> Join["Signal Join & Bid Auction\n(lib/decide.ts)"]
+    AudienceNet --> Join["Signal Join & Bid Auction\n(lib/decide.ts)"]
     MetaAds --> Join
-    ContextClassifier --> Join
+    MuseWonder --> Join
 
     Join --> DeterministicRules{"Deterministic Rules Filter\n(Flight, Category, Cap)"}
     DeterministicRules -->|Pass| Rank["Rank by Intent Score + Local Tie-Breaker"]
     DeterministicRules -->|Fail| Mark["Mark Blocked / Capped / Expired"]
 
     Rank --> Winner["Winning Creative Selected"]
-    Winner --> LLM["LLM Explainer / Guardrail\n(Groq Llama-3.3-70b)"]
+    Winner --> MuseSpark["Meta Muse Spark Agent\n(Tool Calling & Explainer)"]
     Winner --> Homography["3x3 Homography Matrix\n(lib/homography.ts)"]
     Homography --> Player["In-Scene Composited Player\n(components/CompositedPlayer.tsx)"]
 ```
@@ -61,11 +73,11 @@ flowchart TD
 
 1. **`/` Projects:** High-level metric overview (active films, marked surfaces, global markets, pending approvals) and production projects catalog.
 2. **`/studio` Studio Editor:** Video preview with draggable 4-corner zone handles, trim and mark zone tools, timeline scrubber with zone blocks, editorial rules panel, and live "Who sees what" multi-viewer matrix.
-3. **`/targeting` Intent Targeting:** Detailed intent-classification inspector showing ranked brands with intent score progress bars, status pills, Google AdSense / Meta Ads attribution, and 3-step explanation strip.
+3. **`/targeting` Intent Targeting:** Detailed intent-classification inspector showing ranked brands with intent score progress bars, status pills, Meta Audience Network & Meta Ads attribution, and 3-step explanation strip.
 4. **`/watch/[id]` Cinema Player:** Interactive video player featuring live persona switching (Tokyo, Vizag, SF, BLR, Paris, Kids, Ad-free), perspective-warped in-scene billboards, scannable QR code pause-to-shop card (click or scan to open checkout in a new window), and "Why this ad?" drawer.
 5. **`/compare` 4-Way Persona Sync:** Side-by-side synchronized viewports demonstrating the core promise: *one scene, four viewers, one story*.
-6. **`/ad-studio` Ad Studio:** Multi-aspect creative generator rendering 1:1, 4:5, and 9:16 responsive ad formats for Google AdSense responsive units and Meta feed/story placements.
-7. **`/connections` Ad Networks & Social:** OAuth and credential manager for Google AdSense / Google Ad Manager and Meta Ads Manager (Facebook & Instagram).
+6. **`/ad-studio` Ad Studio:** Multi-aspect creative generator rendering 1:1, 4:5, and 9:16 responsive ad formats for Meta Audience Network responsive units and Meta feed/story placements.
+7. **`/connections` Meta Platforms & Social:** OAuth and credential manager for Meta Audience Network and Meta Ads Manager (Facebook & Instagram).
 8. **`/campaigns` Brand Studio:** Campaign builder with instant intent entity resolution and live localized canvas poster preview across Japanese, Telugu, Kannada, French, and English.
 9. **`/analytics` Campaign Analytics:** Event telemetry tracking impressions, pause-to-shop inspections, and sponsor click-through rates.
 
@@ -228,7 +240,7 @@ flowchart TD
    - `urn:entity:place` — Architectural landmarks, third wave cafes, and neighborhood cultural hubs.
    - `urn:entity:brand` — Existing commercial brands with high cohort affinity.
 3. **Affinity-Weighted Tag Aggregation:** Extracts explainability signals and descriptive tags from top entities, normalizes weights, strips uninformative stop words (*general, item, brand, correlation*), and isolates the **top 8 intent tags**.
-4. **Contextual Ad Network Routing:** Automatically identifies whether the campaign maps to Google AdSense / Google Ad Manager (optics, electronics, automotive, tech) or Meta Ads (beverages, apparel, lifestyle, food).
+4. **Contextual Ad Network Routing:** Automatically identifies whether the campaign maps to Meta Audience Network in-scene programmatic units (optics, electronics, automotive, tech) or Meta Ads social placements (beverages, apparel, lifestyle, food).
 
 ### Deterministic Taste-to-Style Mapping Table (28 Rules)
 Design tokens are selected deterministically by scoring tag rules against intent tag weights (tie-broken stably via cohort ID hashing):
@@ -290,4 +302,4 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## Inspiration and Credits
 
-Inspired by the future of personalized cinematic storytelling and powered by **Intent-Based In-Scene Advertising with Google AdSense & Meta Ads**.
+Inspired by the future of personalized cinematic storytelling and powered by **Intent-Based In-Scene Advertising with Meta AI & Meta Audience Network**.

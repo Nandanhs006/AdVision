@@ -175,13 +175,13 @@ export default function AdStudioCreatePage() {
             <span className="px-2.5 py-1 rounded-full bg-adv-accent/10 text-adv-accent text-xs font-semibold uppercase tracking-wider border border-adv-accent/20">
               Ad Studio
             </span>
-            <span className="text-xs text-adv-secondary font-mono">Google AdSense & Meta Ads</span>
+            <span className="text-xs text-adv-secondary font-mono">Meta Audience Network & Meta Ads</span>
           </div>
           <h1 className="text-2xl font-bold text-adv-text tracking-tight mt-1">
             Generate In-Scene & Social Ad Creatives
           </h1>
           <p className="text-sm text-adv-secondary mt-1">
-            Turn audience intent signals and in-market data into multi-aspect responsive posters, localized copy, and AdSense/Meta ad units.
+            Turn audience intent signals and in-market data into multi-aspect responsive posters, localized copy, and Meta ad units with Meta AI.
           </p>
         </div>
 

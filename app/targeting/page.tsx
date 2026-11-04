@@ -61,14 +61,14 @@ export default function TargetingPage() {
               Contextual AI & Intent Inspector
             </span>
             <span className="text-xs text-adv-secondary">
-              Google AdSense & Meta Ads Integration
+              Meta AI & Meta Audience Network
             </span>
           </div>
           <h1 className="text-3xl font-extrabold text-adv-text tracking-tight mt-1">
-            Intent Classification & Ad Network Inspector
+            Intent Classification & Meta Ad Network Inspector
           </h1>
           <p className="text-sm text-adv-secondary mt-1">
-            Examine how SceneCast&apos;s intent engine maps individual viewer intent signals, in-market behavior, and scene context to Google AdSense & Meta Ads bids, and how editorial safety rules filter the final placement.
+            Examine how SceneCast&apos;s intent engine maps individual viewer intent signals, in-market behavior, and scene context to Meta Ads & Audience Network bids, and how editorial safety rules filter the final placement.
           </p>
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function TargetingPage() {
               Step 1: Intent & Context Match
             </span>
             <h3 className="text-sm font-bold text-adv-text mt-0.5">
-              AdSense & Meta Intent Engine
+              Meta AI & Audience Engine
             </h3>
             <p className="text-xs text-adv-secondary mt-1">
               Classifies viewer in-market search and purchase intent and scores candidate creatives against scene atmosphere.

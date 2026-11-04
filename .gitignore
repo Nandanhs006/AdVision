@@ -41,6 +41,14 @@ advision-demo-*.mp4
 scenecast-demo-*.mp4
 scripts/video_temp/
 
+# large video files & raw assets (never commit video files to GitHub)
+*.mp4
+*.webm
+*.mov
+*.avi
+*.mkv
+/public/media/*.mp4
+
 # runtime generated social posters
 /public/rendered-ads/*.png
 !/public/rendered-ads/.gitkeep

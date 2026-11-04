@@ -48,7 +48,7 @@ export function Sidebar() {
                 SceneCast
               </span>
               <span className="text-[10px] text-adv-secondary font-mono tracking-wider uppercase mt-1 block">
-                Intent Ads · AdSense & Meta
+                Meta AI · Audience Net
               </span>
             </div>
           </Link>
@@ -108,7 +108,7 @@ export function Sidebar() {
             <span className="text-adv-secondary font-medium">Intent Engine</span>
           </div>
           <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-adv-successBg text-adv-success border border-adv-success/30 font-semibold">
-            AdSense + Meta
+            Meta AI Active
           </span>
         </div>
 

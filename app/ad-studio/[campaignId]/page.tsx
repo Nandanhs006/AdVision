@@ -35,7 +35,9 @@ import {
   LayoutArchetype,
   TasteProfile,
   Campaign,
+  MotionAdPlan,
 } from "@/lib/schema";
+import { MotionAdPlayer } from "@/components/MotionAdPlayer";
 
 const LAYOUT_CYCLE: LayoutArchetype[] = [
   "minimal-center",
@@ -61,7 +63,8 @@ export default function CampaignVariantsPage({
   // Active view states
   const [selectedVariant, setSelectedVariant] = useState<AdVariant>("primary");
   const [selectedAspect, setSelectedAspect] = useState<AdAspect>("1:1");
-  const [previewPlatform, setPreviewPlatform] = useState<"feed" | "story" | "facebook">("feed");
+  const [previewPlatform, setPreviewPlatform] = useState<"feed" | "story" | "facebook" | "motion">("feed");
+  const [motionPlan, setMotionPlan] = useState<MotionAdPlan | null>(null);
 
   // Drawer & Dialog states
   const [showWhyDrawer, setShowWhyDrawer] = useState(false);
@@ -142,6 +145,38 @@ export default function CampaignVariantsPage({
           const genData = await genRes.json();
           setCreatives(genData.creatives || []);
           setTasteProfile(genData.tasteProfile || null);
+
+          // Generate 15s Motion Billboard plan with Meta Muse Spark
+          const motionRes = await fetch("/api/ads/motion", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              campaignId,
+              brief: {
+                brandName: campaignId.includes("repbull")
+                  ? "RepBull Energy"
+                  : campaignId.includes("sony")
+                  ? "Sony Alpha Optics"
+                  : "Kissa Craft Roasters",
+                product: campaignId.includes("repbull")
+                  ? "Zero Sugar Ultra Focus"
+                  : campaignId.includes("sony")
+                  ? "Alpha 7R V Full Frame"
+                  : "Shibuya Drip Blend",
+                category: campaignId.includes("repbull")
+                  ? "beverage"
+                  : campaignId.includes("sony")
+                  ? "electronics"
+                  : "coffee",
+                goal: "awareness",
+                languages: ["en"],
+              },
+            }),
+          });
+          if (motionRes.ok) {
+            const mData = await motionRes.json();
+            if (mData.plan) setMotionPlan(mData.plan);
+          }
         }
       } catch (err) {
         console.error("Failed to load campaign data:", err);
@@ -311,7 +346,7 @@ Language: ${campaignId.includes("sony") ? "Japanese" : "English"}`;
             )}
           </div>
           <h1 className="text-2xl font-bold text-adv-text tracking-tight mt-1">
-            Intent-Engineered Ad Variants (AdSense & Meta)
+            Intent-Engineered Ad Variants (Meta Ads & Audience Network)
           </h1>
         </div>
 
@@ -598,13 +633,14 @@ Language: ${campaignId.includes("sony") ? "Japanese" : "English"}`;
                 { id: "feed", label: "Instagram Feed" },
                 { id: "story", label: "Instagram Story" },
                 { id: "facebook", label: "Facebook Post" },
+                { id: "motion", label: "15s Motion Billboard (Meta AI)" },
               ].map((p) => (
                 <button
                   key={p.id}
                   onClick={() => setPreviewPlatform(p.id as any)}
                   className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors ${
                     previewPlatform === p.id
-                      ? "bg-adv-surfaceHover text-adv-text border border-adv-border shadow-sm"
+                      ? "bg-adv-accent text-white shadow-sm"
                       : "text-adv-secondary hover:text-adv-text"
                   }`}
                 >
@@ -717,6 +753,11 @@ Language: ${campaignId.includes("sony") ? "Japanese" : "English"}`;
                       <ChevronRight size={14} />
                     </div>
                   </div>
+                </div>
+              ) : previewPlatform === "motion" && motionPlan ? (
+                /* Meta AI 15s Motion Billboard Player (Beat Sync) */
+                <div className="w-full max-w-[620px]">
+                  <MotionAdPlayer plan={motionPlan} aspect="16:9" />
                 </div>
               ) : (
                 /* Facebook Post Mockup */

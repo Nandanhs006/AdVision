@@ -87,7 +87,7 @@ export const RankedCampaignSchema = z.object({
   category: z.string().optional(),
   intentScore: z.number().optional(), // 0 to 1 intent-based classification score
   qlooAffinity: z.number().optional(), // 0 to 1 (backward compatible)
-  adNetwork: z.enum(["google_adsense", "meta_ads", "programmatic_dsp", "direct"]).optional(),
+  adNetwork: z.enum(["meta_audience_network", "meta_ads", "programmatic_dsp", "direct"]).optional(),
   intentSignals: z.array(z.string()).optional(),
   finalScore: z.number().optional(),
   status: z.enum([
@@ -113,7 +113,7 @@ export const DecisionSchema = z.object({
   reasons: z.array(z.string()),
   trace: z.array(DecisionTraceEntrySchema),
   explanation: z.string(),
-  source: z.enum(["intent_engine", "google_adsense", "meta_ads", "fixture", "fallback", "qloo"]),
+  source: z.enum(["intent_engine", "meta_audience_network", "meta_ads", "fixture", "fallback", "qloo"]),
   status: z.enum(["approved", "pending", "bypassed"]).default("approved"),
   adNetwork: z.string().optional(),
 });
@@ -252,6 +252,38 @@ export const AdCreativeStatusSchema = z.enum([
   "failed",
 ]);
 export type AdCreativeStatus = z.infer<typeof AdCreativeStatusSchema>;
+
+// ==========================================
+// Part 3: Meta Motion In-Scene Creative Schemas
+// (Inspired by brag 3-act beat architecture & Muse Spark)
+// ==========================================
+
+export const MotionSceneBeatSchema = z.object({
+  act: z.number().min(1).max(3),
+  name: z.string(), // "Hook" | "Core Benefit" | "CTA & QR"
+  startSec: z.number(),
+  durationSec: z.number(),
+  headline: z.string(),
+  subhead: z.string(),
+  visualCue: z.string(),
+  motif: MotifSchema,
+  sfxCue: z.string().optional(),
+});
+export type MotionSceneBeat = z.infer<typeof MotionSceneBeatSchema>;
+
+export const MotionAdPlanSchema = z.object({
+  campaignId: z.string(),
+  brandName: z.string(),
+  totalDurationSec: z.number().default(15.0),
+  beats: z.array(MotionSceneBeatSchema),
+  musicTrack: z.string().default("happy-beats-business-moves-vol-1"),
+  bpm: z.number().default(120),
+  palette: PaletteSchema,
+  qrLink: z.string().default("https://instagram.com/"),
+  source: z.enum(["meta_muse_spark", "fallback"]).default("meta_muse_spark"),
+  aiModel: z.string().default("Meta Muse Spark + Muse Wonder"),
+});
+export type MotionAdPlan = z.infer<typeof MotionAdPlanSchema>;
 
 export const AdCreativeSchema = z.object({
   id: z.string(),

@@ -208,10 +208,10 @@ export function ProceduralScene({
             }
           }
 
-          // Top Banner Tag (e.g. IN-SCENE AD · GOOGLE ADSENSE / META ADS)
+          // Top Banner Tag (e.g. IN-SCENE AD · META AUDIENCE NETWORK / META ADS)
           const netLabel = (campaign.category.toLowerCase().includes("beverage") || campaign.category.toLowerCase().includes("fashion") || campaign.category.toLowerCase().includes("lifestyle"))
             ? "META ADS · "
-            : "GOOGLE ADSENSE · ";
+            : "META AUDIENCE NETWORK · ";
           ctx.fillStyle = palette.accent;
           ctx.font = "bold 11px monospace";
           ctx.textAlign = "left";

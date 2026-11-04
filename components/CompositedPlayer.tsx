@@ -241,7 +241,7 @@ export function CompositedPlayer({
         <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/20 text-[11px] text-adv-secondary flex items-center gap-1.5 font-mono">
           <span>Ad Network:</span>
           <span className="text-adv-text font-bold uppercase">
-            {decision?.winningCampaign?.category?.toLowerCase().includes("beverage") ? "Meta Ads" : "Google AdSense"}
+            {decision?.winningCampaign?.category?.toLowerCase().includes("beverage") ? "Meta Ads" : "Meta Audience Net"}
           </span>
         </div>
 
@@ -383,7 +383,7 @@ export function CompositedPlayer({
                   </span>
                   <span className="font-bold text-white block">Intent Engine</span>
                   <span className="text-[10px] text-adv-secondary">
-                    AdSense & Meta
+                    Meta AI & Audience
                   </span>
                 </div>
                 <div className="bg-adv-surface border border-adv-border p-2.5 rounded-xl">

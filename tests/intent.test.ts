@@ -32,7 +32,7 @@ describe("IntentEngineClient & Ad Network Routing", () => {
     expect(traces[1].cached).toBe(true);
   });
 
-  it("should route brands to Google AdSense or Meta Ads based on commercial category", async () => {
+  it("should route brands to Meta Audience Network or Meta Ads based on commercial category", async () => {
     const res = await client.brandInsights({
       locationQuery: "Tokyo",
       entityIds: ["urn:entity:brand:sony_alpha"],
@@ -43,10 +43,10 @@ describe("IntentEngineClient & Ad Network Routing", () => {
     expect(topBrand.affinity).toBeGreaterThanOrEqual(0);
     expect(topBrand.affinity).toBeLessThanOrEqual(1);
 
-    // Electronics & Tech route to Google AdSense
+    // Electronics & Tech route to Meta Audience Network
     const sony = res.brands.find((b) => b.id.includes("sony"));
     if (sony) {
-      expect(sony.adNetwork).toBe("google_adsense");
+      expect(sony.adNetwork).toBe("meta_audience_network");
     }
 
     // Beverage routes to Meta Ads

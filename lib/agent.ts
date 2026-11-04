@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Zone, Rules, Viewer, Campaign, Decision } from "./schema";
 import { IntentEngineClient, getIntentClient } from "./intent/client";
 import { runDecisionPipeline } from "./decide";
+import { MetaAIClient, getMetaAIClient } from "./ai/meta-client";
 
 export const ToolCallSchema = z.object({
   id: z.string(),
@@ -25,6 +26,7 @@ interface LLMMessage {
 }
 
 export class DecisionAgent {
+  private metaClient: MetaAIClient;
   private apiKey: string;
   private baseUrl: string;
   private model: string;
@@ -37,20 +39,27 @@ export class DecisionAgent {
     intentClient?: IntentEngineClient;
     qlooClient?: IntentEngineClient;
   }) {
-    this.apiKey = options?.apiKey || process.env.GROQ_API_KEY || "";
+    this.metaClient = getMetaAIClient({
+      apiKey: options?.apiKey,
+      apiBase: options?.baseUrl,
+      textModel: options?.model,
+    });
+    this.apiKey = options?.apiKey || process.env.META_MODEL_API_KEY || process.env.GROQ_API_KEY || "";
     this.baseUrl =
       options?.baseUrl ||
+      process.env.META_MODEL_API_BASE ||
       process.env.LLM_BASE_URL ||
-      "https://api.groq.com/openai/v1";
+      "https://api.meta.com/v1";
     this.model =
       options?.model ||
+      process.env.META_TEXT_MODEL ||
       process.env.LLM_MODEL ||
-      "llama-3.3-70b-versatile";
+      "muse-spark";
     this.intentClient = options?.intentClient || options?.qlooClient || getIntentClient();
   }
 
   hasLLMKey(): boolean {
-    return Boolean(this.apiKey && this.apiKey.trim().length > 0);
+    return this.metaClient.hasLiveKey() || Boolean(this.apiKey && this.apiKey.trim().length > 0);
   }
 
   async decide(params: {
@@ -167,7 +176,7 @@ export class DecisionAgent {
     const messages: LLMMessage[] = [
       {
         role: "system",
-        content: `You are the SceneCast Decision Agent. Orchestrate commercial purchase intent classification across Google AdSense & Meta Ads, and explain the winning brand placement for an in-scene billboard.
+        content: `You are the SceneCast Decision Agent powered by Meta Muse Spark. Orchestrate commercial purchase intent classification across Meta Audience Network & Meta Ads, and explain the winning brand placement for an in-scene billboard.
 Guidelines:
 1. Search viewer favorites using intent_search.
 2. Query brand purchase intent for the viewer's city with brand_insights.

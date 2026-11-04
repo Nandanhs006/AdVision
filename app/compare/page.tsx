@@ -98,7 +98,7 @@ function CompareViewport({
         <div>
           {isWinner && !isWinner.publicService ? (
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-successBg border border-adv-success/30 text-adv-success">
-              Intent match {Math.round(((decision?.ranked?.[0]?.intentScore ?? decision?.ranked?.[0]?.qlooAffinity) || 0.95) * 100)}% ({decision?.winningCampaign?.category?.toLowerCase().includes("beverage") ? "Meta" : "AdSense"})
+              Intent match {Math.round(((decision?.ranked?.[0]?.intentScore ?? decision?.ranked?.[0]?.qlooAffinity) || 0.95) * 100)}% ({decision?.winningCampaign?.category?.toLowerCase().includes("beverage") ? "Meta Ads" : "Meta Audience Net"})
             </span>
           ) : isKids ? (
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-adv-accent/20 border border-adv-accent/30 text-adv-accent">
