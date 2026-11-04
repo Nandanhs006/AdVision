@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Film, LayoutGrid, Globe, Clock, ArrowRight, Play, SlidersHorizontal, Sparkles } from "lucide-react";
+import { Film, LayoutGrid, Globe, Clock, ArrowRight, Play, SlidersHorizontal, Sparkles, Upload } from "lucide-react";
 import { Project } from "@/lib/schema";
 import projectsJson from "@/data/projects.json";
 
@@ -48,6 +48,13 @@ export default function ProjectsPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          <Link
+            href="/studio"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-sm font-bold transition-all shadow-md hover:shadow-emerald-500/20"
+          >
+            <Upload size={16} />
+            <span>Upload Custom Video</span>
+          </Link>
           <Link
             href="/studio"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-adv-accent hover:bg-adv-accentHover text-white text-sm font-semibold transition-all shadow-md"

@@ -348,6 +348,35 @@ export default function StudioEditorPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Prominent Custom Video Upload in Header */}
+          {customVideoUrl ? (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold shadow-sm animate-in fade-in">
+              <FileVideo size={15} className="animate-pulse" />
+              <span className="max-w-[160px] truncate" title={customVideoName || ""}>
+                {customVideoName}
+              </span>
+              <span className="text-[10px] font-mono text-emerald-300/80 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                {effectiveDuration.toFixed(1)}s
+              </span>
+              <button
+                onClick={handleClearCustomVideo}
+                className="p-1 hover:bg-emerald-500/30 rounded text-emerald-300 hover:text-white transition-colors"
+                title="Remove custom video and switch back to preset scene"
+              >
+                <X size={13} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold transition-all shadow-md hover:shadow-emerald-500/20"
+              title="Upload your own custom MP4 / WebM video from your computer"
+            >
+              <Upload size={14} />
+              <span>Upload Custom Video</span>
+            </button>
+          )}
+
           {savedSuccess && (
             <span className="text-xs text-adv-success font-semibold flex items-center gap-1.5 animate-in fade-in">
               <CheckCircle2 size={14} /> Saved locally!
