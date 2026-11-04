@@ -23,6 +23,9 @@ import {
   Gauge,
   Award,
   Film,
+  Upload,
+  FileVideo,
+  X,
 } from "lucide-react";
 import { ScoutedSlot } from "@/lib/slotScout";
 
@@ -61,8 +64,53 @@ export default function StudioEditorPage() {
   const [currentTime, setCurrentTime] = useState<number>(2.5);
   const [playing, setPlaying] = useState<boolean>(true);
   const [useVideo, setUseVideo] = useState<boolean>(true);
-  const videoDuration = activeProject.durationSec || 15;
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Custom Video Upload state
+  const [customVideoUrl, setCustomVideoUrl] = useState<string | null>(null);
+  const [customVideoName, setCustomVideoName] = useState<string | null>(null);
+  const [customVideoDuration, setCustomVideoDuration] = useState<number | null>(null);
+  const [isDraggingFile, setIsDraggingFile] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const effectiveDuration = customVideoDuration || activeProject.durationSec || 15;
+
+  const handleVideoUpload = (file: File) => {
+    if (!file.type.startsWith("video/")) {
+      alert("Please upload a video file (.mp4, .webm, .mov, etc.)");
+      return;
+    }
+    if (customVideoUrl) {
+      URL.revokeObjectURL(customVideoUrl);
+    }
+    const url = URL.createObjectURL(file);
+    setCustomVideoUrl(url);
+    setCustomVideoName(file.name);
+    setUseVideo(true);
+    setPlaying(true);
+    setCurrentTime(0);
+  };
+
+  const handleClearCustomVideo = () => {
+    if (customVideoUrl) {
+      URL.revokeObjectURL(customVideoUrl);
+    }
+    setCustomVideoUrl(null);
+    setCustomVideoName(null);
+    setCustomVideoDuration(null);
+    setCurrentTime(0);
+  };
+
+  // Sync HTML5 video play/pause
+  useEffect(() => {
+    if (videoRef.current) {
+      if (playing) {
+        videoRef.current.play().catch(() => {});
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [playing]);
 
   // Container sizing for 3D matrix
   const [containerSize, setContainerSize] = useState<{ w: number; h: number }>({ w: 800, h: 450 });
@@ -115,9 +163,9 @@ export default function StudioEditorPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          filmTitle: activeProject.filmTitle,
+          filmTitle: customVideoName ? `Custom Video: ${customVideoName}` : activeProject.filmTitle,
           currentSec: currentTime,
-          durationSec: videoDuration,
+          durationSec: effectiveDuration,
         }),
       });
       if (res.ok) {
@@ -315,18 +363,33 @@ export default function StudioEditorPage() {
         </div>
       </div>
 
-      {/* Project Switcher Bar */}
+      {/* Project Switcher Bar & Custom Video Upload */}
       <div className="flex items-center gap-2 bg-adv-surface border border-adv-border p-2 rounded-xl overflow-x-auto">
+        {/* Hidden File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="video/mp4,video/webm,video/quicktime,video/x-msvideo"
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files && e.target.files[0]) {
+              handleVideoUpload(e.target.files[0]);
+            }
+            e.target.value = "";
+          }}
+        />
+
         <span className="text-xs font-semibold uppercase text-adv-secondary whitespace-nowrap pl-2 flex items-center gap-1.5">
           <Film size={14} className="text-adv-accent" />
           Active Scene:
         </span>
         {projects.map((p) => {
-          const active = p.id === selectedProjectId;
+          const active = !customVideoUrl && p.id === selectedProjectId;
           return (
             <button
               key={p.id}
               onClick={() => {
+                if (customVideoUrl) handleClearCustomVideo();
                 setSelectedProjectId(p.id);
                 setCurrentTime(0);
               }}
@@ -340,6 +403,37 @@ export default function StudioEditorPage() {
             </button>
           );
         })}
+
+        {/* Custom Uploaded Video Pill or Upload Button */}
+        <div className="ml-auto flex items-center gap-2 pl-2 border-l border-adv-border">
+          {customVideoUrl ? (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold shadow-sm animate-in fade-in">
+              <FileVideo size={14} className="animate-pulse" />
+              <span className="max-w-[200px] truncate" title={customVideoName || ""}>
+                {customVideoName}
+              </span>
+              <span className="text-[10px] font-mono text-emerald-300/80 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                {effectiveDuration.toFixed(1)}s
+              </span>
+              <button
+                onClick={handleClearCustomVideo}
+                className="p-1 hover:bg-emerald-500/30 rounded text-emerald-300 hover:text-white transition-colors"
+                title="Remove uploaded video and revert to sample scene"
+              >
+                <X size={13} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-adv-accent/20 to-emerald-500/20 hover:from-adv-accent/30 hover:to-emerald-500/30 border border-adv-accent/40 text-adv-accent hover:text-white text-xs font-semibold transition-all shadow-sm"
+              title="Upload your own custom MP4 / WebM video from your computer"
+            >
+              <Upload size={13} />
+              <span>Upload Custom Video</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Main Studio Workspace: Left Editor Viewport & Right Rules Panel */}
@@ -399,26 +493,61 @@ export default function StudioEditorPage() {
             </div>
           </div>
 
-          {/* Interactive Video / Zone Canvas */}
+          {/* Interactive Video / Zone Canvas with Drag-and-Drop */}
           <div
             ref={overlayRef}
-            className="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-adv-border select-none shadow-2xl"
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDraggingFile(true);
+            }}
+            onDragLeave={() => setIsDraggingFile(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setIsDraggingFile(false);
+              if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                handleVideoUpload(e.dataTransfer.files[0]);
+              }
+            }}
+            className={`relative w-full aspect-video bg-black rounded-2xl overflow-hidden border transition-all duration-200 select-none shadow-2xl ${
+              isDraggingFile
+                ? "border-emerald-400 ring-4 ring-emerald-400/30 scale-[1.01]"
+                : "border-adv-border"
+            }`}
           >
+            {/* Drag & Drop Overlay */}
+            {isDraggingFile && (
+              <div className="absolute inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-emerald-400 rounded-2xl pointer-events-none animate-in fade-in zoom-in-95 duration-150">
+                <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center mb-3 animate-bounce">
+                  <Upload size={32} className="text-emerald-400" />
+                </div>
+                <h3 className="text-lg font-bold text-white">Drop your custom video here</h3>
+                <p className="text-xs text-zinc-300 max-w-sm mt-1">
+                  SceneCast will load your video locally and calibrate Meta SAM 3.1 & Muse Wonder surface detection.
+                </p>
+              </div>
+            )}
+
             {useVideo ? (
               <video
                 ref={videoRef}
-                src={activeProject.videoUrl}
+                src={customVideoUrl || activeProject.videoUrl}
                 autoPlay
                 loop
                 muted
                 playsInline
                 className="w-full h-full object-cover"
+                onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+                onLoadedMetadata={(e) => {
+                  if (e.currentTarget.duration && !isNaN(e.currentTarget.duration)) {
+                    setCustomVideoDuration(e.currentTarget.duration);
+                  }
+                }}
                 onError={() => setUseVideo(false)}
               />
             ) : (
               <ProceduralScene
                 currentTime={currentTime}
-                duration={videoDuration}
+                duration={effectiveDuration}
                 playing={playing}
                 onTimeUpdate={(t) => setCurrentTime(t)}
               />
@@ -493,12 +622,12 @@ export default function StudioEditorPage() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setPlaying(!playing)}
-                  className="w-7 h-7 rounded-lg bg-adv-sidebar border border-adv-border hover:bg-adv-surfaceHover text-white flex items-center justify-center"
+                  className="w-7 h-7 rounded-lg bg-adv-sidebar border border-adv-border hover:bg-adv-surfaceHover text-white flex items-center justify-center transition-colors"
                 >
                   {playing ? <Pause size={13} /> : <Play size={13} className="ml-0.5" />}
                 </button>
                 <span className="font-mono text-adv-text">
-                  {currentTime.toFixed(1)}s / {videoDuration.toFixed(1)}s
+                  {currentTime.toFixed(1)}s / {effectiveDuration.toFixed(1)}s
                 </span>
               </div>
 
@@ -523,13 +652,25 @@ export default function StudioEditorPage() {
               </div>
             </div>
 
-            {/* Visual Timeline Track */}
-            <div className="relative w-full h-8 bg-adv-sidebar rounded-lg border border-adv-border overflow-hidden">
+            {/* Visual Timeline Track with Click to Seek */}
+            <div
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                const seekTime = ratio * effectiveDuration;
+                setCurrentTime(seekTime);
+                if (videoRef.current) {
+                  videoRef.current.currentTime = seekTime;
+                }
+              }}
+              className="relative w-full h-8 bg-adv-sidebar rounded-lg border border-adv-border overflow-hidden cursor-pointer group"
+              title="Click anywhere to scrub playback position"
+            >
               {/* Zone Active Window Block */}
               <div
                 style={{
-                  left: `${(currentZone.startSec / videoDuration) * 100}%`,
-                  width: `${((currentZone.endSec - currentZone.startSec) / videoDuration) * 100}%`,
+                  left: `${(currentZone.startSec / effectiveDuration) * 100}%`,
+                  width: `${((currentZone.endSec - currentZone.startSec) / effectiveDuration) * 100}%`,
                 }}
                 className="absolute top-0 bottom-0 bg-adv-accent/25 border-x-2 border-adv-accent flex items-center justify-center text-[10px] font-bold text-adv-accent uppercase tracking-wider"
               >
@@ -538,7 +679,7 @@ export default function StudioEditorPage() {
 
               {/* Scrubber Playhead Line */}
               <div
-                style={{ left: `${(currentTime / videoDuration) * 100}%` }}
+                style={{ left: `${(currentTime / effectiveDuration) * 100}%` }}
                 className="absolute top-0 bottom-0 w-1 bg-white shadow-md pointer-events-none z-10"
               />
             </div>
@@ -573,7 +714,7 @@ export default function StudioEditorPage() {
                   <input
                     type="range"
                     min={currentZone.startSec + 0.5}
-                    max={videoDuration}
+                    max={effectiveDuration}
                     step={0.5}
                     value={currentZone.endSec}
                     onChange={(e) => {
