@@ -43,6 +43,44 @@ export async function runSlotScout(params: {
 
   // If real frame image or point prompt is provided, run real vision surface detection
   if (frameImage || clickPoint) {
+    // 1. Try Live Multimodal Meta Llama 3.2 Vision (Meta Model API or Fireworks backup)
+    if (frameImage && !clickPoint) {
+      try {
+        const cloudSurfaces = await metaClient.detectSurfacesMultimodal(frameImage);
+        if (cloudSurfaces && cloudSurfaces.length > 0) {
+          const slots: ScoutedSlot[] = cloudSurfaces.map((s, idx) => ({
+            id: `slot-cloud-${Date.now()}-${idx + 1}`,
+            label: s.label,
+            quad: s.quad,
+            startSec: 0.2,
+            endSec: Math.min(durationSec, durationSec > 1 ? durationSec - 0.5 : 19.5),
+            frameShare: s.frameShare,
+            placementScore: Math.round(s.confidence * 100),
+            suggestedCap: s.suggestedCap,
+            contrastRatio: s.contrastRatio,
+            legibilityIndex: Math.round(s.confidence * 98),
+            occlusionRisk: "low",
+            suggestedMood: ["prominent", "high-visibility", "in-scene", "calibrated"],
+            reason: "Detected by Meta Llama 3.2 Vision via live multimodal inference.",
+            modelOrigin: s.label.includes("Fireworks")
+              ? "Fireworks AI (Meta Llama 3.2 Vision)"
+              : "Meta Model API (Llama 3.2 Vision)",
+          }));
+
+          return {
+            filmTitle,
+            scoutedAtSec: Number(currentSec.toFixed(1)),
+            slots,
+            sceneAtmosphere: ["in-scene", "billboard", "display", "high-visibility"],
+            aiModel: "Meta Llama 3.2 Vision (Live Multimodal)",
+          };
+        }
+      } catch {
+        // Fallback to local CV engine
+      }
+    }
+
+    // 2. Local Computer Vision Surface Detector (Zero-downtime safety net)
     const detected = await detectSurfacesFromFrame({ frameBase64: frameImage, clickPoint, filmTitle });
     const slots: ScoutedSlot[] = detected.map((s, idx) => ({
       id: `slot-real-${Date.now()}-${idx + 1}`,
