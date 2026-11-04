@@ -96,4 +96,45 @@ describe("Meta AI Model Integration (Muse Spark & SAM 3.1)", () => {
     expect(plan.beats[2].name).toBe("CTA & QR");
     expect(plan.aiModel).toContain("Meta Muse Spark");
   });
+
+  it("should generate a configurable 180-second (3-minute) epic motion ad plan using Muse Spark", async () => {
+    const { generateMotionAdPlan } = await import("@/lib/ads/motion");
+    const plan = await generateMotionAdPlan({
+      campaignId: "camp-repbull-focus",
+      durationSec: 180.0,
+      brief: {
+        brandName: "RepBull Energy",
+        product: "Zero Sugar Ultra Focus",
+        category: "beverage",
+        goal: "awareness",
+        languages: ["en"],
+      },
+      cohort: {
+        city: "Tokyo",
+        country: "Japan",
+        language: "en",
+        ageBand: "25-34",
+        anchors: ["Formula 1", "Haruki Murakami", "Shibuya Nightlife"],
+        goal: "awareness",
+      },
+      styleSpec: {
+        palette: { bg: "#0b0f19", fg: "#f1f5f9", accent: "#06b6d4" },
+        typeStyle: "geometric-sans",
+        layout: "bold-type",
+        motif: "waves",
+        tone: ["bold", "kinetic", "high-energy"],
+        energy: 0.9,
+      },
+    });
+
+    expect(plan.totalDurationSec).toBe(180.0);
+    expect(plan.beats.length).toBe(6);
+    expect(plan.beats[0].act).toBe(1);
+    expect(plan.beats[0].startSec).toBe(0.0);
+    // Final act should have the interactive QR code
+    const lastBeat = plan.beats[plan.beats.length - 1];
+    expect(lastBeat.act).toBe(6);
+    expect(lastBeat.name).toContain("QR");
+    expect(plan.aiModel).toContain("Meta Muse Spark");
+  });
 });

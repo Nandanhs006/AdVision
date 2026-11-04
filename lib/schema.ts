@@ -259,8 +259,8 @@ export type AdCreativeStatus = z.infer<typeof AdCreativeStatusSchema>;
 // ==========================================
 
 export const MotionSceneBeatSchema = z.object({
-  act: z.number().min(1).max(3),
-  name: z.string(), // "Hook" | "Core Benefit" | "CTA & QR"
+  act: z.number().min(1).max(10),
+  name: z.string(), // "Hook" | "Core Benefit" | "Social Proof" | "Innovation" | "CTA & QR"
   startSec: z.number(),
   durationSec: z.number(),
   headline: z.string(),
@@ -274,7 +274,7 @@ export type MotionSceneBeat = z.infer<typeof MotionSceneBeatSchema>;
 export const MotionAdPlanSchema = z.object({
   campaignId: z.string(),
   brandName: z.string(),
-  totalDurationSec: z.number().default(15.0),
+  totalDurationSec: z.number().min(5).max(180).default(15.0),
   beats: z.array(MotionSceneBeatSchema),
   musicTrack: z.string().default("happy-beats-business-moves-vol-1"),
   bpm: z.number().default(120),

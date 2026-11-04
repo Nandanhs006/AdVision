@@ -6,6 +6,8 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const campaignId = searchParams.get("campaignId") || "camp-repbull-focus";
+    const durationParam = searchParams.get("durationSec");
+    const durationSec = durationParam ? parseFloat(durationParam) : 15.0;
 
     const brief = {
       brandName: campaignId.includes("sony")
@@ -45,7 +47,13 @@ export async function GET(req: NextRequest) {
       energy: 0.9,
     };
 
-    const plan = await generateMotionAdPlan({ campaignId, brief, cohort, styleSpec });
+    const plan = await generateMotionAdPlan({
+      campaignId,
+      brief,
+      cohort,
+      styleSpec,
+      durationSec,
+    });
 
     return NextResponse.json({
       success: true,
@@ -65,6 +73,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const campaignId = body.campaignId || "default-campaign";
+    const durationSec = typeof body.durationSec === "number" ? body.durationSec : 15.0;
 
     const brief = BriefSchema.parse(body.brief || {
       brandName: "RepBull Energy",
@@ -92,7 +101,13 @@ export async function POST(req: NextRequest) {
       energy: 0.9,
     });
 
-    const plan = await generateMotionAdPlan({ campaignId, brief, cohort, styleSpec });
+    const plan = await generateMotionAdPlan({
+      campaignId,
+      brief,
+      cohort,
+      styleSpec,
+      durationSec,
+    });
 
     return NextResponse.json({
       success: true,

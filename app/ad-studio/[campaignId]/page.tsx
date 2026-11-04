@@ -65,6 +65,38 @@ export default function CampaignVariantsPage({
   const [selectedAspect, setSelectedAspect] = useState<AdAspect>("1:1");
   const [previewPlatform, setPreviewPlatform] = useState<"feed" | "story" | "facebook" | "motion">("feed");
   const [motionPlan, setMotionPlan] = useState<MotionAdPlan | null>(null);
+  const [isRegeneratingMotion, setIsRegeneratingMotion] = useState(false);
+
+  const handleMotionDurationChange = async (durationSec: number) => {
+    setIsRegeneratingMotion(true);
+    try {
+      const res = await fetch("/api/ads/motion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          campaignId,
+          durationSec,
+          brief: {
+            brandName: campaign?.brandName || (campaignId.includes("repbull") ? "RepBull Energy" : "Sony Alpha Optics"),
+            product: campaign?.headline?.["en"] || (campaignId.includes("repbull") ? "Zero Sugar Ultra Focus" : "Alpha 7R V Full Frame"),
+            category: campaign?.category || "beverage",
+            goal: "awareness",
+            languages: ["en"],
+          },
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.plan) {
+          setMotionPlan(data.plan);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to change motion duration:", err);
+    } finally {
+      setIsRegeneratingMotion(false);
+    }
+  };
 
   // Drawer & Dialog states
   const [showWhyDrawer, setShowWhyDrawer] = useState(false);
@@ -755,9 +787,14 @@ Language: ${campaignId.includes("sony") ? "Japanese" : "English"}`;
                   </div>
                 </div>
               ) : previewPlatform === "motion" && motionPlan ? (
-                /* Meta AI 15s Motion Billboard Player (Beat Sync) */
-                <div className="w-full max-w-[620px]">
-                  <MotionAdPlayer plan={motionPlan} aspect="16:9" />
+                /* Meta AI Motion Billboard Player (Beat Sync, 15s to 3m Configurable) */
+                <div className="w-full max-w-[640px]">
+                  <MotionAdPlayer
+                    plan={motionPlan}
+                    aspect="16:9"
+                    onDurationChange={handleMotionDurationChange}
+                    isLoadingNewDuration={isRegeneratingMotion}
+                  />
                 </div>
               ) : (
                 /* Facebook Post Mockup */
